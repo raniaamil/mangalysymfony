@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Ajouter un article</h1>
+    <form method="post" class="mt-4">
+        <div class="form-group">
+            <label for="titre">Titre</label>
+            <input type="text" id="titre" name="titre" class="form-control" required>
+        </div>
+        <div class="form-group mt-3">
+            <label for="contenu">Contenu</label>
+            <textarea id="contenu" name="contenu" class="form-control" rows="5" required></textarea>
+        </div>
+        <div class="form-group mt-3">
+            <label for="genre">Genre</label>
+            <select id="genre" name="genre" class="form-control" required>
+                <option value="" disabled selected>-- Sélectionnez un genre --</option>
+                <option value="Shōnen">Shōnen</option>
+                <option value="Shōjo">Shōjo</option>
+                <option value="Seinen">Seinen</option>
+                <option value="Josei">Josei</option>
+                <option value="Kodomo">Kodomo</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
+        <a href="{{ path('articles_index') }}" class="btn btn-secondary mt-3">Retour</a>
+    </form>
+</div>
+{% endblock %}

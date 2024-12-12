@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des genres</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for genre in genre %}
+                <tr>
+                    <td>{{ genre.id }}</td>
+                    <td>{{ genre.nom }}</td>
+                    <td>
+                        <a href="{{ path('genre_edit', {id: genre.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        <form action="{{ path('genre_delete', {id: genre.id}) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ genre.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce genre ?');">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center">Aucun genre trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bouton pour ajouter un genre -->
+    <div class="mb-3">
+        <a href="{{ path('genre_new') }}" class="btn btn-success">Ajouter un genre</a>
+    </div>
+
+</div>
+{% endblock %}
