@@ -1,1 +1,1 @@
-# magalysymfony
+# mangalysymfony
