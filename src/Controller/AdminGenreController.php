@@ -16,6 +16,7 @@ class AdminGenreController extends AbstractController
     #[Route('/', name: 'genre_index', methods: ['GET'])] // Route pour afficher la liste des genre
     public function index(GenreRepository $genreRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
         $genre = $genreRepository->findAll(); // Récupère tous les genre de la base de données
 
         return $this->render('admin/genre/index.html.twig', ['genre' => $genre]); // Affiche la vue avec la liste des genres
@@ -24,6 +25,7 @@ class AdminGenreController extends AbstractController
     #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] // Route pour créer un nouveau genre
     public function new(Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
         if ($request->isMethod('POST')) { // Vérifie si la requête est POST
             $genre = new Genre(); // Crée une nouvelle instance de l'entité Genre
 
@@ -42,6 +44,7 @@ class AdminGenreController extends AbstractController
     #[Route('/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] // Route pour modifier un genre existant
     public function edit(Genre $genre, Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
         if ($request->isMethod('POST')) { // Vérifie si la requête est POST
             // Met à jour les informations du genre
             $genre->setNom($request->request->get('nom')); // Modifie le nom
@@ -57,6 +60,7 @@ class AdminGenreController extends AbstractController
     #[Route('/{id}/delete', name: 'genre_delete', methods: ['POST'])] // Route pour supprimer un genre
     public function delete(Genre $genre, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
         $em->remove($genre); // Supprime le genre
         $em->flush(); // Enregistre la suppression dans la base de données
 

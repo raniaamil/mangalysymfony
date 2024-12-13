@@ -21,16 +21,26 @@ class ArticlesController extends AbstractController
         return $this->render('articles/index.html.twig', ['articles' => $articles]); // Affiche la vue avec la liste des articles
     }
 
+    #[Route('/{id}', name: 'articles_show', methods: ['GET'])]
+    public function show(Articles $article): Response
+    {
+        return $this->render('articles/show.html.twig', [
+            'article' => $article,
+        ]);
+    }
+
     #[Route('/new', name: 'articles_new', methods: ['GET', 'POST'])] // Route pour créer un nouvel article
     public function new(Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Protection pour les utilisateurs non-admins
+        
         if ($request->isMethod('POST')) { // Vérifie si la requête est POST
             $article = new Articles(); // Crée une nouvelle instance de l'entité Articles
 
             // Récupère les données du formulaire et les attribue à l'article
             $article->setTitre($request->request->get('titre')); // Attribue le titre
             $article->setContenu($request->request->get('contenu')); // Attribue le contenu
-            $article->setGenre($request->request->get('genre')); // Attribue la catégorie
+            $article->setGenre($request->request->get('genre')); // Attribue le genre
 
             $em->persist($article); // Prépare l'article à être sauvegardé
             $em->flush(); // Sauvegarde dans la base de données
@@ -44,6 +54,8 @@ class ArticlesController extends AbstractController
     #[Route('/{id}/edit', name: 'articles_edit', methods: ['GET', 'POST'])] // Route pour modifier un article existant
     public function edit(Articles $article, Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Protection pour les utilisateurs non-admins
+
         if ($request->isMethod('POST')) { // Vérifie si la requête est POST
             // Met à jour les informations de l'article
             $article->setTitre($request->request->get('titre')); // Modifie le titre
@@ -61,6 +73,8 @@ class ArticlesController extends AbstractController
     #[Route('/{id}/delete', name: 'articles_delete', methods: ['POST'])] // Route pour supprimer un article
     public function delete(Articles $article, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN'); // Protection pour les utilisateurs non-admins
+
         $em->remove($article); // Supprime l'article
         $em->flush(); // Enregistre la suppression dans la base de données
 

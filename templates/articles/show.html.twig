@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'article{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>{{ article.titre }}</h1>
+    <p>{{ article.contenu }}</p>
+
+    <h3>Genre</h3>
+    <p>{{ article.genre }}</p>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="mt-4">
+            <a href="{{ path('articles_edit', {id: article.id}) }}" class="btn btn-primary">Modifier</a>
+            <form method="post" action="{{ path('articles_delete', {id: article.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                <button class="btn btn-danger">Supprimer</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <a href="{{ path('articles_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
+{% endblock %}
