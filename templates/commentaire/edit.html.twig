@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Modifier le commentaire</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="contenu">Contenu</label>
+        <textarea id="contenu" name="contenu" class="form-control" required>{{ commentaire.contenu }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
+    <a href="{{ path('commentaire_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</form>
+{% endblock %}

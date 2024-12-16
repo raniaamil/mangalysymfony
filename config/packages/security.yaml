@@ -20,6 +20,17 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/  # Ce motif couvre les routes liées au profiler, aux fichiers CSS, JS et images
       security: false  # Pas de sécurité appliquée sur ces routes (les utilisateurs peuvent y accéder sans être authentifiés)
 
+    # Configuration pour les API (commentée ici, mais peut être activée si nécessaire pour les connexions API basées sur JSON ou JWT)
+    api_login:
+        pattern: ^/api/login  # Cette route serait spécifique aux API (connexion via API)
+        stateless: true  # Indique que l'API ne maintient pas de session (stateless)
+        json_login:  # Configuration pour une authentification JSON (souvent utilisée pour les APIs)
+            check_path: /api/login  # La route où les données de connexion sont envoyées
+            username_path: email
+            password_path: password
+            success_handler: lexik_jwt_authentication.handler.authentication_success  # Si la connexion réussit, la réponse JSON sera gérée ici
+            failure_handler: lexik_jwt_authentication.handler.authentication_failure  # Si la connexion échoue, la réponse JSON sera gérée ici
+
     # Configuration principale du firewall pour toutes les autres routes
     main:
       pattern: ^/  # Cela couvre toutes les routes qui commencent par '/' (toutes les routes de l'application)
@@ -33,14 +44,7 @@ security:
       logout:  # Gestion de la déconnexion
         path: /logout  # La route pour se déconnecter
 
-    # Configuration pour les API (commentée ici, mais peut être activée si nécessaire pour les connexions API basées sur JSON ou JWT)
-    # api_login:
-    #     pattern: ^/api/login  # Cette route serait spécifique aux API (connexion via API)
-    #     stateless: true  # Indique que l'API ne maintient pas de session (stateless)
-    #     json_login:  # Configuration pour une authentification JSON (souvent utilisée pour les APIs)
-    #         check_path: /api/login  # La route où les données de connexion sont envoyées
-    #         success_handler: lexik_jwt_authentication.handler.authentication_success  # Si la connexion réussit, la réponse JSON sera gérée ici
-    #         failure_handler: lexik_jwt_authentication.handler.authentication_failure  # Si la connexion échoue, la réponse JSON sera gérée ici
+  
 
   # Configuration des contrôles d'accès (qui peut accéder à quelles routes en fonction de son rôle)
   access_control:
@@ -56,14 +60,30 @@ security:
     # Restreint l'accès à la page des utilisateurs (/users) uniquement aux utilisateurs complètement authentifiés
     - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }  # L'accès à la page /users est restreint aux utilisateurs qui sont entièrement authentifiés
 
-    - { path: ^/articles/new, roles: ROLE_ADMIN }
+    - { path: ^/critiques/, roles: PUBLIC_ACCESS }
 
-    - { path: ^/articles/\d+/edit, roles: ROLE_ADMIN }
+    - { path: ^/critiques/new, roles: IS_AUTHENTICATED_FULLY }
 
-    - { path: ^/articles/\d+/delete, roles: ROLE_ADMIN }
+    - { path: ^/critiques/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
 
-    - { path: ^/articles/, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/critiques/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
 
     - { path: ^/admin/genre/, roles: ROLE_ADMIN }
+
+    - { path: ^/api/login, roles: ROLE_ADMIN }
+
+    - { path: ^/commentaire/, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/commentaire/new/\d+/, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/commentaire/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/commentaire/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
+
+
+
+
+
+
 
     

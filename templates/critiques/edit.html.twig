@@ -2,22 +2,22 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Modifier l'article</h1>
+    <h1>Modifier la critique</h1>
     <form method="post" class="mt-4">
         <div class="form-group">
             <label for="titre">Titre</label>
-            <input type="text" id="titre" name="titre" class="form-control" value="{{ article.titre }}" required>
+            <input type="text" id="titre" name="titre" class="form-control" value="{{ critique.titre }}" required>
         </div>
         <div class="form-group mt-3">
             <label for="contenu">Contenu</label>
-            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ article.contenu }}</textarea>
+            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ critique.contenu }}</textarea>
         </div>
         <div class="form-group mt-3">
             <label for="genre">Genre</label>
-            <input type="text" id="genre" name="genre" class="form-control" value="{{ article.genre }}" required>
+            <input type="text" id="genre" name="genre" class="form-control" value="{{ critique.genre }}" required>
         </div>
         <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-        <a href="{{ path('articles_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Retour</a>
     </form>
 </div>
 {% endblock %}

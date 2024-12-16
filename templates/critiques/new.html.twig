@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Ajouter un article</h1>
+    <h1>Ajouter une critique</h1>
     <form method="post" class="mt-4">
         <div class="form-group">
             <label for="titre">Titre</label>
@@ -24,7 +24,7 @@
             </select>
         </div>
         <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
-        <a href="{{ path('articles_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Retour</a>
     </form>
 </div>
 {% endblock %}

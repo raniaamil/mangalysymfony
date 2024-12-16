@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des critiques</h1>
+
+    <!-- Filtre par catégorie -->
+    <form method="get" action="{{ path('critiques_index') }}" class="mb-4">
+        <div class="form-group">
+            <label for="filter_genre">Filtrer par genre</label>
+            <select id="filter_genre" name="genre" class="form-control">
+                <option value="">-- Toutes les catégories --</option>
+                <option value="Shōnen" {% if app.request.get('genre') == 'Shōnen' %}selected{% endif %}>Shōnen</option>
+                <option value="Shōjo" {% if app.request.get('genre') == 'Shōjo' %}selected{% endif %}>Shōjo</option>
+                <option value="Seinen" {% if app.request.get('genre') == 'Seinen' %}selected{% endif %}>Seinen</option>
+                <option value="Josei" {% if app.request.get('genre') == 'Josei' %}selected{% endif %}>Josei</option>
+                <option value="Kodomo" {% if app.request.get('genre') == 'Kodomo' %}selected{% endif %}>Kodomo</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Appliquer</button>
+        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Réinitialiser</a>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>ID</th>
+                {% endif %}
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Genre</th>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for critique in critiques %}
+                <tr>
+                        <td>{{ critique.id }}</td>
+                    <td>
+                        <a href="{{ path('critiques_show', {id: critique.id}) }}">{{ critique.titre }}</a>
+                    </td>
+                    <td>{{ critique.contenu|slice(0, 50) }}...</td>
+                    <td>{{ critique.genre }}</td>
+                        <td>
+                            <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                            <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">Supprimer</button>
+                            </form>
+                        </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{% if is_granted('IS_AUTHENTICATED_FULLY') %}4{% else %}3{% endif %}" class="text-center">Aucune critique trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bouton pour ajouter une critique -->
+        <div class="mb-3">
+            <a href="{{ path('critiques_new') }}" class="btn btn-success">Ajouter une critique</a>
+        </div>
+</div>
+{% endblock %}

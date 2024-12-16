@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Liste des commentaires</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Contenu</th>
+            <th>Date</th>
+            <th>Utilisateur</th>
+            <th>Critique</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for commentaire in commentaires %}
+            <tr>
+                <td>{{ commentaire.id }}</td>
+                <td>{{ commentaire.contenu }}</td>
+                <td>{{ commentaire.datePublication|date('d/m/Y') }}</td>
+                <td>{{ commentaire.user.username }}</td>
+                <td>{{ commentaire.critiques.titre }}</td>
+                <td>
+                    <!-- Modifier le commentaire -->
+                    <a href="{{ path('commentaire_edit', { id: commentaire.id }) }}" class="btn btn-primary btn-sm">Modifier</a>
+                    
+                    <!-- Supprimer le commentaire -->
+                    <form action="{{ path('commentaire_delete', { id: commentaire.id }) }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun commentaire trouvé.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
