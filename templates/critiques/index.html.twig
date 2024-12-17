@@ -48,7 +48,7 @@
                     <td>{{ critique.contenu|slice(0, 50) }}...</td>
                     <td>{{ critique.genre }}</td>   
                     <td>{{ critique.user.username }}</td> {# Affiche le nom de l'utilisateur #}
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% if app.user and app.user.id == critique.user.id %}
                         <td>
                             <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
                             <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
