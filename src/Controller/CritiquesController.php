@@ -44,6 +44,9 @@ class CritiquesController extends AbstractController
             $critique->setContenu($request->request->get('contenu')); // Attribue le contenu
             $critique->setGenre($request->request->get('genre')); // Attribue le genre
 
+            // Associer l'utilisateur connecté
+            $critique->setUser($this->getUser());
+
             $em->persist($critique); // Prépare la critique à être sauvegardée
             $em->flush(); // Sauvegarde dans la base de données
 

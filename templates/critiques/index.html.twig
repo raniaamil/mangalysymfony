@@ -30,6 +30,7 @@
                 <th>Titre</th>
                 <th>Contenu</th>
                 <th>Genre</th>
+                <th>Par</th> {# Nouvelle colonne pour afficher le nom de l'utilisateur #}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <th>Actions</th>
                 {% endif %}
@@ -38,12 +39,16 @@
         <tbody>
             {% for critique in critiques %}
                 <tr>
+                    {% if is_granted('ROLE_ADMIN') %}
                         <td>{{ critique.id }}</td>
+                    {% endif %}
                     <td>
                         <a href="{{ path('critiques_show', {id: critique.id}) }}">{{ critique.titre }}</a>
                     </td>
                     <td>{{ critique.contenu|slice(0, 50) }}...</td>
-                    <td>{{ critique.genre }}</td>
+                    <td>{{ critique.genre }}</td>   
+                    <td>{{ critique.user.username }}</td> {# Affiche le nom de l'utilisateur #}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         <td>
                             <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
                             <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
@@ -51,6 +56,7 @@
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">Supprimer</button>
                             </form>
                         </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

@@ -9,6 +9,7 @@
         <textarea id="contenu" name="contenu" class="form-control" required>{{ commentaire.contenu }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-    <a href="{{ path('commentaire_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    <a href="{{ path('critiques_show', {id: commentaire.critiques.id}) }}" class="btn btn-secondary mt-3">Retour à la critique</a>
+
 </form>
 {% endblock %}

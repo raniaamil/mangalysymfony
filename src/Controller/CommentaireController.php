@@ -51,7 +51,7 @@ class CommentaireController extends AbstractController
     }
 
     // 3. Modifier un commentaire
-    #[Route('/{id<\d+>}/edit', name: 'commentaire_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'commentaire_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
     {
         // Vérifie si l'utilisateur est connecté
@@ -61,7 +61,7 @@ class CommentaireController extends AbstractController
             $commentaire->setContenu($request->request->get('contenu'));
             $em->flush();
 
-            return $this->redirectToRoute('commentaire_index');
+            return $this->redirectToRoute('critiques_show', ['id' => $commentaire->getCritiques()->getId()]);
         }
 
         return $this->render('commentaire/edit.html.twig', [
@@ -70,17 +70,21 @@ class CommentaireController extends AbstractController
     }
 
     // 4. Supprimer un commentaire
-    #[Route('/{id<\d+>}/delete', name: 'commentaire_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'commentaire_delete', methods: ['POST'])]
     public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
     {
         // Vérifie si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $critiqueId = $commentaire->getCritiques()->getId(); // Récupère l'ID de la critique associée
 
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
             $em->remove($commentaire);
             $em->flush();
         }
 
-        return $this->redirectToRoute('commentaire_index');
+        // Redirige vers la page de la critique associée après suppression
+        return $this->redirectToRoute('critiques_show', ['id' => $commentaire->getCritiques()->getId()]);
+
     }
 }

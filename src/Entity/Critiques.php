@@ -31,6 +31,10 @@ class Critiques
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'critiques')]
     private Collection $commentaires;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'critiques')]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")] //Cascade supprime automatiqueement les critiques associées si un utilsateur est supprimé.//
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
@@ -103,6 +107,18 @@ class Critiques
                 $commentaire->setCritiques(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
