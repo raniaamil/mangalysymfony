@@ -31,6 +31,11 @@ security:
             success_handler: lexik_jwt_authentication.handler.authentication_success  # Si la connexion réussit, la réponse JSON sera gérée ici
             failure_handler: lexik_jwt_authentication.handler.authentication_failure  # Si la connexion échoue, la réponse JSON sera gérée ici
 
+    api:
+        pattern: ^/api
+        stateless: true
+        jwt: ~
+
     # Configuration principale du firewall pour toutes les autres routes
     main:
       pattern: ^/  # Cela couvre toutes les routes qui commencent par '/' (toutes les routes de l'application)
