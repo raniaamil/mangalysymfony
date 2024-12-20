@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -40,10 +41,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Critiques::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $critiques;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateInscription = null;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
         $this->critiques = new ArrayCollection();
+        $this->dateInscription = new \DateTime(); // Initialise automatiquement la date d'inscription
     }
 
     public function getId(): ?int
@@ -160,6 +165,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $critique->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
+    {
+        return $this->dateInscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $date_inscription): static
+    {
+        $this->dateInscription = $date_inscription;
 
         return $this;
     }

@@ -35,6 +35,9 @@ class Critiques
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")] //Cascade supprime automatiqueement les critiques associées si un utilsateur est supprimé.//
     private ?User $user = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_publication = null;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
@@ -119,6 +122,18 @@ class Critiques
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDatePublication(): ?\DateTimeInterface
+    {
+        return $this->date_publication;
+    }
+
+    public function setDatePublication(\DateTimeInterface $date_publication): static
+    {
+        $this->date_publication = $date_publication;
 
         return $this;
     }

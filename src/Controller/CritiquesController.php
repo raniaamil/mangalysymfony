@@ -43,6 +43,7 @@ class CritiquesController extends AbstractController
             $critique->setTitre($request->request->get('titre')); // Attribue le titre
             $critique->setContenu($request->request->get('contenu')); // Attribue le contenu
             $critique->setGenre($request->request->get('genre')); // Attribue le genre
+            $critique->setDatePublication(new \DateTime());
 
             // Associer l'utilisateur connecté
             $critique->setUser($this->getUser());

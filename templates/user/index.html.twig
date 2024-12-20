@@ -11,6 +11,7 @@
                 <th>Username</th>
                 <th>Email</th>
                 <th>Rôles</th>
+                <th>Date d'inscription</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles|join(', ') }}</td>
+                    <td>{{ user.dateInscription|date('d/m/Y H:i') }}</td>
                     <td>
                         <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
                         <form action="{{ path('user_delete', {id: user.id}) }}" method="post" style="display: inline;">

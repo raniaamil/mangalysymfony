@@ -10,6 +10,10 @@
     <h3>Genre</h3>
     <p>{{ critique.genre }}</p>
 
+    <h3>Date de publication</h3>
+    <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p> 
+
+
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
             <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary">Modifier</a>

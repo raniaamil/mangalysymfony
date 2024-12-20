@@ -31,6 +31,7 @@ class UserController extends AbstractController // Déclaration de la classe Use
             // On récupère les données soumises dans le formulaire et on les attribue à l'entité $user
             $user->setUsername($request->request->get('username')); // Attribue le nom de l'utilisateur depuis la requête
             $user->setEmail($request->request->get('email')); // Attribue l'email depuis la requête
+            $user->setDateInscription($request->request->get('date_inscription'));
 
             // Hachage du mot de passe avant de le sauvegarder dans la base de données
             $hashedPassword = password_hash($request->request->get('password'), PASSWORD_BCRYPT); // Utilise bcrypt pour sécuriser le mot de passe
