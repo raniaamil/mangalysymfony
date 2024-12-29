@@ -85,6 +85,7 @@ security:
 
     - { path: ^/commentaire/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
 
+    - { path: ^/admin/manga/, roles: ROLE_ADMIN }
 
 
 

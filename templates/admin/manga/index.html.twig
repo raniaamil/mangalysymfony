@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Liste des mangas</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Auteur</th>
+                <th>Date de sortie</th>
+                <th>Description</th>
+                <th>Genre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for manga in mangas %}
+                <tr>
+                    <td>{{ manga.id }}</td>
+                    <td>{{ manga.titre }}</td>
+                    <td>{{ manga.auteur }}</td>
+                    <td>{{ manga.dateSortie|date('d/m/Y') }}</td>
+                    <td>{{ manga.description|slice(0, 50) ~ (manga.description|length > 50 ? '...' : '') }}</td>
+                    <td>{{ manga.genre.nom }}</td>
+                    <td>
+                        <a href="{{ path('manga_edit', {id: manga.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        <form action="{{ path('manga_delete', {id: manga.id}) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ manga.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce manga ?');">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center">Aucun manga trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bouton pour ajouter un manga -->
+    <div class="mb-3">
+        <a href="{{ path('manga_new') }}" class="btn btn-success">Ajouter un manga</a>
+    </div>
+
+</div>
+{% endblock %}
