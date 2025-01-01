@@ -9,7 +9,16 @@
         <textarea id="contenu" name="contenu" class="form-control" required>{{ commentaire.contenu }}</textarea>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-    <a href="{{ path('critiques_show', {id: commentaire.critiques.id}) }}" class="btn btn-secondary mt-3">Retour à la critique</a>
-
+    
+    {% if commentaire.theorie %}
+        <a href="{{ path('theorie_show', {id: commentaire.theorie.id}) }}" class="btn btn-secondary mt-3">
+            Retour à la théorie
+        </a>
+    {% elseif commentaire.critiques %}
+        <a href="{{ path('critiques_show', {id: commentaire.critiques.id}) }}" class="btn btn-secondary mt-3">
+            Retour à la critique
+        </a>
+    {% endif %}
 </form>
 {% endblock %}
+

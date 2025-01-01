@@ -1,37 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de la critique{% endblock %}
+{% block title %}Détails de la théorie{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1>{{ critique.titre }}</h1>
-    <p>{{ critique.contenu }}</p>
+    <h1>{{ theorie.titre }}</h1>
+    <p>{{ theorie.contenu }}</p>
 
-    <h3>Genre</h3>
-    <p>{{ critique.genre }}</p>
+    <h3>Média</h3>
+    {% if media_base64 %}
+        <div>
+            <p>Type: {{ theorie.mediaType }}</p>
+            {% if theorie.mediaType starts with 'image' %}
+                <img src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}" alt="Média associé" class="img-fluid" />
+            {% elseif theorie.mediaType starts with 'video' %}
+                <video controls class="w-100">
+                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+            {% elseif theorie.mediaType starts with 'audio' %}
+                <audio controls>
+                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
+                    Votre navigateur ne supporte pas la lecture audio.
+                </audio>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucun média associé</p>
+    {% endif %}
+
+    <h3>Manga</h3>
+    <p>{{ theorie.manga.titre }}</p>
 
     <h3>Date de publication</h3>
-    <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p> 
+    <p>{{ theorie.datePublication|date('d/m/Y H:i') }}</p>
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
-            <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary">Modifier</a>
-            <form method="post" action="{{ path('critiques_delete', {id: critique.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
+            <a href="{{ path('theorie_edit', {id: theorie.id}) }}" class="btn btn-primary">Modifier</a>
+            <form method="post" action="{{ path('theorie_delete', {id: theorie.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette théorie ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ theorie.id) }}">
                 <button class="btn btn-danger">Supprimer</button>
             </form>
         </div>
     {% endif %}
 
     <div class="mt-4">
-        <a href="{{ path('critiques_index') }}" class="btn btn-secondary">Retour aux critiques</a>
+        <a href="{{ path('theorie_index') }}" class="btn btn-secondary">Retour aux théories</a>
     </div>
 
     <!-- Section des Commentaires -->
     <div class="mt-5">
         <h2>Commentaires</h2>
         <ul class="list-group">
-            {% for commentaire in critique.commentaires %}
+            {% for commentaire in theorie.commentaires %}
                 <li class="list-group-item">
                     <strong>{{ commentaire.user.username }}</strong> le {{ commentaire.datePublication|date('d/m/Y H:i') }} :
                     <p>{{ commentaire.contenu }}</p>
@@ -51,7 +73,7 @@
                     {% endif %}
                 </li>
             {% else %}
-                <li class="list-group-item text-center">Aucun commentaire pour cette critique.</li>
+                <li class="list-group-item text-center">Aucun commentaire pour cette théorie.</li>
             {% endfor %}
         </ul>
     </div>
@@ -60,7 +82,7 @@
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
             <h3>Ajouter un commentaire</h3>
-            <form method="post" action="{{ path('commentaire_new', {entity: 'critiques', id: critique.id}) }}">
+            <form method="post" action="{{ path('commentaire_new', {entity: 'theorie', id: theorie.id}) }}">
                 <div class="form-group">
                     <label for="contenu">Votre commentaire</label>
                     <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>

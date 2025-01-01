@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Commentaire;
 use App\Entity\Critiques;
+use App\Entity\Theorie;
 use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,43 +26,80 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    // 2. Ajouter un nouveau commentaire
-    #[Route('/new/{id<\d+>}', name: 'commentaire_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Critiques $critique, EntityManagerInterface $em): Response
-    {
-        // Vérifie si l'utilisateur est connecté
+    // 2. Ajouter un nouveau commentaire pour 'Critiques' ou 'Theorie'
+    #[Route('/new/{entity}/{id}', name: 'commentaire_new', methods: ['POST'])]
+    public function new(
+        string $entity,
+        int $id,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        // Vérifier si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        if ($request->isMethod('POST')) {
-            $commentaire = new Commentaire();
-            $commentaire->setContenu($request->request->get('contenu')); // Récupère le contenu
-            $commentaire->setDatePublication(new \DateTime()); // Date actuelle
-            $commentaire->setCritiques($critique); // Lie le commentaire à la critique
-            $commentaire->setUser($this->getUser()); // Associe l'utilisateur connecté
+        // Identifier l'entité cible (Critiques ou Theorie)
+        $targetEntity = match ($entity) {
+            'theorie' => Theorie::class,
+            'critiques' => Critiques::class,
+            default => null,
+        };
 
-            $em->persist($commentaire);
-            $em->flush();
-
-            return $this->redirectToRoute('critiques_show', ['id' => $critique->getId()]);
+        if (!$targetEntity) {
+            throw $this->createNotFoundException("Entité invalide.");
         }
 
-        return $this->render('commentaire/new.html.twig', [
-            'critique' => $critique,
-        ]);
+        // Récupérer l'entité cible
+        $target = $em->getRepository($targetEntity)->find($id);
+        if (!$target) {
+            throw $this->createNotFoundException("L'entité demandée n'existe pas.");
+        }
+
+        // Créer le commentaire
+        $contenu = $request->request->get('contenu');
+        if (!$contenu) {
+            return $this->redirectToRoute($entity . '_show', ['id' => $id]);
+        }
+
+        $commentaire = new Commentaire();
+        $commentaire->setContenu($contenu);
+        $commentaire->setDatePublication(new \DateTime());
+        $commentaire->setUser($this->getUser());
+
+        // Associer le commentaire à l'entité cible
+        if ($entity === 'theorie') {
+            $commentaire->setTheorie($target);
+        } elseif ($entity === 'critiques') {
+            $commentaire->setCritiques($target);
+        }
+
+        $em->persist($commentaire);
+        $em->flush();
+
+        // Redirection vers la vue de l'entité
+        return $this->redirectToRoute($entity . '_show', ['id' => $id]);
     }
 
     // 3. Modifier un commentaire
     #[Route('/{id}/edit', name: 'commentaire_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
-    {
-        // Vérifie si l'utilisateur est connecté
+    public function edit(
+        Request $request,
+        Commentaire $commentaire,
+        EntityManagerInterface $em
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
             $commentaire->setContenu($request->request->get('contenu'));
             $em->flush();
 
-            return $this->redirectToRoute('critiques_show', ['id' => $commentaire->getCritiques()->getId()]);
+            // Redirige selon l'entité liée
+            $entity = $commentaire->getTheorie() ? 'theorie' : 'critiques';
+            $targetId = $entity === 'theorie'
+                ? $commentaire->getTheorie()->getId()
+                : $commentaire->getCritiques()->getId();
+
+
+            return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
         }
 
         return $this->render('commentaire/edit.html.twig', [
@@ -71,20 +109,26 @@ class CommentaireController extends AbstractController
 
     // 4. Supprimer un commentaire
     #[Route('/{id}/delete', name: 'commentaire_delete', methods: ['POST'])]
-    public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
-    {
-        // Vérifie si l'utilisateur est connecté
+    public function delete(
+        Request $request,
+        Commentaire $commentaire,
+        EntityManagerInterface $em
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $critiqueId = $commentaire->getCritiques()->getId(); // Récupère l'ID de la critique associée
-
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
+            $entity = $commentaire->getTheorie() ? 'theorie' : 'critiques';
+            $targetId = $entity === 'theorie'
+                ? $commentaire->getTheorie()->getId()
+                : $commentaire->getCritiques()->getId();
+
             $em->remove($commentaire);
             $em->flush();
+
+            // Redirige vers la vue de l'entité liée
+            return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
         }
 
-        // Redirige vers la page de la critique associée après suppression
-        return $this->redirectToRoute('critiques_show', ['id' => $commentaire->getCritiques()->getId()]);
-
+        throw $this->createAccessDeniedException('Action non autorisée.');
     }
 }

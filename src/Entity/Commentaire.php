@@ -28,6 +28,9 @@ class Commentaire
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    private ?Theorie $theorie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class Commentaire
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTheorie(): ?Theorie
+    {
+        return $this->theorie;
+    }
+
+    public function setTheorie(?Theorie $theorie): static
+    {
+        $this->theorie = $theorie;
 
         return $this;
     }

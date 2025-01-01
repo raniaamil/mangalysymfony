@@ -3,19 +3,33 @@
 namespace App\Entity;
 
 use App\Repository\MangaRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups; // Ajout de l'importation pour les groupes
 
 #[ORM\Entity(repositoryClass: MangaRepository::class)]
 class Manga
 {
+    /**
+     * @Groups({"manga_suggestion"})
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @Groups({"manga_suggestion"})
+     */
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
+
+    // Ne pas inclure le genre dans ce groupe
+    #[ORM\ManyToOne(inversedBy: 'manga')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Genre $genre = null;
 
     #[ORM\Column(length: 150)]
     private ?string $auteur = null;
@@ -29,9 +43,21 @@ class Manga
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'manga')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Genre $genre = null;
+    /**
+     * @var Collection<int, Theorie>
+     */
+    #[ORM\OneToMany(targetEntity: Theorie::class, mappedBy: 'manga')]
+    private Collection $theorie;
+
+    public function __toString(): string
+    {
+        return $this->titre; // Retourne le titre du manga lorsqu'il est utilisé comme une chaîne
+    }
+
+    public function __construct()
+    {
+        $this->theorie = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +132,36 @@ class Manga
     public function setGenre(?Genre $genre): static
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Theorie>
+     */
+    public function getTheorie(): Collection
+    {
+        return $this->theorie;
+    }
+
+    public function addTheorie(Theorie $theorie): static
+    {
+        if (!$this->theorie->contains($theorie)) {
+            $this->theorie->add($theorie);
+            $theorie->setManga($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTheorie(Theorie $theorie): static
+    {
+        if ($this->theorie->removeElement($theorie)) {
+            // set the owning side to null (unless already changed)
+            if ($theorie->getManga() === $this) {
+                $theorie->setManga(null);
+            }
+        }
 
         return $this;
     }

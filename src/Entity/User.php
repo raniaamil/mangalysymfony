@@ -44,11 +44,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInscription = null;
 
+    /**
+     * @var Collection<int, Theorie>
+     */
+    #[ORM\OneToMany(targetEntity: Theorie::class, mappedBy: 'user')]
+    private Collection $theorie;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
         $this->critiques = new ArrayCollection();
         $this->dateInscription = new \DateTime(); // Initialise automatiquement la date d'inscription
+        $this->theorie = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -177,6 +184,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDateInscription(\DateTimeInterface $date_inscription): static
     {
         $this->dateInscription = $date_inscription;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Theorie>
+     */
+    public function getTheorie(): Collection
+    {
+        return $this->theorie;
+    }
+
+    public function addTheorie(Theorie $theorie): static
+    {
+        if (!$this->theorie->contains($theorie)) {
+            $this->theorie->add($theorie);
+            $theorie->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTheorie(Theorie $theorie): static
+    {
+        if ($this->theorie->removeElement($theorie)) {
+            // set the owning side to null (unless already changed)
+            if ($theorie->getUser() === $this) {
+                $theorie->setUser(null);
+            }
+        }
 
         return $this;
     }

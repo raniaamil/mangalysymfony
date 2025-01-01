@@ -100,3 +100,4 @@ class AdminMangaController extends AbstractController
         return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas après suppression
     }
 }
+

@@ -16,6 +16,16 @@ class MangaRepository extends ServiceEntityRepository
         parent::__construct($registry, Manga::class);
     }
 
+    public function findByQuery(string $query): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.titre LIKE :query')
+            ->setParameter('query', '%' . $query . '%')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }    
+
     //    /**
     //     * @return Manga[] Returns an array of Manga objects
     //     */

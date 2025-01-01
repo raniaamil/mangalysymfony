@@ -85,7 +85,24 @@ security:
 
     - { path: ^/commentaire/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
 
-    - { path: ^/admin/manga/, roles: ROLE_ADMIN }
+    - { path: ^/admin/, roles: ROLE_ADMIN }
+
+    - { path: ^/theories/, roles: PUBLIC_ACCESS }
+
+    - { path: ^/theories/new, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/theories/\d+/, roles: PUBLIC_ACCESS }
+
+    - { path: ^/theories/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/theories/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/manga/suggestions, roles: PUBLIC_ACCESS }
+
+
+
+
+
 
 
 
