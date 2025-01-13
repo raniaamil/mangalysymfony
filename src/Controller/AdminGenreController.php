@@ -22,23 +22,23 @@ class AdminGenreController extends AbstractController
         return $this->render('admin/genre/index.html.twig', ['genre' => $genre]); // Affiche la vue avec la liste des genres
     }
 
-    #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] // Route pour créer un nouveau genre
+    #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] 
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
-        if ($request->isMethod('POST')) { // Vérifie si la requête est POST
-            $genre = new Genre(); // Crée une nouvelle instance de l'entité Genre
+        if ($request->isMethod('POST')) { 
+            
+            $genre = new Genre(); 
 
-            // Récupère les données du formulaire et les attribue au genre
-            $genre->setNom($request->request->get('nom')); // Attribue le nom
+            $genre->setNom($request->request->get('nom'));
 
-            $em->persist($genre); // Prépare le genre à être sauvegardé
-            $em->flush(); // Sauvegarde dans la base de données
+            $em->persist($genre); 
+            $em->flush(); 
 
-            return $this->redirectToRoute('genre_index'); // Redirige vers la liste des genres après création
+            return $this->redirectToRoute('genre_index'); 
         }
 
-        return $this->render('admin/genre/new.html.twig'); // Affiche le formulaire de création
+        return $this->render('admin/genre/new.html.twig'); 
     }
 
     #[Route('/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] // Route pour modifier un genre existant

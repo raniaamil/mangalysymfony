@@ -70,18 +70,18 @@ class TheorieController extends AbstractController
     #[Route('/{id}', name: 'theorie_show', methods: ['GET'])]
     public function show(Theorie $theorie): Response
     {
-        $mediaBase64 = null; // Par défaut, pas de média.
+        $mediaBase64 = null;
 
-        if ($theorie->getMedia()) { // Si un média existe.
+        if ($theorie->getMedia()) { 
             $mediaPath = $this->getParameter('media_directory') . '/' . $theorie->getMedia();
-            if (file_exists($mediaPath)) { // Vérifie si le fichier existe.
-                $mediaBase64 = base64_encode(file_get_contents($mediaPath)); // Lis et encode.
+            if (file_exists($mediaPath)) { 
+                $mediaBase64 = base64_encode(file_get_contents($mediaPath)); 
             }
         }
 
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
-            'media_base64' => $mediaBase64, // Envoie le média encodé au template.
+            'media_base64' => $mediaBase64, 
         ]);
     }
 

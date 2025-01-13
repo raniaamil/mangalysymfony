@@ -6,7 +6,7 @@ use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups; // Ajout de l'importation pour les groupes
+use Symfony\Component\Serializer\Annotation\Groups; 
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
 class Genre
@@ -25,7 +25,6 @@ class Genre
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    // Ne pas inclure les mangas dans ce groupe
     /**
      * @var Collection<int, Manga>
      */
@@ -80,7 +79,7 @@ class Genre
     public function removeManga(Manga $manga): static
     {
         if ($this->manga->removeElement($manga)) {
-            // set the owning side to null (unless already changed)
+            
             if ($manga->getGenre() === $this) {
                 $manga->setGenre(null);
             }
