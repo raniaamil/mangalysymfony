@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Critiques; // On importe la classe Critiques pour manipuler l'entité
+use App\Entity\Manga;
 use App\Repository\CritiquesRepository; // On importe le repository pour interagir avec la base de données
 use Doctrine\ORM\EntityManagerInterface; // Pour interagir avec la base de données
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des contrôleurs Symfony
@@ -42,10 +43,19 @@ class CritiquesController extends AbstractController
             // Récupère les données du formulaire et les attribue à la critique
             $critique->setTitre($request->request->get('titre')); // Attribue le titre
             $critique->setContenu($request->request->get('contenu')); // Attribue le contenu
-            $critique->setGenre($request->request->get('genre')); // Attribue le genre
-            $critique->setDatePublication(new \DateTime());
+            
+            // Associer le manga
+            $mangaTitre = $request->request->get('manga');
+            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
 
-            // Associer l'utilisateur connecté
+            if ($manga) {
+                $critique->setManga($manga);
+            } else {
+                $this->addFlash('error', 'Le manga sélectionné est invalide.');
+                return $this->redirectToRoute('critiques_new');
+            }
+            
+            $critique->setDatePublication(new \DateTime());
             $critique->setUser($this->getUser());
 
             $em->persist($critique); // Prépare la critique à être sauvegardée
@@ -62,6 +72,7 @@ class CritiquesController extends AbstractController
     {
         return $this->render('critiques/show.html.twig', [
             'critique' => $critique,
+            'commentaires' => $critique->getCommentaires(), 
         ]);
     }
 
@@ -71,13 +82,23 @@ class CritiquesController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
 
         if ($request->isMethod('POST')) { // Vérifie si la requête est POST
-            // Met à jour les informations de la critique
             $critique->setTitre($request->request->get('titre')); // Modifie le titre
             $critique->setContenu($request->request->get('contenu')); // Modifie le contenu
-            $critique->setGenre($request->request->get('genre')); // Modifie le genre
+            
+            // Mise à jour du manga
+            $mangaTitre = $request->request->get('manga');
+            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
+
+            if ($manga) {
+                $critique->setManga($manga);
+            } else {
+                $this->addFlash('error', 'Le manga sélectionné est invalide.');
+                return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
+            }
 
             $em->flush(); // Sauvegarde les modifications
 
+        
             return $this->redirectToRoute('critiques_index'); // Redirige vers la liste des critiques
         }
 
@@ -85,13 +106,39 @@ class CritiquesController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'critiques_delete', methods: ['POST'])] // Route pour supprimer une critique
-    public function delete(Critiques $critique, EntityManagerInterface $em): Response
+    public function delete(Critiques $critique, EntityManagerInterface $em, Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
 
-        $em->remove($critique); // Supprime la critique
-        $em->flush(); // Enregistre la suppression dans la base de données
-
+        if ($this->isCsrfTokenValid('delete' . $critique->getId(), $request->request->get('_token'))) {
+            $em->remove($critique);
+            $em->flush();
+            $this->addFlash('success', 'Critique supprimée avec succès.');
+        } else {
+            $this->addFlash('error', 'Erreur lors de la suppression.');
+        }
         return $this->redirectToRoute('critiques_index'); // Redirige vers la liste des critiques après suppression
     }
+
+    #[Route('/{id}/report', name: 'critiques_report', methods: ['POST'])]
+    public function report(Critiques $critique, EntityManagerInterface $em, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    
+        // Vérifier si la critique a déjà été signalée
+        if ($critique->getReport()) {
+            $this->addFlash('info', 'Cette critique a déjà été signalée.');
+        } else {
+            if ($this->isCsrfTokenValid('report' . $critique->getId(), $request->request->get('_token'))) {
+                $critique->setReport(true);
+                $em->flush();
+                $this->addFlash('success', 'La critique a été signalée.');
+            } else {
+                $this->addFlash('error', 'Erreur lors du signalement.');
+            }
+        }
+    
+        return $this->redirectToRoute('critiques_show', ['id' => $critique->getId()]);
+    }
+    
 }

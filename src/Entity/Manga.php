@@ -49,6 +49,18 @@ class Manga
     #[ORM\OneToMany(targetEntity: Theorie::class, mappedBy: 'manga')]
     private Collection $theorie;
 
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'manga')]
+    private Collection $post;
+
+    /**
+     * @var Collection<int, Critiques>
+     */
+    #[ORM\OneToMany(targetEntity: Critiques::class, mappedBy: 'manga')]
+    private Collection $critique;
+
     public function __toString(): string
     {
         return $this->titre; // Retourne le titre du manga lorsqu'il est utilisé comme une chaîne
@@ -57,6 +69,8 @@ class Manga
     public function __construct()
     {
         $this->theorie = new ArrayCollection();
+        $this->post = new ArrayCollection();
+        $this->critique = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -160,6 +174,66 @@ class Manga
             // set the owning side to null (unless already changed)
             if ($theorie->getManga() === $this) {
                 $theorie->setManga(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getPost(): Collection
+    {
+        return $this->post;
+    }
+
+    public function addPost(Post $post): static
+    {
+        if (!$this->post->contains($post)) {
+            $this->post->add($post);
+            $post->setManga($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): static
+    {
+        if ($this->post->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getManga() === $this) {
+                $post->setManga(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Critiques>
+     */
+    public function getCritique(): Collection
+    {
+        return $this->critique;
+    }
+
+    public function addCritique(Critiques $critique): static
+    {
+        if (!$this->critique->contains($critique)) {
+            $this->critique->add($critique);
+            $critique->setManga($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCritique(Critiques $critique): static
+    {
+        if ($this->critique->removeElement($critique)) {
+            // set the owning side to null (unless already changed)
+            if ($critique->getManga() === $this) {
+                $critique->setManga(null);
             }
         }
 

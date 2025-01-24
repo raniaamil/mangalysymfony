@@ -99,6 +99,11 @@ security:
 
     - { path: ^/manga/suggestions, roles: PUBLIC_ACCESS }
 
+    - { path: ^/likes, roles: IS_AUTHENTICATED_FULLY }
+
+    - { path: ^/commentaire/\d+/report, roles: IS_AUTHENTICATED_FULLY }
+
+
 
 
 

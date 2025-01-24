@@ -2,8 +2,8 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Ajouter une critique</h1>
-    <form method="post" class="mt-4">
+    <h1>Ajouter un post</h1>
+    <form method="post" enctype="multipart/form-data" class="mt-4">
         <div class="form-group">
             <label for="titre">Titre</label>
             <input type="text" id="titre" name="titre" class="form-control" required>
@@ -17,8 +17,13 @@
             <input type="text" id="manga" name="manga" class="form-control" autocomplete="off" required>
             <div id="manga-suggestions" class="list-group"></div>
         </div>
+        <div class="form-group mt-3">
+            <label for="media">Média (image, vidéo ou fichier audio)</label>
+            <input type="file" id="media" name="media" class="form-control" accept="image/*,video/*,audio/*">
+            <small class="form-text text-muted">Formats acceptés : image, vidéo ou fichier audio.</small>
+        </div>
         <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
-        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Retour</a>
     </form>
 </div>
 

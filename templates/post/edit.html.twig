@@ -2,23 +2,45 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Modifier la critique</h1>
-    <form method="post" class="mt-4">
+    <h1>Modifier le post</h1>
+    <form method="post" enctype="multipart/form-data" class="mt-4">
         <div class="form-group">
             <label for="titre">Titre</label>
-            <input type="text" id="titre" name="titre" class="form-control" value="{{ critique.titre }}" required>
+            <input type="text" id="titre" name="titre" class="form-control" value="{{ post.titre }}" required>
         </div>
         <div class="form-group mt-3">
             <label for="contenu">Contenu</label>
-            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ critique.contenu }}</textarea>
+            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ post.contenu }}</textarea>
         </div>
         <div class="form-group mt-3">
             <label for="manga">Manga</label>
-            <input type="text" id="manga" name="manga" class="form-control" value="{{ critique.manga.titre }}" required autocomplete="off" 
+            <input type="text" id="manga" name="manga" class="form-control" value="{{ post.manga.titre }}" required autocomplete="off" 
                    data-autocomplete-url="{{ path('manga_suggestions') }}">
         </div>
+        <div class="form-group mt-3">
+            <label for="media">Média (image, vidéo ou fichier audio)</label>
+            <input type="file" id="media" name="media" class="form-control" accept="image/*,video/*,audio/*">
+        </div>
+        {% if post.media %}
+            <div class="mt-3">
+                <p>Type : {{ post.mediaType }}</p>
+                {% if post.mediaType == 'image' %}
+                    <img src="{{ asset('uploads/' ~ post.media) }}" alt="Media" class="img-fluid">
+                {% elseif post.mediaType == 'video' %}
+                    <video controls class="w-100">
+                        <source src="{{ asset('uploads/' ~ post.media) }}" type="video/mp4">
+                    </video>
+                {% elseif post.mediaType == 'audio' %}
+                    <audio controls>
+                        <source src="{{ asset('uploads/' ~ post.media) }}" type="audio/mpeg">
+                    </audio>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>Aucun média associé</p>
+        {% endif %}
         <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Retour</a>
+        <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Retour</a>
     </form>
 </div>
 

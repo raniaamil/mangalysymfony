@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\CritiquesRepository;
+use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CritiquesRepository::class)]
-class Critiques
+#[ORM\Entity(repositoryClass: PostRepository::class)]
+class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,27 +22,24 @@ class Critiques
     #[ORM\Column(type: Types::TEXT)]
     private ?string $contenu = null;
 
-    /**
-     * @var Collection<int, Commentaire>
-     */
-    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'critiques')]
-    private Collection $commentaires;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'critiques')]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")] //Cascade supprime automatiqueement les critiques associées si un utilsateur est supprimé.//
-    private ?User $user = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_publication = null;
 
-    #[ORM\ManyToOne(inversedBy: 'critique')]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $media = null;
+
+    #[ORM\ManyToOne(inversedBy: 'post')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'post')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Manga $manga = null;
 
     /**
      * @var Collection<int, Like>
      */
-    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'critiques')]
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'post')]
     private Collection $likes;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -52,23 +49,15 @@ class Critiques
     private ?bool $report = false;
 
     /**
-     * @var Collection<int, Note>
+     * @var Collection<int, Commentaire>
      */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'critique')]
-    private Collection $note;
-
-    /**
-     * @var Collection<int, Note>
-     */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'critiques')]
-    private Collection $notes;
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'post')]
+    private Collection $commentaires;
 
     public function __construct()
     {
-        $this->commentaires = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->note = new ArrayCollection();
-        $this->notes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,34 +89,43 @@ class Critiques
         return $this;
     }
 
-    /**
-     * @return Collection<int, Commentaire>
-     */
-    public function getCommentaires(): Collection
+    public function getDatePublication(): ?\DateTimeInterface
     {
-        return $this->commentaires;
+        return $this->date_publication;
     }
 
-    public function addCommentaire(Commentaire $commentaire): static
+    public function setDatePublication(\DateTimeInterface $date_publication): static
     {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
-            $commentaire->setCritiques($this);
-        }
+        $this->date_publication = $date_publication;
 
         return $this;
     }
 
-    public function removeCommentaire(Commentaire $commentaire): static
+    public function getMedia(): ?string
     {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getCritiques() === $this) {
-                $commentaire->setCritiques(null);
-            }
-        }
+        return $this->media;
+    }
+
+    public function setMedia(?string $media): static
+    {
+        $this->media = $media;
 
         return $this;
+    }
+
+    public function getMediaType(): ?string
+    {
+        if (!$this->media) {
+            return null;
+        }
+
+        $extension = strtolower(pathinfo($this->media, PATHINFO_EXTENSION));
+            return match ($extension) {
+            'jpg', 'jpeg', 'png', 'gif' => 'image',
+            'mp4', 'mov' => 'video',
+            'mp3', 'wav' => 'audio',
+            default => null,
+        };
     }
 
     public function getUser(): ?User
@@ -138,18 +136,6 @@ class Critiques
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function getDatePublication(): ?\DateTimeInterface
-    {
-        return $this->date_publication;
-    }
-
-    public function setDatePublication(\DateTimeInterface $date_publication): static
-    {
-        $this->date_publication = $date_publication;
 
         return $this;
     }
@@ -169,7 +155,7 @@ class Critiques
     public function getGenre(): ?string
     {
         return $this->manga ? $this->manga->getGenre()->getNom() : null;
-    }  
+    }
 
     /**
      * @return Collection<int, Like>
@@ -183,7 +169,7 @@ class Critiques
     {
         if (!$this->likes->contains($like)) {
             $this->likes->add($like);
-            $like->setCritiques($this);
+            $like->setPost($this);
         }
 
         return $this;
@@ -193,8 +179,8 @@ class Critiques
     {
         if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($like->getCritiques() === $this) {
-                $like->setCritiques(null);
+            if ($like->getPost() === $this) {
+                $like->setPost(null);
             }
         }
 
@@ -226,29 +212,29 @@ class Critiques
     }
 
     /**
-     * @return Collection<int, Note>
+     * @return Collection<int, Commentaire>
      */
-    public function getNote(): Collection
+    public function getCommentaires(): Collection
     {
-        return $this->note;
+        return $this->commentaires;
     }
 
-    public function addNote(Note $note): static
+    public function addCommentaire(Commentaire $commentaire): static
     {
-        if (!$this->note->contains($note)) {
-            $this->note->add($note);
-            $note->setCritique($this);
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setPost($this);
         }
 
         return $this;
     }
 
-    public function removeNote(Note $note): static
+    public function removeCommentaire(Commentaire $commentaire): static
     {
-        if ($this->note->removeElement($note)) {
+        if ($this->commentaires->removeElement($commentaire)) {
             // set the owning side to null (unless already changed)
-            if ($note->getCritique() === $this) {
-                $note->setCritique(null);
+            if ($commentaire->getPost() === $this) {
+                $commentaire->setPost(null);
             }
         }
 

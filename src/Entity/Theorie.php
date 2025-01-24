@@ -42,9 +42,22 @@ class Theorie
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'theorie')]
     private Collection $commentaires;
 
+    /**
+     * @var Collection<int, Like>
+     */
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'theorie')]
+    private Collection $likes;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_modification = null;
+
+    #[ORM\Column]
+    private ?bool $report = false;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,7 +154,7 @@ class Theorie
 
     public function getGenre(): ?string
     {
-        return $this->manga ? $this->manga->getGenre() : null;
+        return $this->manga ? $this->manga->getGenre()->getNom() : null;
     }
 
     /**
@@ -174,4 +187,57 @@ class Theorie
         return $this;
     }
 
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setTheorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getTheorie() === $this) {
+                $like->setTheorie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDateModification(): ?\DateTimeInterface
+    {
+        return $this->date_modification;
+    }
+
+    public function setDateModification(?\DateTimeInterface $date_modification): self
+    {
+        $this->date_modification = $date_modification;
+
+        return $this;
+    }
+
+    public function getReport(): ?bool
+    {
+        return $this->report;
+    }
+
+    public function setReport(bool $report): static
+    {
+        $this->report = $report;
+
+        return $this;
+    }
 }

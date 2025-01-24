@@ -1,50 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de la critique{% endblock %}
+{% block title %}Détails du post{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1>{{ critique.titre }}</h1>
-    <p>{{ critique.contenu }}</p>
+    <h1>{{ post.titre }}</h1>
+    <p>{{ post.contenu }}</p>
+
+    <h3>Média</h3>
+    {% if media_base64 %}
+        <div>
+            <p>Type: {{ post.mediaType }}</p>
+            {% if post.mediaType starts with 'image' %}
+                <img src="data:{{ post.mediaType }};base64,{{ media_base64 }}" alt="Média associé" class="img-fluid" />
+            {% elseif post.mediaType starts with 'video' %}
+                <video controls class="w-100">
+                    <source src="data:{{ post.mediaType }};base64,{{ media_base64 }}">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                </video>
+            {% elseif post.mediaType starts with 'audio' %}
+                <audio controls>
+                    <source src="data:{{ post.mediaType }};base64,{{ media_base64 }}">
+                    Votre navigateur ne supporte pas la lecture audio.
+                </audio>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>Aucun média associé</p>
+    {% endif %}
 
     <h3>Manga</h3>
-    <p>{{ critique.manga.titre }}</p>
+    <p>{{ post.manga.titre }}</p>
 
     <h3>Genre</h3>
-    <p>{{ critique.manga.genre.nom }}</p>
+    <p>{{ post.genre }}</p>
 
     <h3>Date de publication</h3>
-    <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p> 
+    <p>{{ post.datePublication|date('d/m/Y H:i') }}</p>
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
-            <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary">Modifier</a>
-            <form method="post" action="{{ path('critiques_delete', {id: critique.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
+            <a href="{{ path('post_edit', {id: post.id}) }}" class="btn btn-primary">Modifier</a>
+            <form method="post" action="{{ path('post_delete', {id: post.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
                 <button class="btn btn-danger">Supprimer</button>
             </form>
         </div>
     {% endif %}
 
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <form method="post" action="{{ path('critiques_report', {id: critique.id}) }}" style="display: inline;">
-            <input type="hidden" name="_token" value="{{ csrf_token('report' ~ critique.id) }}">
-            <button type="submit" class="btn btn-warning" onclick="return confirm('Voulez-vous signaler cette critique ?');">
-                Signaler
-            </button>
-        </form>
-    {% endif %}
-
+    <form method="post" action="{{ path('post_report', {id: post.id}) }}" style="display: inline;">
+        <input type="hidden" name="_token" value="{{ csrf_token('report' ~ post.id) }}">
+        <button type="submit" class="btn btn-warning" onclick="return confirm('Voulez-vous signaler ce post ?');">
+            Signaler
+        </button>
+    </form>
 
     <div class="mt-4">
-        <a href="{{ path('critiques_index') }}" class="btn btn-secondary">Retour aux critiques</a>
+        <a href="{{ path('post_index') }}" class="btn btn-secondary">Retour aux posts</a>
     </div>
 
     <!-- Section des Commentaires -->
     <div class="mt-5">
         <h2>Commentaires</h2>
         <ul class="list-group">
-            {% for commentaire in critique.commentaires %}
+            {% for commentaire in post.commentaires %}
                 <li class="list-group-item">
                     <strong>{{ commentaire.user.username }}</strong> le {{ commentaire.datePublication|date('d/m/Y H:i') }} :
                     <p>{{ commentaire.contenu }}</p>
@@ -62,8 +81,8 @@
                             </form>
                         </div>
                     {% endif %}
-                    
-                    <!-- Bouton de signalement de commentaire -->
+
+                    <!-- Formulaire pour signaler le commentaire -->
                     <form method="post" action="{{ path('commentaire_report', {id: commentaire.id}) }}" style="display: inline;">
                         <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
                         <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce commentaire ?');">
@@ -72,7 +91,7 @@
                     </form>
                 </li>
             {% else %}
-                <li class="list-group-item text-center">Aucun commentaire pour cette critique.</li>
+                <li class="list-group-item text-center">Aucun commentaire pour ce post.</li>
             {% endfor %}
         </ul>
     </div>
@@ -81,7 +100,7 @@
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
             <h3>Ajouter un commentaire</h3>
-            <form method="post" action="{{ path('commentaire_new', {entity: 'critiques', id: critique.id}) }}">
+            <form method="post" action="{{ path('commentaire_new', {entity: 'post', id: post.id}) }}">
                 <div class="form-group">
                     <label for="contenu">Votre commentaire</label>
                     <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
@@ -93,4 +112,6 @@
         <p class="mt-3">Veuillez <a href="{{ path('app_login') }}">vous connecter</a> pour ajouter un commentaire.</p>
     {% endif %}
 </div>
+
 {% endblock %}
+

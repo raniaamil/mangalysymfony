@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Commentaire;
+use App\Entity\Post;
 use App\Entity\Critiques;
 use App\Entity\Theorie;
 use App\Repository\CommentaireRepository;
@@ -26,7 +27,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    // 2. Ajouter un nouveau commentaire pour 'Critiques' ou 'Theorie'
+    // 2. Ajouter un nouveau commentaire pour 'Critiques','Theorie' & 'Post'
     #[Route('/new/{entity}/{id}', name: 'commentaire_new', methods: ['POST'])]
     public function new(
         string $entity,
@@ -41,6 +42,7 @@ class CommentaireController extends AbstractController
         $targetEntity = match ($entity) {
             'theorie' => Theorie::class,
             'critiques' => Critiques::class,
+            'post' => Post::class,
             default => null,
         };
 
@@ -70,6 +72,8 @@ class CommentaireController extends AbstractController
             $commentaire->setTheorie($target);
         } elseif ($entity === 'critiques') {
             $commentaire->setCritiques($target);
+        } elseif ($entity === 'post') {
+            $commentaire->setPost($target);
         }
 
         $em->persist($commentaire);
@@ -93,11 +97,12 @@ class CommentaireController extends AbstractController
             $em->flush();
 
             // Redirige selon l'entité liée
-            $entity = $commentaire->getTheorie() ? 'theorie' : 'critiques';
-            $targetId = $entity === 'theorie'
-                ? $commentaire->getTheorie()->getId()
-                : $commentaire->getCritiques()->getId();
+            $entity = $commentaire->getTheorie() ? 'theorie' :
+                      ($commentaire->getCritiques() ? 'critiques' : 'post');      
 
+            $targetId = $commentaire->getTheorie()?->getId() ??
+                        $commentaire->getCritiques()?->getId() ??
+                        $commentaire->getPost()?->getId();
 
             return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
         }
@@ -117,13 +122,17 @@ class CommentaireController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
-            $entity = $commentaire->getTheorie() ? 'theorie' : 'critiques';
-            $targetId = $entity === 'theorie'
-                ? $commentaire->getTheorie()->getId()
-                : $commentaire->getCritiques()->getId();
+            $entity = $commentaire->getTheorie() ? 'theorie' :
+            ($commentaire->getCritiques() ? 'critiques' : 'post');
 
+            $targetId = $commentaire->getTheorie()?->getId() ??
+                        $commentaire->getPost()?->getId() ??
+                        $commentaire->getCritiques()?->getId();
+               
             $em->remove($commentaire);
             $em->flush();
+
+            $this->addFlash('success', 'Le commentaire a bien été signalé.');
 
             // Redirige vers la vue de l'entité liée
             return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
@@ -131,4 +140,25 @@ class CommentaireController extends AbstractController
 
         throw $this->createAccessDeniedException('Action non autorisée.');
     }
+
+    #[Route('/{id}/report', name: 'commentaire_report', methods: ['POST'])]
+    public function report(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('report' . $commentaire->getId(), $request->request->get('_token'))) {
+            $commentaire->setReport(true);
+            $em->flush();
+    
+            $this->addFlash('success', 'Le commentaire a été signalé.');
+        } else {
+            $this->addFlash('error', 'Erreur lors du signalement.');
+        }
+    
+        $parentEntity = $commentaire->getTheorie() ?: $commentaire->getPost() ?: $commentaire->getCritiques();
+        $redirectRoute = $parentEntity instanceof Theorie ? 'theorie_show' :
+                         ($parentEntity instanceof Post ? 'post_show' : 'critiques_show');
+        
+        return $this->redirectToRoute($redirectRoute, ['id' => $parentEntity->getId()]);
+        
+    }
+    
 }

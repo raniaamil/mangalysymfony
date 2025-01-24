@@ -32,6 +32,9 @@
     <h3>Manga</h3>
     <p>{{ theorie.manga.titre }}</p>
 
+    <h3>Genre</h3>
+    <p>{{ theorie.manga.genre.nom }}</p>
+
     <h3>Date de publication</h3>
     <p>{{ theorie.datePublication|date('d/m/Y H:i') }}</p>
 
@@ -44,6 +47,14 @@
             </form>
         </div>
     {% endif %}
+
+    <form method="post" action="{{ path('theorie_report', {id: theorie.id}) }}" style="display: inline;">
+        <input type="hidden" name="_token" value="{{ csrf_token('report' ~ theorie.id) }}">
+        <button type="submit" class="btn btn-warning" onclick="return confirm('Voulez-vous signaler cette théorie ?');">
+            Signaler
+        </button>
+    </form>
+
 
     <div class="mt-4">
         <a href="{{ path('theorie_index') }}" class="btn btn-secondary">Retour aux théories</a>
@@ -71,6 +82,14 @@
                             </form>
                         </div>
                     {% endif %}
+
+                    <!-- Bouton pour signaler le commentaire -->
+                    <form method="post" action="{{ path('commentaire_report', {id: commentaire.id}) }}" style="display: inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
+                        <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce commentaire ?');">
+                            Signaler
+                        </button>
+                    </form>
                 </li>
             {% else %}
                 <li class="list-group-item text-center">Aucun commentaire pour cette théorie.</li>

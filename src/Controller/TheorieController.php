@@ -15,8 +15,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class TheorieController extends AbstractController
 {
     #[Route('/', name: 'theorie_index', methods: ['GET'])]
-    public function index(TheorieRepository $theorieRepository): Response
+    public function index(TheorieRepository $theorieRepository, Request $request): Response
     {
+        $genre = $request->query->get('genre'); // Récupère la catégorie sélectionnée
+    
+        if ($genre) {
+            // Filtre les théories par catégorie
+            $theorie = $theorieRepository->findBy(['genre' => $genre]);
+        } else {
+            // Récupère toutes les critiques
+            $theorie = $theorieRepository->findAll();
+        }
+
         return $this->render('theorie/index.html.twig', [
             'theories' => $theorieRepository->findAll(),
         ]);
@@ -82,6 +92,7 @@ class TheorieController extends AbstractController
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
             'media_base64' => $mediaBase64, 
+            'commentaires' => $theorie->getCommentaires()
         ]);
     }
 
@@ -105,6 +116,8 @@ class TheorieController extends AbstractController
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('theorie_edit', ['id' => $theorie->getId()]);
             }
+
+            $genre = $manga->getGenre()->getNom();
 
             // Gestion du média (facultatif)
             $media = $request->files->get('media');
@@ -140,4 +153,26 @@ class TheorieController extends AbstractController
 
         return $this->redirectToRoute('theorie_index');
     }
+
+    #[Route('/{id}/report', name: 'theorie_report', methods: ['POST'])]
+    public function report(Theorie $theorie, EntityManagerInterface $em, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    
+        // Vérifier si la théorie a déjà été signalée
+        if ($theorie->getReport()) {
+            $this->addFlash('info', 'Cette théorie a déjà été signalée.');
+        } else {
+            if ($this->isCsrfTokenValid('report' . $theorie->getId(), $request->request->get('_token'))) {
+                $theorie->setReport(true);
+                $em->flush();
+                $this->addFlash('success', 'La théorie a été signalée.');
+            } else {
+                $this->addFlash('error', 'Erreur lors du signalement.');
+            }
+        }
+    
+        return $this->redirectToRoute('theorie_show', ['id' => $theorie->getId()]);
+    }
+    
 }
