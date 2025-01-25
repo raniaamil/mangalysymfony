@@ -93,8 +93,8 @@ class TheorieController extends AbstractController
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
     
+        // Vérifier si l'utilisateur a liké la théorie
         $isLiked = false;
-    
         if ($user) {
             $isLiked = $likeRepo->findOneBy([
                 'user' => $user,
@@ -102,11 +102,23 @@ class TheorieController extends AbstractController
             ]) ? true : false;
         }
     
+        // Vérifier si l'utilisateur a liké les commentaires
+        $commentaireLikes = [];
+        if ($user) {
+            foreach ($theorie->getCommentaires() as $commentaire) {
+                $commentaireLikes[$commentaire->getId()] = $likeRepo->findOneBy([
+                    'user' => $user,
+                    'commentaire' => $commentaire
+                ]) ? true : false;
+            }
+        }
+    
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
             'media_base64' => $mediaBase64, 
             'commentaires' => $theorie->getCommentaires(),
             'isLiked' => $isLiked,
+            'commentaireLikes' => $commentaireLikes,
             'type' => 'theorie'  // On passe le type pour le bouton like
         ]);
     }    

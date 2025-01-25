@@ -6,6 +6,7 @@ use App\Entity\Commentaire;
 use App\Entity\Post;
 use App\Entity\Critiques;
 use App\Entity\Theorie;
+use App\Entity\Like;
 use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,10 +36,8 @@ class CommentaireController extends AbstractController
         Request $request,
         EntityManagerInterface $em
     ): Response {
-        // Vérifier si l'utilisateur est connecté
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // Identifier l'entité cible (Critiques ou Theorie)
         $targetEntity = match ($entity) {
             'theorie' => Theorie::class,
             'critiques' => Critiques::class,
@@ -50,13 +49,11 @@ class CommentaireController extends AbstractController
             throw $this->createNotFoundException("Entité invalide.");
         }
 
-        // Récupérer l'entité cible
         $target = $em->getRepository($targetEntity)->find($id);
         if (!$target) {
             throw $this->createNotFoundException("L'entité demandée n'existe pas.");
         }
 
-        // Créer le commentaire
         $contenu = $request->request->get('contenu');
         if (!$contenu) {
             return $this->redirectToRoute($entity . '_show', ['id' => $id]);
@@ -67,19 +64,15 @@ class CommentaireController extends AbstractController
         $commentaire->setDatePublication(new \DateTime());
         $commentaire->setUser($this->getUser());
 
-        // Associer le commentaire à l'entité cible
-        if ($entity === 'theorie') {
-            $commentaire->setTheorie($target);
-        } elseif ($entity === 'critiques') {
-            $commentaire->setCritiques($target);
-        } elseif ($entity === 'post') {
-            $commentaire->setPost($target);
-        }
+        match ($entity) {
+            'theorie' => $commentaire->setTheorie($target),
+            'critiques' => $commentaire->setCritiques($target),
+            'post' => $commentaire->setPost($target),
+        };
 
         $em->persist($commentaire);
         $em->flush();
 
-        // Redirection vers la vue de l'entité
         return $this->redirectToRoute($entity . '_show', ['id' => $id]);
     }
 
@@ -96,7 +89,6 @@ class CommentaireController extends AbstractController
             $commentaire->setContenu($request->request->get('contenu'));
             $em->flush();
 
-            // Redirige selon l'entité liée
             $entity = $commentaire->getTheorie() ? 'theorie' :
                       ($commentaire->getCritiques() ? 'critiques' : 'post');      
 
@@ -123,7 +115,7 @@ class CommentaireController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
             $entity = $commentaire->getTheorie() ? 'theorie' :
-            ($commentaire->getCritiques() ? 'critiques' : 'post');
+                      ($commentaire->getCritiques() ? 'critiques' : 'post');
 
             $targetId = $commentaire->getTheorie()?->getId() ??
                         $commentaire->getPost()?->getId() ??
@@ -132,15 +124,15 @@ class CommentaireController extends AbstractController
             $em->remove($commentaire);
             $em->flush();
 
-            $this->addFlash('success', 'Le commentaire a bien été signalé.');
+            $this->addFlash('success', 'Le commentaire a bien été supprimé.');
 
-            // Redirige vers la vue de l'entité liée
             return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
         }
 
         throw $this->createAccessDeniedException('Action non autorisée.');
     }
 
+    // 5. Signaler un commentaire
     #[Route('/{id}/report', name: 'commentaire_report', methods: ['POST'])]
     public function report(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
     {
@@ -158,7 +150,34 @@ class CommentaireController extends AbstractController
                          ($parentEntity instanceof Post ? 'post_show' : 'critiques_show');
         
         return $this->redirectToRoute($redirectRoute, ['id' => $parentEntity->getId()]);
-        
     }
-    
+
+    // 6. Toggle Like sur un commentaire
+    #[Route('/{id}/like', name: 'commentaire_like', methods: ['POST'])]
+    public function toggleLike(Commentaire $commentaire, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $likeRepo = $em->getRepository(Like::class);
+        $existingLike = $likeRepo->findOneBy(['user' => $user, 'commentaire' => $commentaire]);
+
+        if ($existingLike) {
+            $em->remove($existingLike);
+            $isLiked = false;
+        } else {
+            $like = new Like();
+            $like->setUser($user);
+            $like->setCommentaire($commentaire);
+            $em->persist($like);
+            $isLiked = true;
+        }
+
+        $em->flush();
+
+        return $this->json(['isLiked' => $isLiked]);
+    }
 }
+

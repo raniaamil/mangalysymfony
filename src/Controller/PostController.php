@@ -89,12 +89,12 @@ class PostController extends AbstractController
                 $mediaBase64 = base64_encode(file_get_contents($mediaPath)); 
             }
         }
-    
+
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
     
+        // Vérifier si l'utilisateur a liké le post
         $isLiked = false;
-    
         if ($user) {
             $isLiked = $likeRepo->findOneBy([
                 'user' => $user,
@@ -102,14 +102,26 @@ class PostController extends AbstractController
             ]) ? true : false;
         }
     
+        // Vérifier si l'utilisateur a liké les commentaires du post
+        $commentaireLikes = [];
+        if ($user) {
+            foreach ($post->getCommentaires() as $commentaire) {
+                $commentaireLikes[$commentaire->getId()] = $likeRepo->findOneBy([
+                    'user' => $user,
+                    'commentaire' => $commentaire
+                ]) ? true : false;
+            }
+        }
+    
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'media_base64' => $mediaBase64, 
             'commentaires' => $post->getCommentaires(),
             'isLiked' => $isLiked,
+            'commentaireLikes' => $commentaireLikes,
             'type' => 'post'  // On passe le type pour le bouton like
         ]);
-    }
+    }    
     
 
     #[Route('/{id<\d+>}/edit', name: 'post_edit', methods: ['GET', 'POST'])]

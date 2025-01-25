@@ -69,26 +69,37 @@ class CritiquesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'critiques_show', methods: ['GET'])]
-    public function show(Critiques $critique, EntityManagerInterface $em): Response
+    public function show(Critiques $critiques, EntityManagerInterface $em): Response
     {
-
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
     
+        // Vérifier si l'utilisateur a liké la critique
         $isLiked = false;
-    
         if ($user) {
             $isLiked = $likeRepo->findOneBy([
                 'user' => $user,
-                'critiques' => $critique
+                'critiques' => $critiques
             ]) ? true : false;
         }
     
+        // Vérifier si l'utilisateur a liké les commentaires
+        $commentaireLikes = [];
+        if ($user) {
+            foreach ($critiques->getCommentaires() as $commentaire) {
+                $commentaireLikes[$commentaire->getId()] = $likeRepo->findOneBy([
+                    'user' => $user,
+                    'commentaire' => $commentaire
+                ]) ? true : false;
+            }
+        }
+    
         return $this->render('critiques/show.html.twig', [
-            'critique' => $critique,
-            'commentaires' => $critique->getCommentaires(),
+            'critiques' => $critiques,
+            'commentaires' => $critiques->getCommentaires(),
             'isLiked' => $isLiked,
-            'type' => 'critique'  // On passe le type pour le bouton like
+            'commentaireLikes' => $commentaireLikes,
+            'type' => 'critiques'  // On passe le type pour le bouton like
         ]);
     }    
 
