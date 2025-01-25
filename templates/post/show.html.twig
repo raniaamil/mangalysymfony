@@ -38,16 +38,16 @@
     <h3>Date de publication</h3>
     <p>{{ post.datePublication|date('d/m/Y H:i') }}</p>
 
-    <div>
-        <form method="post" action="{{ path('like_toggle') }}" class="like-form">
-            <input type="hidden" name="id" value="{{ post.id }}">
-            <input type="hidden" name="type" value="post">
+    <div> 
+        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ post.id }}" data-entity-type="post">
             <button type="submit" class="btn btn-like">
-                {% if isLiked %}
-                    ❤️ Unlike
-                {% else %}
-                    🤍 Like
-                {% endif %}
+                <span class="like-icon">
+                    {% if isLiked %}
+                        ❤️
+                    {% else %}
+                        🤍
+                    {% endif %}
+                </span>
             </button>
         </form>
     </div>
@@ -57,6 +57,8 @@
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const formData = new FormData(this);
+                formData.append('id', this.dataset.entityId);
+                formData.append('type', this.dataset.entityType);
 
                 fetch(this.action, {
                     method: 'POST',
@@ -64,9 +66,14 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message);
-                    location.reload(); // Recharge la page pour afficher la mise à jour
-                });
+                    const likeIcon = this.querySelector('.like-icon');
+                    if (data.isLiked) {
+                        likeIcon.innerHTML = '❤️';  // Change to filled heart
+                    } else {
+                        likeIcon.innerHTML = '🤍';  // Change to empty heart
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
             });
         });
     </script>

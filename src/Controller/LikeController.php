@@ -74,7 +74,6 @@ class LikeController extends AbstractController
 
         if ($like) {
             $em->remove($like);
-            $message = 'Like supprimé avec succès.';
             $isLiked = false;
         } else {
             $like = new Like();
@@ -97,14 +96,12 @@ class LikeController extends AbstractController
 
             $like->setDateCreation(new \DateTime());
             $em->persist($like);
-            $message = 'Like ajouté avec succès.';
             $isLiked = true;
         }
 
         $em->flush();
         
         return $this->json([
-            'message' => $message,
             'isLiked' => $isLiked,
             'type' => $type
         ], Response::HTTP_OK);
