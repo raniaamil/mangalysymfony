@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Entity\Manga;
+use App\Entity\Like;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,23 +79,38 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(Post $post, EntityManagerInterface $em): Response
     {
         $mediaBase64 = null;
-
-        if ($post->getMedia()) {
+    
+        if ($post->getMedia()) { 
             $mediaPath = $this->getParameter('media_directory') . '/' . $post->getMedia();
-            if (file_exists($mediaPath)) {
-                $mediaBase64 = base64_encode(file_get_contents($mediaPath));
+            if (file_exists($mediaPath)) { 
+                $mediaBase64 = base64_encode(file_get_contents($mediaPath)); 
             }
         }
-
+    
+        $user = $this->getUser();
+        $likeRepo = $em->getRepository(Like::class);
+    
+        $isLiked = false;
+    
+        if ($user) {
+            $isLiked = $likeRepo->findOneBy([
+                'user' => $user,
+                'post' => $post
+            ]) ? true : false;
+        }
+    
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'media_base64' => $mediaBase64,
-            'commentaires' => $post->getCommentaires(), 
+            'media_base64' => $mediaBase64, 
+            'commentaires' => $post->getCommentaires(),
+            'isLiked' => $isLiked,
+            'type' => 'post'  // On passe le type pour le bouton like
         ]);
     }
+    
 
     #[Route('/{id<\d+>}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $em): Response

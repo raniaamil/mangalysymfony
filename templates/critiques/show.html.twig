@@ -16,6 +16,39 @@
     <h3>Date de publication</h3>
     <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p> 
 
+    <div>
+        <form method="post" action="{{ path('like_toggle') }}" class="like-form">
+            <input type="hidden" name="id" value="{{ critique.id }}">
+            <input type="hidden" name="type" value="critique">
+            <button type="submit" class="btn btn-like">
+                {% if isLiked %}
+                    ❤️ Unlike
+                {% else %}
+                    🤍 Like
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelectorAll('.like-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Recharge la page pour afficher la mise à jour
+                });
+            });
+        });
+    </script>
+
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <div class="mt-4">
             <a href="{{ path('critiques_edit', {id: critique.id}) }}" class="btn btn-primary">Modifier</a>

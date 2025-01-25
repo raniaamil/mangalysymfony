@@ -195,26 +195,23 @@ class Theorie
         return $this->likes;
     }
 
-    public function addLike(Like $like): static
+    public function addLike(User $user): self
     {
-        if (!$this->likes->contains($like)) {
-            $this->likes->add($like);
-            $like->setTheorie($this);
+        if (!$this->likes->contains($user)) {
+            $this->likes->add($user);
         }
-
         return $this;
     }
 
-    public function removeLike(Like $like): static
+    public function removeLike(User $user): self
     {
-        if ($this->likes->removeElement($like)) {
-            // set the owning side to null (unless already changed)
-            if ($like->getTheorie() === $this) {
-                $like->setTheorie(null);
-            }
-        }
-
+        $this->likes->removeElement($user);
         return $this;
+    }
+
+    public function isLikedByUser(User $user): bool
+    {
+        return $this->likes->contains($user);
     }
 
     public function getDateModification(): ?\DateTimeInterface

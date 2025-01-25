@@ -51,24 +51,10 @@ class Critiques
     #[ORM\Column]
     private ?bool $report = false;
 
-    /**
-     * @var Collection<int, Note>
-     */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'critique')]
-    private Collection $note;
-
-    /**
-     * @var Collection<int, Note>
-     */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'critiques')]
-    private Collection $notes;
-
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->note = new ArrayCollection();
-        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,36 +207,6 @@ class Critiques
     public function setReport(bool $report): self
     {
         $this->report = $report;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Note>
-     */
-    public function getNote(): Collection
-    {
-        return $this->note;
-    }
-
-    public function addNote(Note $note): static
-    {
-        if (!$this->note->contains($note)) {
-            $this->note->add($note);
-            $note->setCritique($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): static
-    {
-        if ($this->note->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getCritique() === $this) {
-                $note->setCritique(null);
-            }
-        }
 
         return $this;
     }

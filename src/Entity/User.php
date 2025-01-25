@@ -65,12 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-    /**
-     * @var Collection<int, Note>
-     */
-    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user')]
-    private Collection $note;
-
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
@@ -79,7 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->theorie = new ArrayCollection();
         $this->post = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->note = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -314,33 +307,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Note>
-     */
-    public function getNote(): Collection
-    {
-        return $this->note;
-    }
-
-    public function addNote(Note $note): static
-    {
-        if (!$this->note->contains($note)) {
-            $this->note->add($note);
-            $note->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNote(Note $note): static
-    {
-        if ($this->note->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getUser() === $this) {
-                $note->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 }

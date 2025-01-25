@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LikeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
@@ -29,6 +30,9 @@ class Like
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     private ?Critiques $critiques = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_creation = null;
 
     public function getId(): ?int
     {
@@ -91,6 +95,18 @@ class Like
     public function setCritiques(?Critiques $critiques): static
     {
         $this->critiques = $critiques;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->date_creation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $date_creation): static
+    {
+        $this->date_creation = $date_creation;
 
         return $this;
     }

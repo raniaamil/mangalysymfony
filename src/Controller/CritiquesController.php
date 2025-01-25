@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Critiques; // On importe la classe Critiques pour manipuler l'entité
 use App\Entity\Manga;
+use App\Entity\Like;
 use App\Repository\CritiquesRepository; // On importe le repository pour interagir avec la base de données
 use Doctrine\ORM\EntityManagerInterface; // Pour interagir avec la base de données
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des contrôleurs Symfony
@@ -67,14 +68,29 @@ class CritiquesController extends AbstractController
         return $this->render('critiques/new.html.twig'); // Affiche le formulaire de création
     }
 
-    #[Route('/{id<\d+>}', name: 'critiques_show', methods: ['GET'])]
-    public function show(Critiques $critique): Response
+    #[Route('/{id}', name: 'critiques_show', methods: ['GET'])]
+    public function show(Critiques $critique, EntityManagerInterface $em): Response
     {
+
+        $user = $this->getUser();
+        $likeRepo = $em->getRepository(Like::class);
+    
+        $isLiked = false;
+    
+        if ($user) {
+            $isLiked = $likeRepo->findOneBy([
+                'user' => $user,
+                'critiques' => $critique
+            ]) ? true : false;
+        }
+    
         return $this->render('critiques/show.html.twig', [
             'critique' => $critique,
-            'commentaires' => $critique->getCommentaires(), 
+            'commentaires' => $critique->getCommentaires(),
+            'isLiked' => $isLiked,
+            'type' => 'critique'  // On passe le type pour le bouton like
         ]);
-    }
+    }    
 
     #[Route('/{id}/edit', name: 'critiques_edit', methods: ['GET', 'POST'])] // Route pour modifier une critique existante
     public function edit(Critiques $critique, Request $request, EntityManagerInterface $em): Response

@@ -16,66 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/likes')]
 class LikeController extends AbstractController
 {
-    #[Route('/add', name: 'like_add', methods: ['POST'])]
-    public function addLike(Request $request, EntityManagerInterface $em): Response
-    {
-        $user = $this->getUser();
-
-        if (!$user) {
-            return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
-        }
-
-        $entityId = $request->request->get('id');
-        $entityType = $request->request->get('type'); // 'theorie', 'critique', 'post', 'commentaire'
-
-        $like = new Like();
-        $like->setUser($user);
-
-        switch ($entityType) {
-            case 'theorie':
-                $entity = $em->getRepository(Theorie::class)->find($entityId);
-                if (!$entity) {
-                    return $this->json(['message' => 'Théorie non trouvée.'], Response::HTTP_NOT_FOUND);
-                }
-                $like->setTheorie($entity);
-                break;
-
-            case 'critique':
-                $entity = $em->getRepository(Critiques::class)->find($entityId);
-                if (!$entity) {
-                    return $this->json(['message' => 'Critique non trouvée.'], Response::HTTP_NOT_FOUND);
-                }
-                $like->setCritique($entity);
-                break;
-
-            case 'post':
-                $entity = $em->getRepository(Post::class)->find($entityId);
-                if (!$entity) {
-                    return $this->json(['message' => 'Post non trouvé.'], Response::HTTP_NOT_FOUND);
-                }
-                $like->setPost($entity);
-                break;
-
-            case 'commentaire':
-                $entity = $em->getRepository(Commentaire::class)->find($entityId);
-                if (!$entity) {
-                    return $this->json(['message' => 'Commentaire non trouvé.'], Response::HTTP_NOT_FOUND);
-                }
-                $like->setCommentaire($entity);
-                break;
-
-            default:
-                return $this->json(['message' => 'Type non valide.'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $em->persist($like);
-        $em->flush();
-
-        return $this->json(['message' => 'Like ajouté avec succès !'], Response::HTTP_CREATED);
-    }
-
-    #[Route('/remove', name: 'like_remove', methods: ['POST'])]
-    public function removeLike(Request $request, EntityManagerInterface $em): Response
+    #[Route('/toggle', name: 'like_toggle', methods: ['POST'])]
+    public function toggleLike(Request $request, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
 
@@ -89,35 +31,82 @@ class LikeController extends AbstractController
         $likeRepo = $em->getRepository(Like::class);
 
         $like = null;
+        $entity = null;
+        $isLiked = false;
+        $type = '';
 
         switch ($entityType) {
             case 'theorie':
-                $like = $likeRepo->findOneBy(['theorie' => $entityId, 'user' => $user]);
+                $entity = $em->getRepository(Theorie::class)->find($entityId);
+                $like = $likeRepo->findOneBy(['theorie' => $entity, 'user' => $user]);
+                $isLiked = $like ? true : false;
+                $type = 'theorie';
                 break;
 
             case 'critique':
-                $like = $likeRepo->findOneBy(['critique' => $entityId, 'user' => $user]);
+                $entity = $em->getRepository(Critiques::class)->find($entityId);
+                $like = $likeRepo->findOneBy(['critiques' => $entity, 'user' => $user]);
+                $isLiked = $like ? true : false;
+                $type = 'critique';
                 break;
 
             case 'post':
-                $like = $likeRepo->findOneBy(['post' => $entityId, 'user' => $user]);
+                $entity = $em->getRepository(Post::class)->find($entityId);
+                $like = $likeRepo->findOneBy(['post' => $entity, 'user' => $user]);
+                $isLiked = $like ? true : false;
+                $type = 'post';
                 break;
 
             case 'commentaire':
-                $like = $likeRepo->findOneBy(['commentaire' => $entityId, 'user' => $user]);
+                $entity = $em->getRepository(Commentaire::class)->find($entityId);
+                $like = $likeRepo->findOneBy(['commentaire' => $entity, 'user' => $user]);
+                $isLiked = $like ? true : false;
+                $type = 'commentaire';
                 break;
 
             default:
                 return $this->json(['message' => 'Type non valide.'], Response::HTTP_BAD_REQUEST);
         }
 
-        if (!$like) {
-            return $this->json(['message' => 'Like non trouvé.'], Response::HTTP_NOT_FOUND);
+        if (!$entity) {
+            return $this->json(['message' => 'Entité non trouvée.'], Response::HTTP_NOT_FOUND);
         }
 
-        $em->remove($like);
-        $em->flush();
+        if ($like) {
+            $em->remove($like);
+            $message = 'Like supprimé avec succès.';
+            $isLiked = false;
+        } else {
+            $like = new Like();
+            $like->setUser($user);
 
-        return $this->json(['message' => 'Like supprimé avec succès.'], Response::HTTP_OK);
+            switch ($entityType) {
+                case 'theorie':
+                    $like->setTheorie($entity);
+                    break;
+                case 'critique':
+                    $like->setCritiques($entity);
+                    break;
+                case 'post':
+                    $like->setPost($entity);
+                    break;
+                case 'commentaire':
+                    $like->setCommentaire($entity);
+                    break;
+            }
+
+            $like->setDateCreation(new \DateTime());
+            $em->persist($like);
+            $message = 'Like ajouté avec succès.';
+            $isLiked = true;
+        }
+
+        $em->flush();
+        
+        return $this->json([
+            'message' => $message,
+            'isLiked' => $isLiked,
+            'type' => $type
+        ], Response::HTTP_OK);
     }
 }

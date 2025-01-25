@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Theorie;
 use App\Entity\Manga;
+use App\Entity\Like;
 use App\Repository\TheorieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -78,23 +79,37 @@ class TheorieController extends AbstractController
     }
 
     #[Route('/{id}', name: 'theorie_show', methods: ['GET'])]
-    public function show(Theorie $theorie): Response
+    public function show(Theorie $theorie, EntityManagerInterface $em): Response
     {
         $mediaBase64 = null;
-
+    
         if ($theorie->getMedia()) { 
             $mediaPath = $this->getParameter('media_directory') . '/' . $theorie->getMedia();
             if (file_exists($mediaPath)) { 
                 $mediaBase64 = base64_encode(file_get_contents($mediaPath)); 
             }
         }
-
+    
+        $user = $this->getUser();
+        $likeRepo = $em->getRepository(Like::class);
+    
+        $isLiked = false;
+    
+        if ($user) {
+            $isLiked = $likeRepo->findOneBy([
+                'user' => $user,
+                'theorie' => $theorie
+            ]) ? true : false;
+        }
+    
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
             'media_base64' => $mediaBase64, 
-            'commentaires' => $theorie->getCommentaires()
+            'commentaires' => $theorie->getCommentaires(),
+            'isLiked' => $isLiked,
+            'type' => 'theorie'  // On passe le type pour le bouton like
         ]);
-    }
+    }    
 
     #[Route('/{id<\d+>}/edit', name: 'theorie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Theorie $theorie, EntityManagerInterface $em): Response
