@@ -1,0 +1,346 @@
+/* ----------------------------- STYLES GÉNÉRAUX ----------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* ----------------------------- NAVBAR ----------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root{
+    --color-1: #7327BC;
+    --text-color: #ffffff;
+    --accent-color: #5e2ab4;
+    --button-hover-bg: #5e2ab4;
+}
+
+html{
+    font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+}
+
+nav{
+    height: 60px;
+    background-color: var(--color-1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px; 
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+}
+
+.links-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.1em;
+}
+
+nav a{
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    
+}
+
+nav a:hover{
+    background-color: var(--accent-color);
+    text-decoration: none;
+}
+
+nav .home-link{
+    margin-right: auto;
+}
+
+.logo {
+    height: 140px; 
+    padding-top: 26px;  
+}
+
+nav svg{
+    fill: var(--text-color);
+}
+
+#sidebar-active{
+    display: none;
+}
+.open-sidebar-button, .close-sidebar-button{
+    display: none;
+}
+
+/* Menu déroulant */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    background-color: var(--button-bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;   
+}
+
+.dropdown-checkbox {
+    display: none; /* Cacher le checkbox, il sert uniquement à l'interaction */
+}
+
+.dropdown-menu {
+    display: none; /* Caché par défaut */
+    position: absolute;
+    top: 100%; /* Positionné en dessous du bouton */
+    left: 0;
+    background-color: var(--color-1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 150px;
+    z-index: 10;
+    flex-direction: column;
+}
+
+.dropdown-menu a {
+    padding: 10px 15px;
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--button-hover-bg);
+}
+
+
+/* Quand le checkbox est coché, on affiche le menu */
+.dropdown-checkbox:checked + .dropdown-toggle + .dropdown-menu {
+    display: flex;
+}
+
+/* ---------------------------------------------------- NAVBAR RESPONSIVE ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+    nav {
+        position: relative; /* Pour positionner le menu latéral */
+    }
+
+    .links-container {
+        position: fixed; /* Fixer le menu à droite */
+        top: 0;
+        right: -100%; /* Cacher le menu hors de l'écran */
+        height: 100vh; /* Prendre toute la hauteur de l'écran */
+        width: 250px; /* Largeur du menu */
+        flex-direction: column; /* Empiler les éléments verticalement */
+        align-items: flex-start; /* Aligner à gauche */
+        background-color: var(--color-1); /* Conserver la couleur de fond */
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2); /* Ombre à gauche */
+        transition: right 0.3s ease; /* Animation pour l'ouverture/fermeture */
+        z-index: 1000; /* Assurer que le menu est au-dessus de tout */
+    }
+
+    #overlay {
+        display: none; /* Caché par défaut */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* Fond semi-transparent */
+        z-index: 999; /* En dessous du menu mais au-dessus du reste */
+    }
+
+    #sidebar-active:checked ~ .links-container {
+        right: 0; /* Afficher le menu */
+    }
+
+    #sidebar-active:checked ~ #overlay {
+        display: block; /* Afficher l'overlay */
+    }
+
+    .open-sidebar-button {
+        cursor: pointer;
+        z-index: 1001; /* Au-dessus du menu */
+        display: block;
+        
+    }
+
+    .close-sidebar-button {
+        display: block; /* Afficher le bouton de fermeture */
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        cursor: pointer;
+        z-index: 1001; /* Au-dessus du menu */
+    }
+
+    nav a {
+        padding: 15px 20px; /* Espacement des liens */
+        width: 100%; /* Prendre toute la largeur */
+        justify-content: flex-start; /* Aligner le texte à gauche */
+    }
+
+    .logo {
+        height: 50px; /* Réduire la taille du logo */
+        padding-top: 0; /* Supprimer le padding en haut */
+        margin-left: 0; /* Supprimer la marge à gauche */
+    }
+
+    .dropdown {
+        width: 100%; /* Prendre toute la largeur */
+    }
+
+    .dropdown-toggle {
+        width: 100%; /* Prendre toute la largeur */
+        justify-content: flex-start; /* Aligner le texte à gauche */
+        padding: 15px 20px; /* Augmenter le padding */
+    }
+
+    .dropdown-menu {
+        position: static; /* Position relative pour les petits écrans */
+        width: 100%; /* Prendre toute la largeur */
+        box-shadow: none; /* Supprimer l'ombre pour un look plus propre */
+    }
+}
+
+@media (max-width: 480px) {
+    .links-container {
+        width: 100%; /* Prendre toute la largeur sur les très petits écrans */
+    }
+
+    nav a {
+        padding: 10px 15px; /* Réduire le padding */
+    }
+
+    .logo {
+        height: 40px; /* Réduire encore la taille du logo */
+    }
+
+    .dropdown-toggle {
+        padding: 10px 15px; /* Réduire le padding */
+    }
+}
+
+/* ---------------------------------------------------- 5) FOOTER ---------------------------------------------------- */
+
+footer {
+    background-color: #f8f8f8;
+    color: #333;
+    padding: 40px 20px;
+    font-size: 1em;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.footer-top-border,
+.footer-bottom-border {
+    width: 100%;
+    height: 0.5px;
+    background-color: #7327BC;
+    margin-bottom: 20px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+    text-align: left;
+}
+
+.footer-column h3 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    color: #7327BC;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 10px;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: #7327BC;
+}
+
+/* ------------------------------- SÉPARATEURS ------------------------------- */
+.footer-separator {
+    width: 2px;
+    background-color: #ddd;
+    height: auto;
+    align-self: stretch;
+    margin: 0 15px;
+}
+
+/* ------------------------------- RÉSEAUX SOCIAUX ------------------------------- */
+.social-icons {
+    display: flex;
+    justify-content: left;
+    gap: 20px;
+}
+
+.social-icon {
+    font-size: 1.5em;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+}
+
+/* ------------------------------- COPYRIGHT ------------------------------- */
+.footer-bottom p {
+    margin-top: 20px;
+    font-size: 0.9em;
+    text-align: center;
+
+}
+
+/* ------------------------------- RESPONSIVE DESIGN ------------------------------- */
+@media (max-width: 768px) {
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-column {
+        min-width: 100%;
+    }
+
+    .footer-separator {
+        display: none;
+    }
+
+    .social-icons {
+        margin-bottom: 35px;
+    }
+}

@@ -1,8 +1,54 @@
-<h1>Hello!</h1>
-
-<p>Pour réinitialiser votre mot de passe, cliquez sur ce lien</p>
-
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
-
-<p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
-
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Réinitialisation du mot de passe</title>
+  <style>
+    /* Vous pouvez coller ici le contenu de email.css pour un rendu inline dans l'e-mail */
+    .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+    }
+    .email-container h1 {
+        font-size: 24px;
+        color: #5e2ab4;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .email-container p {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .email-container a {
+        display: block;
+        background-color: #7327BC;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 5px;
+        text-align: start;
+        margin-bottom: 20px;
+    }
+    .email-container a:hover {
+        background-color: #5e2ab4;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <h1>Hello!</h1>
+    <p>Pour réinitialiser votre mot de passe, cliquez sur ce lien :</p>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">
+      {{ url('app_reset_password', {token: resetToken.token}) }}
+    </a>
+    <p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+  </div>
+</body>
+</html>

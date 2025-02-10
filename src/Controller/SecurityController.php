@@ -1,7 +1,5 @@
 <?php
 
-// Déclaration du namespace. Cela permet de définir à quel "espace" ou "dossier" cette classe appartient
-// Ici, la classe SecurityController appartient à l'espace "App\Controller"
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // On importe la classe de base AbstractController de Symfony, qui permet d'utiliser les méthodes de base pour un contrôleur

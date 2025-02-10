@@ -1,0 +1,32 @@
+
+.reset-info-container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 161, 21, 0.5);
+    text-align: left;
+    width: 500px;
+    margin: 92px auto 60px; 
+}
+
+.reset-info-container p {
+    color: #333;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.reset-info-container a {
+    color: #7327BC;  
+    text-decoration: none;
+}
+
+.reset-info-container a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 762px) {
+    .reset-info-container {
+        width: 80%;
+    }
+}

@@ -1,0 +1,124 @@
+/* ----------------------------- FORMULAIRE CONNEXION -------------------*/
+
+.formregister {
+    display: flex;
+    justify-content: center;
+    margin-top: 90px;
+    margin-bottom: 60px;
+}
+
+.signup-container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 161, 21, 0.5);
+    text-align: center;
+    width: 410px;
+}
+
+.signup-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #5e2ab4;
+}
+
+.signup-form input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.password-container {
+    position: relative;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 30px;
+}
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+}
+
+.terms {
+    font-size: 0.9em;
+    margin: 10px 0;  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.terms input {
+    width: auto;
+    margin: 0;
+}
+
+.terms label {
+    padding-right: 80px;
+}
+
+.signup-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #7327BC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.signup-btn:hover {
+    background-color: #5e2ab4;
+}
+
+.or-divider {
+    margin: 15px 0;
+    font-size: 0.9em;
+    color: #777;
+}
+
+.social-icons i:hover {
+    color: #333;
+}
+
+.login-link {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.login-link a {
+    color: #4a90e2;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* ----------------------------- RESPONSIVE ----------------------------- */
+@media (max-width: 760px) {
+    .signup-container {
+        width: 95%;
+        margin-left: 20px;
+        margin-right: 25px;
+    }
+}
+
+@media (max-width: 450px) {
+    .signup-container {
+        width: 95%;
+    }
+}

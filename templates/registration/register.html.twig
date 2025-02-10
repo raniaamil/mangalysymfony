@@ -2,19 +2,29 @@
 
 {% block title %}Inscription{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
 {% block body %}
-    <h1>Register</h1>
+    <div class="formregister">
+        <div class="signup-container">
+            <h1 class="signup-title">Inscription</h1>
+            
+            {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm, {'attr': {'class': 'signup-form'}}) }}
+                
+                {{ form_row(registrationForm.username) }}
+                {{ form_row(registrationForm.email) }}
+                {{ form_row(registrationForm.plainPassword.first) }}
+                {{ form_row(registrationForm.plainPassword.second) }}
+                {{ form_row(registrationForm.agreeTerms) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                <button type="submit" class="signup-btn">S’inscrire</button>
+            {{ form_end(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <p class="login-link">Déjà un compte ? <a href="/login">Se connecter</a></p>
+        </div>
+    </div>
 {% endblock %}

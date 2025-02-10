@@ -1,19 +1,102 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-                {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon Site{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# On inclut ici les liens vers les CSS globaux #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block nav %}
+        <nav>
+            <input type="checkbox" id="sidebar-active">
+            <label for="sidebar-active" class="open-sidebar-button">
+                <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#5f6368">
+                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
+                </svg>
+            </label>
+            <label id="overlay" for="sidebar-active"></label>
+            <div class="links-container">
+                <label for="sidebar-active" class="close-sidebar-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#5f6368">
+                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                    </svg>
+                </label>
+                <a class="home-link" href="{{ path('app_home') }}">
+                    <img src="{{ asset('images/logo-mangaly-sans-fond.png') }}" alt="logo mangaly" class="logo">
+                </a>
+                <a href="/Critiques/page1.html">Critiques</a>
+                <a href="/Forums/page1.html">Forum</a>
+                <a href="/Théories/page1.html">Théories</a>
+                <a href="/Contact/contact.html">Contact</a>
+                
+                <div class="dropdown">
+                    <input type="checkbox" id="user-dropdown-checkbox" class="dropdown-checkbox">
+                    <label for="user-dropdown-checkbox" class="dropdown-toggle">
+                        <i class="fa-regular fa-user" style="color: #ffffff;"></i>▼
+                    </label>
+                    <div class="dropdown-menu">
+                        <a href="/Inscription/inscription.html">Inscription</a>
+                        <a href="/Connexion/connexion.html">Connexion</a>
+                    </div>
+                </div>
+                <a href="search.html"><i class="fa-solid fa-magnifying-glass" style="color: #ffffff;"></i></a>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block body %}{% endblock %}
+
+    {% block footer %}
+        <footer>
+            <div class="footer-top-border"></div> 
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Navigation rapide</h3>
+                    <ul>
+                        <li><a href="/Home/home.html">Accueil</a></li>
+                        <li><a href="/Critiques/page1.html">Critiques</a></li>
+                        <li><a href="/Forums/page1.html">Forum</a></li>
+                        <li><a href="/Théories/page1.html">Théories</a></li>
+                        <li><a href="/Inscription/inscription.html">Inscription / Connexion</a></li>
+                    </ul>
+                </div>
+                <div class="footer-separator"></div> 
+                <div class="footer-column">
+                    <h3>À propos</h3>
+                    <ul>
+                        <li><a href="/Apropos/politiquedeconfidentialite.html">Politique de confidentialité</a></li>
+                        <li><a href="/Apropos/cgu.html">Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-separator"></div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li><a href="/Contact/contact.html">Formulaire de contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-separator"></div> 
+                <div class="footer-column">
+                    <h3>Réseaux sociaux</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fa-brands fa-facebook-f" style="color: #6049a7;"></i></a>
+                        <a href="#" class="social-icon"><i class="fa-brands fa-twitter" style="color: #6049a7;"></i></a>
+                        <a href="#" class="social-icon"><i class="fa-brands fa-instagram" style="color: #6049a7;"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom-border"></div> 
+            <div class="footer-bottom">
+                <p>2024 © Mangaly. Tous droits réservés.</p>
+            </div> 
+        </footer>
+    {% endblock %}
+
+    {% block javascripts %}{% endblock %}
+</body>
 </html>
