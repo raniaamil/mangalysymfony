@@ -78,7 +78,7 @@ class TheorieController extends AbstractController
         return $this->render('theorie/new.html.twig');
     }
 
-    #[Route('/{id}', name: 'theorie_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'theorie_show', methods: ['GET'])]
     public function show(Theorie $theorie, EntityManagerInterface $em): Response
     {
         $mediaBase64 = null;
@@ -201,5 +201,20 @@ class TheorieController extends AbstractController
     
         return $this->redirectToRoute('theorie_show', ['id' => $theorie->getId()]);
     }
+
+    #[Route('/mestheories', name: 'mes_theories', methods: ['GET'])]
+    public function myTheories(TheorieRepository $theorieRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+    
+        $theories = $theorieRepository->findBy(['user' => $user]);
+    
+        return $this->render('theorie/mestheories.html.twig', [
+            'theories' => $theories,
+        ]);
+    }    
     
 }

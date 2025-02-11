@@ -1,0 +1,58 @@
+/* ----------------------------- SECTIONS ----------------------------- */
+h1 {
+    color: #7327BC;
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+h2 {
+    color: rgb(228, 123, 85);
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    font-size: 1.4em;
+    counter-reset: none;
+
+}
+
+p, ul, ol {
+    font-size: 1em;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+ul, ol {
+    padding-left: 30px;
+    padding-right: 20px;
+}
+
+a {
+    color: #7327BC;
+    text-decoration: none;
+
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ----------------------------- RESPONSIVE ----------------------------- */
+@media (max-width: 768px) {
+    .privacy-container {
+        width: 90%;
+        padding: 15px;
+    }
+    
+    h1 {
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    p, ul, ol {
+        font-size: 0.95em;
+    }
+}

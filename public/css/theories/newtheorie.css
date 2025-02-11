@@ -1,0 +1,106 @@
+/* ----------------------------- AJOUTER UNE THEORIE ----------------------------- */
+
+.manga-post-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 90px;
+}
+
+.post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.editor-toolbar {
+    gap: 5px;
+    background: #f1f1f1;
+    padding: 7px;
+    border-radius: 5px;
+}
+
+.editor-btn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;  
+}
+
+textarea {
+    resize: vertical;
+    height: 250px;
+}
+
+/* --- BOUTONS --- */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.submit-btn, .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn {
+    background-color: #7327BC;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #5e2ab4;
+}
+
+.cancel-btn {
+    background-color: #ddd;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #bbb;
+}
+
+@media (max-width: 76px) {
+    .manga-post-container {
+        width: 90%;
+        padding: 15px;
+    }
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 750px) {
+    .manga-post-container {
+        width: 90%;
+        padding: 15px;
+    }
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -44,34 +44,4 @@
     </form>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const mangaInput = document.getElementById('manga');
-        const suggestionsBox = document.getElementById('manga-suggestions');
-
-        mangaInput.addEventListener('input', function () {
-            const query = this.value;
-
-            if (query.length > 1) {
-                fetch('/manga/suggestions?q=' + query)
-                    .then(response => response.json())
-                    .then(data => {
-                        suggestionsBox.innerHTML = '';
-                        data.forEach(manga => {
-                            const item = document.createElement('div');
-                            item.classList.add('list-group-item');
-                            item.textContent = manga.titre;
-                            item.addEventListener('click', function () {
-                                mangaInput.value = manga.titre;
-                                suggestionsBox.innerHTML = '';
-                            });
-                            suggestionsBox.appendChild(item);
-                        });
-                    });
-            } else {
-                suggestionsBox.innerHTML = '';
-            }
-        });
-    });
-</script>
 {% endblock %}

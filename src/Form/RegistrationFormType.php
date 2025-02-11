@@ -61,7 +61,7 @@ class RegistrationFormType extends AbstractType
             // Champ "agreeTerms" avec une étiquette HTML pour intégrer un lien vers les CGU
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
-                'label' => 'J\'accepte les <a href="/Apropos/cgu.html">Conditions Générales d\'Utilisation</a>',
+                'label' => 'J\'accepte les <a href="/conditions-generales">Conditions Générales d\'Utilisation</a>',
                 'label_html' => true, // Permet d'interpréter le HTML dans le label (Symfony 5.2+)
                 'constraints' => [
                     new IsTrue([

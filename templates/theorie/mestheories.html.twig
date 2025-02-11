@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Théories{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mes Théories</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>ID</th>
+                {% endif %}
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Manga</th>
+                <th>Genre</th>
+                <th>Par</th>
+                <th>Date de publication</th>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for theorie in theories %}
+                <tr>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>{{ theorie.id }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ path('theorie_show', {id: theorie.id}) }}">{{ theorie.titre }}</a>
+                    </td>
+                    <td>{{ theorie.contenu|slice(0, 50) }}...</td>
+                    <td>{{ theorie.manga.titre }}</td>
+                    <td>{{ theorie.genre }}</td>
+                    <td>{{ theorie.user.username }}</td>
+                    <td>{{ theorie.datePublication|date('d/m/Y H:i') }}</td>
+                    {% if app.user and app.user.id == theorie.user.id %}
+                        <td>
+                            <a href="{{ path('theorie_edit', {id: theorie.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                            <form action="{{ path('theorie_delete', {id: theorie.id}) }}" method="post" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ theorie.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette théorie ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{% if is_granted('IS_AUTHENTICATED_FULLY') %}8{% else %}7{% endif %}" class="text-center">Aucune théorie trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="mb-3">
+        <a href="{{ path('theorie_new') }}" class="btn btn-success">Ajouter une théorie</a>
+    </div>
+</div>
+{% endblock %}
