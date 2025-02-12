@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Critiques{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mes Critiques</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Manga</th>
+                <th>Genre</th>
+                <th>Date de publication</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for critique in critiques %}
+                <tr>
+                    <td><a href="{{ path('critiques_show', {id: critique.id}) }}">{{ critique.titre }}</a></td>
+                    <td>{{ critique.contenu|slice(0, 50) }}...</td>
+                    <td>{{ critique.manga.titre }}</td>
+                    <td>{{ critique.genre }}</td>
+                    <td>{{ critique.datePublication|date('d/m/Y H:i') }}</td>
+                    {% if app.user and app.user.id == critique.user.id %}
+                        <td class="actions">
+                            <a href="{{ path('critiques_edit', {id: critique.id}) }}">Modifier</a>
+                            <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    {% elseif is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{% if is_granted('IS_AUTHENTICATED_FULLY') %}8{% else %}7{% endif %}" class="text-center">Aucune critique trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

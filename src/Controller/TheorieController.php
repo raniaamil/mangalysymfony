@@ -159,7 +159,7 @@ class TheorieController extends AbstractController
 
             $em->flush();
 
-            return $this->redirectToRoute('theorie_index');
+            return $this->redirectToRoute('mes_theories');
         }
 
         return $this->render('theorie/edit.html.twig', [
@@ -178,7 +178,7 @@ class TheorieController extends AbstractController
             $em->flush();
         }
 
-        return $this->redirectToRoute('theorie_index');
+        return $this->redirectToRoute('mes_theories');
     }
 
     #[Route('/{id}/report', name: 'theorie_report', methods: ['POST'])]

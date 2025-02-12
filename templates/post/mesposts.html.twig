@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Posts{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mes Posts</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Manga</th>
+                <th>Genre</th>
+                <th>Date de publication</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>
+                        <a href="{{ path('post_show', {id: post.id}) }}">{{ post.titre }}</a>
+                    </td>
+                    <td>{{ post.contenu|slice(0, 50) }}...</td>
+                    <td>{{ post.manga.titre }}</td>
+                    <td>{{ post.genre }}</td>
+                    <td>{{ post.datePublication|date('d/m/Y H:i') }}</td>
+                    {% if app.user and app.user.id == post.user.id %}
+                        <td>
+                            <a href="{{ path('post_edit', {id: post.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                            <form action="{{ path('post_delete', {id: post.id}) }}" method="post" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{% if is_granted('IS_AUTHENTICATED_FULLY') %}8{% else %}7{% endif %}" class="text-center">Aucun post trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

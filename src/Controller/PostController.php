@@ -78,7 +78,7 @@ class PostController extends AbstractController
         return $this->render('post/new.html.twig');
     }
 
-    #[Route('/{id}', name: 'post_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'post_show', methods: ['GET'])]
     public function show(Post $post, EntityManagerInterface $em): Response
     {
         $mediaBase64 = null;
@@ -157,7 +157,7 @@ class PostController extends AbstractController
 
             $em->flush();
 
-            return $this->redirectToRoute('post_index');
+            return $this->redirectToRoute('mes_posts');
         }
 
         return $this->render('post/edit.html.twig', [
@@ -178,7 +178,7 @@ class PostController extends AbstractController
             $this->addFlash('error', 'Erreur lors de la suppression.');
         }        
 
-        return $this->redirectToRoute('post_index');
+        return $this->redirectToRoute('mes_posts');
     }
 
     #[Route('/{id}/report', name: 'post_report', methods: ['POST'])]
@@ -202,5 +202,22 @@ class PostController extends AbstractController
         return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
     }
     
+    #[Route('/mesposts', name: 'mes_posts', methods: ['GET'])]
+    public function myPosts(PostRepository $postRepository): Response
+    {
+        // Récupère l'utilisateur connecté
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+        
+        // Récupère uniquement les posts dont l'auteur est l'utilisateur connecté
+        $posts = $postRepository->findBy(['user' => $user]);
+    
+        // Vous pouvez utiliser un template dédié ou réutiliser celui d'index en l'adaptant
+        return $this->render('post/mesposts.html.twig', [
+            'posts' => $posts,
+        ]);
+    }    
     
 }

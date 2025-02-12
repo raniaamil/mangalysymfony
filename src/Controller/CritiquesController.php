@@ -68,7 +68,7 @@ class CritiquesController extends AbstractController
         return $this->render('critiques/new.html.twig'); // Affiche le formulaire de création
     }
 
-    #[Route('/{id}', name: 'critiques_show', methods: ['GET'])]
+    #[Route('/{id<\d+>}', name: 'critiques_show', methods: ['GET'])]
     public function show(Critiques $critiques, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
@@ -103,7 +103,7 @@ class CritiquesController extends AbstractController
         ]);
     }    
 
-    #[Route('/{id}/edit', name: 'critiques_edit', methods: ['GET', 'POST'])] // Route pour modifier une critique existante
+    #[Route('/{id<\d+>}/edit', name: 'critiques_edit', methods: ['GET', 'POST'])] // Route pour modifier une critique existante
     public function edit(Critiques $critique, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY'); 
@@ -167,5 +167,21 @@ class CritiquesController extends AbstractController
     
         return $this->redirectToRoute('critiques_show', ['id' => $critique->getId()]);
     }
+
+    #[Route('/mescritiques', name: 'mes_critiques', methods: ['GET'])]
+    public function mesCritiques(CritiquesRepository $critiquesRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+    
+        $critiques = $critiquesRepository->findBy(['user' => $user]);
+    
+        return $this->render('critiques/mescritiques.html.twig', [
+            'critiques' => $critiques,
+        ]);
+    }
+    
     
 }
