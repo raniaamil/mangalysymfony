@@ -16,6 +16,19 @@ class NoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Note::class);
     }
 
+    public function findAverageForManga(Manga $manga): ?float
+    {
+        $qb = $this->createQueryBuilder('n')
+            ->select('AVG(n.valeur) as avgNote')
+            ->where('n.manga = :manga')
+            ->setParameter('manga', $manga)
+            ->getQuery();
+    
+        $result = $qb->getSingleScalarResult();
+    
+        return $result !== null ? (float)$result : null;
+    }
+    
     //    /**
     //     * @return Note[] Returns an array of Note objects
     //     */

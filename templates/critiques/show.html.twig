@@ -4,20 +4,20 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>{{ critiques.titre }}</h1>
-    <p>{{ critiques.contenu }}</p>
+    <h1>{{ critique.titre }}</h1>
+    <p>{{ critique.contenu }}</p>
 
     <h3>Manga</h3>
-    <p>{{ critiques.manga.titre }}</p>
+    <p>{{ critique.manga.titre }}</p>
 
     <h3>Genre</h3>
-    <p>{{ critiques.manga.genre.nom }}</p>
+    <p>{{ critique.manga.genre.nom }}</p>
 
     <h3>Date de publication</h3>
-    <p>{{ critiques.datePublication|date('d/m/Y H:i') }}</p>
+    <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p>
 
     <div>
-        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critiques.id }}" data-entity-type="critiques">
+        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critique.id }}" data-entity-type="critiques">
             <button type="submit" class="btn btn-like">
                 <span class="like-icon">
                     {% if isLiked %}
@@ -30,89 +30,30 @@
         </form>
     </div>
 
-    <h2>Commentaires</h2>
-    <ul class="list-group">
-        {% for commentaire in critiques.commentaires %}
-            <li class="list-group-item">
-                <strong>{{ commentaire.user.username }}</strong> le {{ commentaire.datePublication|date('d/m/Y H:i') }} :
-                <p>{{ commentaire.contenu }}</p>
+    <script>
+        document.querySelectorAll('.like-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                formData.append('id', this.dataset.entityId);
+                formData.append('type', this.dataset.entityType);
 
-                <!-- Bouton Like pour les commentaires -->
-                <div>
-                    <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ commentaire.id }}" data-entity-type="commentaire">
-                        <button type="submit" class="btn btn-like">
-                            <span class="like-icon">
-                                {% if commentaireLikes[commentaire.id] is defined and commentaireLikes[commentaire.id] %}
-                                    ❤️
-                                {% else %}
-                                    🤍
-                                {% endif %}
-                            </span>
-                        </button>
-                    </form>
-                </div>
-
-                {% if app.user and app.user.id == commentaire.user.id %}
-                    <div class="mt-2">
-                        <a href="{{ path('commentaire_edit', {id: commentaire.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                        <form method="post" action="{{ path('commentaire_delete', {id: commentaire.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                        </form>
-                    </div>
-                {% endif %}
-
-                <form method="post" action="{{ path('commentaire_report', {id: commentaire.id}) }}" style="display: inline;">
-                    <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
-                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce commentaire ?');">
-                        Signaler
-                    </button>
-                </form>
-            </li>
-        {% else %}
-            <li class="list-group-item text-center">Aucun commentaire pour cette critique.</li>
-        {% endfor %}
-    </ul>
-
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <div class="mt-4">
-            <h3>Ajouter un commentaire</h3>
-            <form method="post" action="{{ path('commentaire_new', {entity: 'critiques', id: critiques.id}) }}">
-                <div class="form-group">
-                    <label for="contenu">Votre commentaire</label>
-                    <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-success mt-2">Publier</button>
-            </form>
-        </div>
-    {% else %}
-        <p class="mt-3">Veuillez <a href="{{ path('app_login') }}">vous connecter</a> pour ajouter un commentaire.</p>
-    {% endif %}
-</div>
-
-<script>
-    document.querySelectorAll('.like-form').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('id', this.dataset.entityId);
-            formData.append('type', this.dataset.entityType);
-
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                const likeIcon = this.querySelector('.like-icon');
-                if (data.isLiked) {
-                    likeIcon.innerHTML = '❤️';  // Change to filled heart
-                } else {
-                    likeIcon.innerHTML = '🤍';  // Change to empty heart
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const likeIcon = this.querySelector('.like-icon');
+                    if (data.isLiked) {
+                        likeIcon.innerHTML = '❤️';
+                    } else {
+                        likeIcon.innerHTML = '🤍';
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+            });
         });
-    });
-</script>
+    </script>
+</div>
 {% endblock %}

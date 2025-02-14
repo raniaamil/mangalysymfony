@@ -24,10 +24,6 @@ class Commentaire
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Critiques $critiques = null;
-
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
-    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
@@ -78,18 +74,6 @@ class Commentaire
     public function setDatePublication(\DateTimeInterface $date_publication): static
     {
         $this->date_publication = $date_publication;
-
-        return $this;
-    }
-
-    public function getCritiques(): ?Critiques
-    {
-        return $this->critiques;
-    }
-
-    public function setCritiques(?Critiques $critiques): static
-    {
-        $this->critiques = $critiques;
 
         return $this;
     }

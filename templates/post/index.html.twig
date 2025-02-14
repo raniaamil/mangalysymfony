@@ -4,23 +4,6 @@
 <div class="container mt-5">
     <h1 class="mb-4">Liste des posts</h1>
 
-    <!-- Filtre par catégorie -->
-    <form method="get" action="{{ path('post_index') }}" class="mb-4">
-        <div class="form-group">
-            <label for="filter_genre">Filtrer par genre</label>
-            <select id="filter_genre" name="genre" class="form-control">
-                <option value="">-- Toutes les catégories --</option>
-                <option value="Shōnen" {% if app.request.get('genre') == 'Shōnen' %}selected{% endif %}>Shōnen</option>
-                <option value="Shōjo" {% if app.request.get('genre') == 'Shōjo' %}selected{% endif %}>Shōjo</option>
-                <option value="Seinen" {% if app.request.get('genre') == 'Seinen' %}selected{% endif %}>Seinen</option>
-                <option value="Josei" {% if app.request.get('genre') == 'Josei' %}selected{% endif %}>Josei</option>
-                <option value="Kodomo" {% if app.request.get('genre') == 'Kodomo' %}selected{% endif %}>Kodomo</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Appliquer</button>
-        <a href="{{ path('post_index') }}" class="btn btn-secondary mt-3">Réinitialiser</a>
-    </form>
-
     <table class="table table-striped">
         <thead>
             <tr>

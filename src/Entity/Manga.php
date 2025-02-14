@@ -61,6 +61,12 @@ class Manga
     #[ORM\OneToMany(targetEntity: Critiques::class, mappedBy: 'manga')]
     private Collection $critique;
 
+    /**
+     * @var Collection<int, Note>
+     */
+    #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'manga')]
+    private Collection $notes;
+
     public function __toString(): string
     {
         return $this->titre; // Retourne le titre du manga lorsqu'il est utilisé comme une chaîne
@@ -71,6 +77,7 @@ class Manga
         $this->theorie = new ArrayCollection();
         $this->post = new ArrayCollection();
         $this->critique = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -234,6 +241,36 @@ class Manga
             // set the owning side to null (unless already changed)
             if ($critique->getManga() === $this) {
                 $critique->setManga(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): static
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setManga($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): static
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getManga() === $this) {
+                $note->setManga(null);
             }
         }
 

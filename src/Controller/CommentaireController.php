@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Commentaire;
 use App\Entity\Post;
-use App\Entity\Critiques;
 use App\Entity\Theorie;
 use App\Entity\Like;
 use App\Repository\CommentaireRepository;
@@ -28,7 +27,7 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    // 2. Ajouter un nouveau commentaire pour 'Critiques','Theorie' & 'Post'
+    // 2. Ajouter un nouveau commentaire pour 'Theorie' & 'Post'
     #[Route('/new/{entity}/{id}', name: 'commentaire_new', methods: ['POST'])]
     public function new(
         string $entity,
@@ -40,7 +39,6 @@ class CommentaireController extends AbstractController
 
         $targetEntity = match ($entity) {
             'theorie' => Theorie::class,
-            'critiques' => Critiques::class,
             'post' => Post::class,
             default => null,
         };
@@ -66,7 +64,6 @@ class CommentaireController extends AbstractController
 
         match ($entity) {
             'theorie' => $commentaire->setTheorie($target),
-            'critiques' => $commentaire->setCritiques($target),
             'post' => $commentaire->setPost($target),
         };
 
@@ -89,12 +86,8 @@ class CommentaireController extends AbstractController
             $commentaire->setContenu($request->request->get('contenu'));
             $em->flush();
 
-            $entity = $commentaire->getTheorie() ? 'theorie' :
-                      ($commentaire->getCritiques() ? 'critiques' : 'post');      
-
-            $targetId = $commentaire->getTheorie()?->getId() ??
-                        $commentaire->getCritiques()?->getId() ??
-                        $commentaire->getPost()?->getId();
+            $entity = $commentaire->getTheorie() ? 'theorie' : 'post';      
+            $targetId = $commentaire->getTheorie()?->getId() ?? $commentaire->getPost()?->getId();
 
             return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
         }
@@ -114,13 +107,9 @@ class CommentaireController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
-            $entity = $commentaire->getTheorie() ? 'theorie' :
-                      ($commentaire->getCritiques() ? 'critiques' : 'post');
+            $entity = $commentaire->getTheorie() ? 'theorie' : 'post';
+            $targetId = $commentaire->getTheorie()?->getId() ?? $commentaire->getPost()?->getId();
 
-            $targetId = $commentaire->getTheorie()?->getId() ??
-                        $commentaire->getPost()?->getId() ??
-                        $commentaire->getCritiques()?->getId();
-               
             $em->remove($commentaire);
             $em->flush();
 
@@ -139,16 +128,15 @@ class CommentaireController extends AbstractController
         if ($this->isCsrfTokenValid('report' . $commentaire->getId(), $request->request->get('_token'))) {
             $commentaire->setReport(true);
             $em->flush();
-    
+
             $this->addFlash('success', 'Le commentaire a été signalé.');
         } else {
             $this->addFlash('error', 'Erreur lors du signalement.');
         }
-    
-        $parentEntity = $commentaire->getTheorie() ?: $commentaire->getPost() ?: $commentaire->getCritiques();
-        $redirectRoute = $parentEntity instanceof Theorie ? 'theorie_show' :
-                         ($parentEntity instanceof Post ? 'post_show' : 'critiques_show');
-        
+
+        $parentEntity = $commentaire->getTheorie() ?: $commentaire->getPost();
+        $redirectRoute = $parentEntity instanceof Theorie ? 'theorie_show' : 'post_show';
+
         return $this->redirectToRoute($redirectRoute, ['id' => $parentEntity->getId()]);
     }
 
@@ -180,4 +168,3 @@ class CommentaireController extends AbstractController
         return $this->json(['isLiked' => $isLiked]);
     }
 }
-

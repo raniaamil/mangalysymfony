@@ -1,47 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<div class="container mt-5">
-    <h1>Modifier la théorie</h1>
-    <form method="post" enctype="multipart/form-data" class="mt-4">
-        <div class="form-group">
-            <label for="titre">Titre</label>
-            <input type="text" id="titre" name="titre" class="form-control" value="{{ theorie.titre }}" required>
-        </div>
-        <div class="form-group mt-3">
-            <label for="contenu">Contenu</label>
-            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ theorie.contenu }}</textarea>
-        </div>
-        <div class="form-group mt-3">
-            <label for="manga">Manga</label>
-            <input type="text" id="manga" name="manga" class="form-control" value="{{ theorie.manga.titre }}" required autocomplete="off" 
-                   data-autocomplete-url="{{ path('manga_suggestions') }}">
-        </div>
-        <div class="form-group mt-3">
-            <label for="media">Média (image, vidéo ou fichier audio)</label>
-            <input type="file" id="media" name="media" class="form-control" accept="image/*,video/*,audio/*">
-        </div>
-        {% if theorie.media %}
-            <div class="mt-3">
-                <p>Type : {{ theorie.mediaType }}</p>
-                {% if theorie.mediaType == 'image' %}
-                    <img src="{{ asset('uploads/' ~ theorie.media) }}" alt="Media" class="img-fluid">
-                {% elseif theorie.mediaType == 'video' %}
-                    <video controls class="w-100">
-                        <source src="{{ asset('uploads/' ~ theorie.media) }}" type="video/mp4">
-                    </video>
-                {% elseif theorie.mediaType == 'audio' %}
-                    <audio controls>
-                        <source src="{{ asset('uploads/' ~ theorie.media) }}" type="audio/mpeg">
-                    </audio>
-                {% endif %}
-            </div>
-        {% else %}
-            <p>Aucun média associé</p>
-        {% endif %}
-        <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-        <a href="{{ path('theorie_index') }}" class="btn btn-secondary mt-3">Retour</a>
-    </form>
-</div>
+{% block title %}Modifier la théorie{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/theories/newtheorie.css') }}">
+{% endblock %}
+
+{% block body %}
+<main class="manga-post-container">
+    <form method="post" enctype="multipart/form-data" class="post-form">
+        <label for="post-title">Titre de la théorie :</label>
+        <input type="text" id="post-title" name="titre" placeholder="Ex : Les gars vous êtes plutôt team Sakura ou team Hinata ?" required value="{{ theorie.titre }}">
+        
+        <label for="post-manga">Manga :</label>
+        <input type="text" id="post-manga" name="manga" placeholder="Ex : Naruto" required value="{{ theorie.manga.titre }}">
+        
+        <label for="post-text">Votre texte :</label>
+        <div class="editor-toolbar">
+            <button type="button" class="editor-btn"><b>B</b></button>
+            <button type="button" class="editor-btn"><i>I</i></button>
+            <button type="button" class="editor-btn"><u>U</u></button>
+            <button type="button" class="editor-btn"><s>S</s></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ul"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ol"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-quote-left"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-code"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-eye-slash"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-smile"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-image"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-play"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-question"></i></button>
+        </div>
+        <textarea id="post-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required>{{ theorie.contenu }}</textarea>
+        
+        <div class="form-buttons">
+            <button type="submit" class="submit-btn">Enregistrer</button>
+            <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
+        </div>
+    </form>
+</main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/theorie/newtheorie.js') }}"></script>
 {% endblock %}

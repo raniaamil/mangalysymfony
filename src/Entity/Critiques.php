@@ -22,14 +22,8 @@ class Critiques
     #[ORM\Column(type: Types::TEXT)]
     private ?string $contenu = null;
 
-    /**
-     * @var Collection<int, Commentaire>
-     */
-    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'critiques')]
-    private Collection $commentaires;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'critiques')]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")] //Cascade supprime automatiqueement les critiques associées si un utilsateur est supprimé.//
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -51,9 +45,11 @@ class Critiques
     #[ORM\Column]
     private ?bool $report = false;
 
+    #[ORM\OneToOne(mappedBy: 'critiques', cascade: ['persist', 'remove'])]
+    private ?Note $note = null;
+
     public function __construct()
     {
-        $this->commentaires = new ArrayCollection();
         $this->likes = new ArrayCollection();
     }
 
@@ -70,7 +66,6 @@ class Critiques
     public function setTitre(string $titre): static
     {
         $this->titre = $titre;
-
         return $this;
     }
 
@@ -82,37 +77,6 @@ class Critiques
     public function setContenu(string $contenu): static
     {
         $this->contenu = $contenu;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commentaire>
-     */
-    public function getCommentaires(): Collection
-    {
-        return $this->commentaires;
-    }
-
-    public function addCommentaire(Commentaire $commentaire): static
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires->add($commentaire);
-            $commentaire->setCritiques($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommentaire(Commentaire $commentaire): static
-    {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getCritiques() === $this) {
-                $commentaire->setCritiques(null);
-            }
-        }
-
         return $this;
     }
 
@@ -124,7 +88,6 @@ class Critiques
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -136,7 +99,6 @@ class Critiques
     public function setDatePublication(\DateTimeInterface $date_publication): static
     {
         $this->date_publication = $date_publication;
-
         return $this;
     }
 
@@ -148,14 +110,13 @@ class Critiques
     public function setManga(?Manga $manga): static
     {
         $this->manga = $manga;
-
         return $this;
     }
 
     public function getGenre(): ?string
     {
         return $this->manga ? $this->manga->getGenre()->getNom() : null;
-    }  
+    }
 
     /**
      * @return Collection<int, Like>
@@ -171,19 +132,16 @@ class Critiques
             $this->likes->add($like);
             $like->setCritiques($this);
         }
-
         return $this;
     }
 
     public function removeLike(Like $like): static
     {
         if ($this->likes->removeElement($like)) {
-            // set the owning side to null (unless already changed)
             if ($like->getCritiques() === $this) {
                 $like->setCritiques(null);
             }
         }
-
         return $this;
     }
 
@@ -195,7 +153,6 @@ class Critiques
     public function setDateModification(?\DateTimeInterface $date_modification): self
     {
         $this->date_modification = $date_modification;
-
         return $this;
     }
 
@@ -207,8 +164,23 @@ class Critiques
     public function setReport(bool $report): self
     {
         $this->report = $report;
-
         return $this;
     }
 
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): static
+    {
+        if ($note === null && $this->note !== null) {
+            $this->note->setCritiques(null);
+        }
+        if ($note !== null && $note->getCritiques() !== $this) {
+            $note->setCritiques($this);
+        }
+        $this->note = $note;
+        return $this;
+    }
 }

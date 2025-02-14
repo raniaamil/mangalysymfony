@@ -1,55 +1,34 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Modifier la Critique{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/critique/newcritique.css') }}">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <h1>Modifier la critique</h1>
-    <form method="post" class="mt-4">
-        <div class="form-group">
-            <label for="titre">Titre</label>
-            <input type="text" id="titre" name="titre" class="form-control" value="{{ critique.titre }}" required>
+<div class="manga-review-container">
+    <form method="post" class="review-form">
+        <label for="review-title">Titre de la critique :</label>
+        <input type="text" id="review-title" name="review-title" placeholder="Ex : Une aventure époustouflante..." value="{{ critique.titre }}" required>
+        
+        <label for="review-manga">Manga :</label>
+        <input type="text" id="review-manga" name="review-manga" placeholder="Ex : Naruto" value="{{ critique.manga.titre }}" required>
+        
+        <label for="review-rating">Note (entre 1 et 5) :</label>
+        <input type="number" id="review-rating" name="review-rating" step="0.1" min="1" max="5" placeholder="Ex : 4.5" value="{{ critique.note }}" required>
+        
+        <label for="review-text">Votre critique :</label>
+        <textarea id="review-text" name="review-text" rows="6" placeholder="Exprimez votre avis ici..." required>{{ critique.contenu }}</textarea>
+        
+        <div class="form-buttons">
+            <button type="submit" class="submit-btn">Enregistrer</button>
+            <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
         </div>
-        <div class="form-group mt-3">
-            <label for="contenu">Contenu</label>
-            <textarea id="contenu" name="contenu" class="form-control" rows="5" required>{{ critique.contenu }}</textarea>
-        </div>
-        <div class="form-group mt-3">
-            <label for="manga">Manga</label>
-            <input type="text" id="manga" name="manga" class="form-control" value="{{ critique.manga.titre }}" required autocomplete="off" 
-                   data-autocomplete-url="{{ path('manga_suggestions') }}">
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-        <a href="{{ path('critiques_index') }}" class="btn btn-secondary mt-3">Retour</a>
     </form>
 </div>
+{% endblock %}
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const mangaInput = document.getElementById('manga');
-        const suggestionsBox = document.getElementById('manga-suggestions');
-
-        mangaInput.addEventListener('input', function () {
-            const query = this.value;
-
-            if (query.length > 1) {
-                fetch('/manga/suggestions?q=' + query)
-                    .then(response => response.json())
-                    .then(data => {
-                        suggestionsBox.innerHTML = '';
-                        data.forEach(manga => {
-                            const item = document.createElement('div');
-                            item.classList.add('list-group-item');
-                            item.textContent = manga.titre;
-                            item.addEventListener('click', function () {
-                                mangaInput.value = manga.titre;
-                                suggestionsBox.innerHTML = '';
-                            });
-                            suggestionsBox.appendChild(item);
-                        });
-                    });
-            } else {
-                suggestionsBox.innerHTML = '';
-            }
-        });
-    });
-</script>
+{% block javascripts %}
+    <script defer src="{{ asset('js/critique/newcritique.js') }}"></script>
 {% endblock %}
