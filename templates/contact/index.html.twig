@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="contact-container">
+
+    <div class="contact-info">
+        <p class="title">NOUS CONTACTER</p>
+        <p class="main-title">Contactez-nous aujourd'hui</p>
+        <p class="description">
+            Nous apprécions les questions et les retours – et nous sommes toujours ravis d'aider ! Voici quelques moyens de nous contacter.
+        </p>
+        
+        <div class="contact-item">
+            <div class="icon-box email-icon">
+                <i class="fa-solid fa-envelope" style="color: #7A36DB;"></i>
+            </div>
+            <div>
+                <p class="contact-type">Email</p>
+                <p class="contact-detail">contact@mangaly.fr</p>
+            </div>
+        </div>
+        <div class="contact-item">
+            <div class="icon-box phone-icon">
+                <i class="fa-solid fa-phone" style="color: #7A36DB;"></i>
+            </div>
+            <div>
+                <p class="contact-type">Téléphone</p>
+                <p class="contact-detail">(+33) 178-659-931</p>
+            </div>
+        </div>
+        
+        <p class="follow-us">Suivez-nous sur:</p>
+        <div class="social-icons">
+            <a href="#" class="social-icon">
+                <i class="fa-brands fa-facebook-f" style="color: #6049a7;"></i>
+            </a>
+            <a href="#" class="social-icon">
+                <i class="fa-brands fa-twitter" style="color: #6049a7;"></i>
+            </a>
+            <a href="#" class="social-icon">
+                <i class="fa-brands fa-instagram" style="color: #6049a7;"></i>
+            </a>
+        </div>
+    </div>
+    
+    <div class="contact-form">
+        <form method="post">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur">
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Votre adresse email">
+            
+            <label for="subject">Sujet</label>
+            <input type="text" id="subject" name="subject" placeholder="Votre sujet">
+            
+            <label for="message">Laissez-nous un message</label>
+            <textarea id="message" name="message" placeholder="Écrivez votre message ici..."></textarea>
+            
+            <div class="captcha">
+                <input type="checkbox" class="checkbox" id="not-robot" name="not_robot">
+                <label for="not-robot" class="checkbox-text">Je ne suis pas un robot</label>
+                <img src="{{ asset('images/contact/recaptcha_sans_fond-removebg-preview.png') }}" alt="image recaptcha">
+            </div>
+        
+            <button type="submit" class="submit-button">Envoyer le message</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

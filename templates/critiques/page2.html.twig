@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page 2 - Critiques et Théories{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/critique/page2.css') }}">
+{% endblock %}
+
+{% block body %}
+    <!-- Barre de recherche & filtres -->
+    <div class="theories-container">
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Rechercher un manga...">
+            <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <!-- Filtres -->
+        <div class="filters">
+            <select id="filter-genre">
+                <option value="all">Note/5</option>
+                <option value="shonen">1 - 2</option>
+                <option value="shojo">2.1 - 3</option>
+                <option value="seinen">3.1 - 4</option>
+                <option value="seinen">4.1 - 5</option>
+            </select>
+            
+            <select id="filter-popularity">
+                <option value="all">Popularité</option>
+                <option value="popular">Les plus populaires</option>
+                <option value="recent">Les moins populaires</option>
+            </select>
+            <select id="filter-date">
+                <option value="all">Date d'ajout</option>
+                <option value="popular">Les plus récents</option>
+                <option value="recent">Les moins récents</option>
+            </select>
+            <a href="/critiques/new" class="add-post-btn">Ajouter une critique</a>
+        </div>
+    </div>
+
+    <!-- Section principale -->
+    <main class="manga-container">
+        <div class="manga-info">
+            <img src="{{ asset('images/critiquespage1/1200x680_sc_onepiece.jpg') }}" alt="Couverture du manga" class="manga-cover">
+            <div class="manga-details">
+                <h2 id="manga-title">One Piece</h2>
+                <p id="manga-synopsis">
+                    L'histoire suit principalement l'équipage de Chapeau de paille, mené par son capitaine Monkey D. Luffy, 
+                    un jeune homme ayant mangé, enfant, sans le savoir, le fruit du Gum Gum qui lui permet d'étirer ses membres, 
+                    et dont le rêve est de devenir le Roi des pirates.
+                </p>
+                <p><strong>Genre :</strong> <span id="manga-genre">Shônen</span></p>
+                <p><strong>Auteur :</strong> <span id="manga-author">Eiichirō Oda</span></p>
+                <p><strong>Date de sortie :</strong> <span id="manga-date">22 juillet 1997</span></p>
+                <p><strong>Note Moyenne :</strong> <span id="manga-rating">4.8/5</span></p>
+            </div>
+        </div>
+        
+        <!-- Section critiques populaires -->
+        <section class="reviews-section">
+            <h2>Critiques les plus populaires</h2>
+            
+            <div class="reviews-container">
+                <!-- Critique 1 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="{{ asset('images/critiquespage2/robin.jpg') }}" alt="Avatar" class="review-avatar">
+                        <div class="review-user-info">
+                            <h3 class="review-username">CocoRobin</h3>
+                        </div>
+                        <div class="review-status">
+                            <span class="review-date">3 Juillet 2024</span>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
+                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
+                    </p>
+                    <p class="review-text">
+                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
+                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
+                        after all, out of the 23~ minutes of each episode 3 are spent ...
+                    </p>
+                    <div class="review-info">
+                        <span class="review-rating">4.85/5</span>
+                        <span class="review-report">Report</span>
+                    </div>
+                    <div class="review-actions">
+                        <button class="like-btn">❤️</button>
+                        <button class="more-btn">Lire plus</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reviews-container">
+                <!-- Critique 2 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="{{ asset('images/critiquespage2/Donquixote_Doflamingo.webp') }}" alt="Avatar" class="review-avatar">
+                        <div class="review-user-info">
+                            <h3 class="review-username">doffyxmaria</h3>
+                        </div>
+                        <div class="review-status">
+                            <span class="review-date">3 Juillet 2024</span>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
+                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
+                    </p>
+                    <p class="review-text">
+                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
+                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
+                        after all, out of the 23~ minutes of each episode 3 are spent ...
+                    </p>
+                    <div class="review-info">
+                        <span class="review-rating">4.85/5</span>
+                        <span class="review-report">Report</span>
+                    </div>
+                    <div class="review-actions">
+                        <button class="like-btn">❤️</button>
+                        <button class="more-btn">Lire plus</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reviews-container">
+                <!-- Critique 3 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="{{ asset('images/critiquespage2/Luffy1.jpg') }}" alt="Avatar" class="review-avatar">
+                        <div class="review-user-info">
+                            <h3 class="review-username">luffytaroooo</h3>
+                        </div>
+                        <div class="review-status">
+                            <span class="review-date">3 Juillet 2024</span>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
+                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
+                    </p>
+                    <p class="review-text">
+                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
+                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
+                        after all, out of the 23~ minutes of each episode 3 are spent ...
+                    </p>
+                    <div class="review-info">
+                        <span class="review-rating">4.85/5</span>
+                        <span class="review-report">Report</span>
+                    </div>
+                    <div class="review-actions">
+                        <button class="like-btn">❤️</button>
+                        <button class="more-btn">Lire plus</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

@@ -1,7 +1,151 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Accueil{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/home/home.css') }}">
+{% endblock %}
 
 {% block body %}
-Homepage!
+    <!-- Header avec slider -->
+    <header>
+        <section class="container">
+            <div class="slider-wrapper">
+                <div class="slider">
+                    <img id="slide-1" src="{{ asset('images/home/joyboy.png') }}" alt="image one piece" />
+                    <img id="slide-2" src="{{ asset('images/home/sasuke-vs-naruto-combat-premier.webp') }}" alt="image demon slayer" />
+                    <img id="slide-3" src="{{ asset('images/home/Muzan_rencontrant_Tanjiro.webp') }}" alt="image jujutsu kaisen" />
+                </div>
+                <div class="caption">
+                    Découvrez, Partagez, et Débattez sur vos mangas et animes préférés
+                </div>
+                <div class="slider-nav">
+                    <a href="#slide-1"></a>
+                    <a href="#slide-2"></a>
+                    <a href="#slide-3"></a>
+                </div>
+                <button class="nav-button left" onclick="moveSlide(-1)">&#10094;</button>
+                <button class="nav-button right" onclick="moveSlide(1)">&#10095;</button>
+            </div>
+        </section>
+        <div class="button">
+            <a href="{{ path('app_register') }}" class="button-start">Commencez maintenant</a>
+        </div>
+    </header>
+
+    <!-- Section critiques récentes et théories populaires -->
+    <main>
+        <section class="reviews-theories">
+            <div class="container-reviews">
+                <div class="section-title">
+                    <h2>Critiques récentes</h2>
+                </div>
+                <div class="reviews">
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/one_piece.webp') }}" alt="image one piece">
+                        <div class="card-content">
+                            <h3>One Piece</h3>
+                            <p>Par : poppycloud</p>
+                            <p>"Ce manga est un pur chef-d'œuvre ! Je ne m'attendais pas à ce que..."</p>
+                            <p>Note : 4.9/5</p>
+                            <a href="{{ path('critiques_index') }}" class="btn-read">Lire la critique</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/fairy-tail.jpg') }}" alt="image fairy tail">
+                        <div class="card-content">
+                            <h3>Fairy Tail</h3>
+                            <p>Par : senseilugubre</p>
+                            <p>"J'aimerais vous donner mon humble avis sur ce manga qui selon moi..."</p>
+                            <p>Note : 3.6/5</p>
+                            <a href="{{ path('critiques_index') }}" class="btn-read">Lire la critique</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/Fullmetal-Alchemist.avif') }}" alt="image fullmetal alchemist">
+                        <div class="card-content">
+                            <h3>Fullmetal Alchemist</h3>
+                            <p>Par : tintin77</p>
+                            <p>"Fullmetal Alchemist. Qui a connu un anime avec une meilleure VF ???"</p>
+                            <p>Note : 4.2/5</p>
+                            <a href="{{ path('critiques_index') }}" class="btn-read">Lire la critique</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-theories">
+                <div class="section-title">
+                    <h2>Théories populaires</h2>
+                </div>
+                <div class="theories">
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/eren-jaeger original.jpg') }}" alt="image eren jaeger">
+                        <div class="card-content">
+                            <h3>SNK : Eren savait donc tout depuis le début ?? 😲</h3>
+                            <p>Par : erenfan1</p>
+                            <p>"J'ai recommencé l'anime au moins 3 fois et je ne cesse de faire des..."</p>
+                            <p><strong>11 002</strong> ❤️</p>
+                            <a href="{{ path('theorie_index') }}" class="btn-read">Lire la théorie</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/ichigo.jpg') }}" alt="image ichigo kurosaki">
+                        <div class="card-content">
+                            <h3>Bleach : La nature du hollow de Ichigo.</h3>
+                            <p>Par : ricoescobar</p>
+                            <p>"Bon... Ca peut paraître un peu tiré par les cheveux comme théorie mais..."</p>
+                            <p><strong>34 758</strong> ❤️</p>
+                            <a href="{{ path('theorie_index') }}" class="btn-read">Lire la théorie</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <img src="{{ asset('images/critiquesettheories/bonnie-one-piece.jpg') }}" alt="image jewerly bonney">
+                        <div class="card-content">
+                            <h3>One Piece : Jewerly Bonney est la mère de Luffy!</h3>
+                            <p>Par : lanadelreina</p>
+                            <p>"Honnêtement, je trouvais ce personnage un peu inutile, mais j'ai déc..."</p>
+                            <p><strong>37 888</strong> ❤️</p>
+                            <a href="{{ path('theorie_index') }}" class="btn-read">Lire la théorie</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="posts-section">
+            <table class="posts-table">
+                <thead>
+                    <tr>
+                        <th>DISCUSSIONS</th>
+                        <th>REPONSES</th>
+                        <th>VUES</th>
+                        <th>DERNIER MESSAGE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fas fa-fire"></i> <a href="#">Top 5 des animes à regarder absolument en 2024</a><br>Par : [User] | 19 octobre 2024, 14:19</td>
+                        <td>315</td>
+                        <td>1001</td>
+                        <td>Par : [User] | 20 octobre 2024, 16:18</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-fire"></i> <a href="#">Personnage le plus puissant de MHA : vos avis ?</a><br>Par : [User] | 19 octobre 2024, 09:08</td>
+                        <td>669</td>
+                        <td>3708</td>
+                        <td>Par : [User] | 20 octobre 2024, 23:17</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-fire"></i> <a href="#">Vous êtes plus team mangas ou animes ?</a><br>Par : [User] | 19 octobre 2024, 17:17</td>
+                        <td>114</td>
+                        <td>773</td>
+                        <td>Par : [User] | 20 octobre 2024, 14:19</td>
+                    </tr>
+                    <!-- D'autres lignes si nécessaire -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="{{ asset('js/home/home.js') }}"></script>
 {% endblock %}

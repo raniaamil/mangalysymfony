@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Critiques{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/critique/page1.css') }}">
+{% endblock %}
+
+{% block body %}
+    <!-- Barre de recherche & filtres -->
+    <div class="theories-container">
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Rechercher un manga...">
+            <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <!-- Critiques Populaires -->
+    <section class="reviews-section">
+        <h2>Critiques Populaires</h2>
+        <div class="reviews-container">
+            <!-- Carte de critique 1 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/1200x680_sc_onepiece.jpg') }}" alt="One Piece">
+                <div class="review-content">
+                    <h3>One Piece</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Ce manga est un pur chef-d'œuvre ! Je ne m'attendais pas à ce que..."</p>
+                    <p>Note : 4.9/5</p>
+                    <a href="/critiques/page2" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+
+            <!-- Carte de critique 2 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/naruto1.webp') }}" alt="Naruto">
+                <div class="review-content">
+                    <h3>Naruto</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Une histoire captivante avec des personnages mémorables..."</p>
+                    <p>Note : 5/5</p>
+                    <a href="/manga/naruto.html" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+
+            <!-- Carte de critique 3 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/gojosmiling.webp') }}" alt="Jujutsu Kaisen">
+                <div class="review-content">
+                    <h3>Jujutsu Kaisen</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Jamais je n'avais connu un personnage aussi attachant et charismatique que..."</p>
+                    <p>Note : 3/5</p>
+                    <a href="/manga/naruto.html" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+
+            <!-- Carte de critique 4 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/Black-Clover-M-codes-2015084705.webp') }}" alt="Black Clover">
+                <div class="review-content">
+                    <h3>Black Clover</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Asta a une voix absolument INSUPPORTABLE c'est une vraie..."</p>
+                    <p>Note : 2/5</p>
+                    <a href="/manga/naruto.html" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+
+            <!-- Carte de critique 5 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/fairy-tail.jpg') }}" alt="Fairy Tail">
+                <div class="review-content">
+                    <h3>Fairy Tail</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Natsu est vraiment un personnage attachant, je comprends parfaitement qu'il..."</p>
+                    <p>Note : 4/5</p>
+                    <a href="/manga/naruto.html" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+
+            <!-- Carte de critique 6 -->
+            <div class="review-card">
+                <img src="{{ asset('images/critiquespage1/l-attaque-des-titans-trois-choses-que-vous-ne-saviez-pas-sur-la-serie-animee_1400x.progressive.webp') }}" alt="Attack on Titan">
+                <div class="review-content">
+                    <h3>Attack on Titan</h3>
+                    <p>Par : poppycloud</p>
+                    <p>"Un chef-d'œuvre sombre et intense qui vous tiendra en haleine..."</p>
+                    <p>Note : 5/5</p>
+                    <a href="" class="btn-read">Lire la critique</a>
+                </div>
+            </div>
+        </div>
+        <div class="filters">
+            <a href="/critiques/new" class="add-post-btn">Ajouter une critique</a>
+        </div>
+    </section>
+{% endblock %}

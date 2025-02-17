@@ -169,4 +169,23 @@ class CritiquesController extends AbstractController
             'critiques' => $critiques,
         ]);
     }
+
+    #[Route('/page1', name: 'critiques_page1', methods: ['GET'])]
+    public function page1(): Response
+    {
+        return $this->render('critiques/page1.html.twig');
+    }
+
+    #[Route('/page2', name: 'critiques_page2', methods: ['GET'])]
+    public function page2(): Response
+    {
+        return $this->render('critiques/page2.html.twig');
+    }
+
+    #[Route('/page3', name: 'critiques_page3', methods: ['GET'])]
+    public function page3(): Response
+    {
+        return $this->render('critiques/page3.html.twig');
+    }
+
 }
