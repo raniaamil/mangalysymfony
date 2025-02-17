@@ -1,0 +1,120 @@
+/* ----------------------------- STYLES GÉNÉRAUX ----------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* ----------------------------- POSTS ----------------------------- */
+
+.posts {
+    margin-top: 100px;
+}
+
+.forum-container {
+    max-width: 1200px;
+    margin: auto;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.user-info {
+    background: #f9f9f9;
+    padding: 20px;
+    flex: 1 1 100px;
+    text-align: center;
+}
+
+.user-info img {
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    padding-top: 10px;
+}
+
+.user-info h3 {
+    color: #d87b2e;
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+
+.user-info p {
+    font-size: 0.8em;
+}
+
+.post-content {
+    flex: 2 1 600px;
+    padding: 20px;
+}
+
+.post-header {
+    background: #d8b6f0;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.daterepondre {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+}
+
+.datepubli {
+    color: #777;
+    font-style: italic;
+}
+
+.report {
+    color: red;
+    cursor: pointer;
+}
+
+.post-body {
+    margin-top: 10px;
+    line-height: 1.6;
+    font-size: 0.8em;
+}
+
+.footerdate {
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: #777;
+}
+
+.datemodif {
+    font-style: italic;
+}
+
+.like-btn {
+    background-color: #f4f4f4;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.answer {
+    cursor: pointer;
+    margin-left: 210px;
+    color: #7327BC;
+    font-weight: bold;
+}
+
+footer {
+    margin-top: 40px;
+}
+
+@media (max-width: 768px) {
+    .forum-container {
+        flex-direction: column;
+    }
+    .user-info {
+        text-align: center;
+    }
+
+}

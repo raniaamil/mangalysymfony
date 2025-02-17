@@ -219,5 +219,35 @@ class PostController extends AbstractController
             'posts' => $posts,
         ]);
     }    
+
+    #[Route('/page1', name: 'post_page1', methods: ['GET'])]
+    public function page1(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+    
+        return $this->render('post/page1.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
+    #[Route('/page2', name: 'post_page2', methods: ['GET'])]
+    public function page2(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+    
+        return $this->render('post/page2.html.twig', [
+            'posts' => $posts,
+        ]);
+    }    
+
+    #[Route('/page3', name: 'post_page3', methods: ['GET'])]
+    public function page3(PostRepository $postRepository): Response
+    {
+        $posts = $postRepository->findAll();
+    
+        return $this->render('post/page3.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
     
 }

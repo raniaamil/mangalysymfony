@@ -1,0 +1,144 @@
+/* ----------------------------- STYLES GÉNÉRAUX ----------------------------- */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.forum-container {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* ----------------------------- BARRE DE RECHERCHE ----------------------------- */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.search-bar input {
+    width: 65%;
+    padding: 12px;
+    border: 2px solid #7327BC;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.search-bar button {
+    padding: 10px 15px;
+    background-color: #7327BC;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.search-bar button:hover {
+    background-color: #5e2ab4;
+}
+
+/* ----------------------------- FILTRES ----------------------------- */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filters select, .filters input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.keyword {
+   display: flex;
+}
+
+.keyword button {
+    padding: 10px 14px;
+    background-color: #7327BC;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.keyword button:hover {
+    background-color: #5e2ab4;
+}
+
+.add-post-btn {
+    padding: 12px 15px;
+    background-color: #7327BC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.add-post-btn:hover {
+    background-color: #5e2ab4;
+}
+
+
+/* ----------------------------- TABLEAU DES POSTS ----------------------------- */
+.posts-section {
+    margin-top: 30px;
+}
+
+.posts-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+
+}
+
+.posts-table th, .posts-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.posts-table th {
+    background-color: #d8b6f0;
+    font-weight: bold;
+    text-align: left;
+    color: black;
+}
+
+.posts-table td {
+    background-color: white;
+}
+
+.posts-table a {
+    text-decoration: none;
+    color: #7327BC;
+    font-weight: bold;
+}
+
+.posts-table a:hover {
+    text-decoration: underline;
+}
+
+/* ----------------------------- RESPONSIVE ----------------------------- */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: center;
+    }
+    .search-bar input {
+        width: 80%;
+    }
+    .posts-table, .posts-table th, .posts-table td {
+        font-size: 0.9em;
+    }
+}
