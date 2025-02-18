@@ -2,115 +2,137 @@
 
 {% block title %}Détails de la théorie{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/post/page2.css') }}">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <h1>{{ theorie.titre }}</h1>
-    <p>{{ theorie.contenu }}</p>
-
-    <h3>Média</h3>
-    {% if media_base64 %}
-        <div>
-            <p>Type: {{ post.mediaType }}</p>
-            {% if post.mediaType starts with 'image' %}
-                <img src="data:{{ post.mediaType }};base64,{{ media_base64 }}" alt="Média associé" class="img-fluid" />
-            {% elseif post.mediaType starts with 'video' %}
-                <video controls class="w-100">
-                    <source src="data:{{ post.mediaType }};base64,{{ media_base64 }}">
-                    Votre navigateur ne supporte pas la lecture vidéo.
-                </video>
-            {% elseif post.mediaType starts with 'audio' %}
-                <audio controls>
-                    <source src="data:{{ post.mediaType }};base64,{{ media_base64 }}">
-                    Votre navigateur ne supporte pas la lecture audio.
-                </audio>
-            {% endif %}
+<main class="posts">
+    <!-- Container principal pour la théorie -->
+    <div class="forum-container">
+        <div class="user-info">
+            {# Affichage de l'auteur si disponible, sinon un libellé par défaut #}
+            <h3>{{ theorie.user.username|default('Auteur inconnu') }}</h3>
+            <img src="{{ asset('images/postspage2/Mikasa_avec_les_cheveux_longs.webp') }}" alt="Avatar">
+            <p>Inscrit depuis Août 2024</p>
         </div>
-    {% else %}
-        <p>Aucun média associé</p>
-    {% endif %}
-
-    <h3>Manga</h3>
-    <p>{{ theorie.manga.titre }}</p>
-
-    <h3>Genre</h3>
-    <p>{{ theorie.manga.genre.nom }}</p>
-
-    <h3>Date de publication</h3>
-    <p>{{ theorie.datePublication|date('d/m/Y H:i') }}</p>
-
-    <div>
-        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ theorie.id }}" data-entity-type="theorie">
-            <button type="submit" class="btn btn-like">
-                <span class="like-icon">
-                    {% if isLiked %}
-                        ❤️
+        <div class="post-content">
+            <div class="post-header">
+                <span>{{ theorie.titre }}</span>
+            </div>
+            <div class="daterepondre">
+                <span class="datepubli">le: {{ theorie.datePublication|date('d M Y, H:i:s') }}</span>
+                <span class="report">Report</span>
+            </div>
+            <div class="post-body">
+                <p>{{ theorie.contenu }}</p>
+                <div class="media">
+                    <h3>Média</h3>
+                    {% if media_base64 %}
+                        <div>
+                            <p>Type: {{ theorie.mediaType }}</p>
+                            {% if theorie.mediaType starts with 'image' %}
+                                <img src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}" alt="Média associé" class="img-fluid" />
+                            {% elseif theorie.mediaType starts with 'video' %}
+                                <video controls class="w-100">
+                                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
+                                    Votre navigateur ne supporte pas la lecture vidéo.
+                                </video>
+                            {% elseif theorie.mediaType starts with 'audio' %}
+                                <audio controls>
+                                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
+                                    Votre navigateur ne supporte pas la lecture audio.
+                                </audio>
+                            {% endif %}
+                        </div>
                     {% else %}
-                        🤍
+                        <p>Aucun média associé</p>
                     {% endif %}
-                </span>
-            </button>
-        </form>
-    </div>
-
-    <h2>Commentaires</h2>
-    <ul class="list-group">
-        {% for commentaire in theorie.commentaires %}
-            <li class="list-group-item">
-                <strong>{{ commentaire.user.username }}</strong> le {{ commentaire.datePublication|date('d/m/Y H:i') }} :
-                <p>{{ commentaire.contenu }}</p>
-
-                <!-- Bouton Like pour les commentaires -->
-                <div>
-                    <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ commentaire.id }}" data-entity-type="commentaire">
-                        <button type="submit" class="btn btn-like">
-                            <span class="like-icon">
-                                {% if commentaireLikes[commentaire.id] is defined and commentaireLikes[commentaire.id] %}
-                                    ❤️
-                                {% else %}
-                                    🤍
-                                {% endif %}
-                            </span>
-                        </button>
-                    </form>
                 </div>
-
-                {% if app.user and app.user.id == commentaire.user.id %}
-                    <div class="mt-2">
-                        <a href="{{ path('commentaire_edit', {id: commentaire.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                        <form method="post" action="{{ path('commentaire_delete', {id: commentaire.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                        </form>
-                    </div>
-                {% endif %}
-
-                <form method="post" action="{{ path('commentaire_report', {id: commentaire.id}) }}" style="display: inline;">
-                    <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
-                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce commentaire ?');">
-                        Signaler
+            </div>
+            <div class="footerdate">
+                <span class="datemodif">« Publié le: {{ theorie.datePublication|date('d M Y, H:i:s') }} »</span>
+            </div>
+            <div class="likeanswer">
+                <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ theorie.id }}" data-entity-type="theorie">
+                    <button type="submit" class="like-btn">
+                        <span class="like-icon">
+                            {% if isLiked %}
+                                ❤️
+                            {% else %}
+                                🤍
+                            {% endif %}
+                        </span>
                     </button>
                 </form>
-            </li>
-        {% else %}
-            <li class="list-group-item text-center">Aucun commentaire pour cette théorie.</li>
-        {% endfor %}
-    </ul>
-
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <div class="mt-4">
-            <h3>Ajouter un commentaire</h3>
-            <form method="post" action="{{ path('commentaire_new', {entity: 'theorie', id: theorie.id}) }}">
-                <div class="form-group">
-                    <label for="contenu">Votre commentaire</label>
-                    <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-success mt-2">Publier</button>
-            </form>
+            </div>
         </div>
-    {% else %}
-        <p class="mt-3">Veuillez <a href="{{ path('app_login') }}">vous connecter</a> pour ajouter un commentaire.</p>
-    {% endif %}
-</div>
+    </div>
+
+    <!-- Container pour les commentaires -->
+    <div class="forum-container">
+        <div class="post-content" style="width:100%">
+            <h2>Commentaires</h2>
+            <ul class="list-group">
+                {% for commentaire in theorie.commentaires %}
+                    <li class="list-group-item">
+                        <strong>{{ commentaire.user.username }}</strong> le {{ commentaire.datePublication|date('d/m/Y H:i') }} :
+                        <p>{{ commentaire.contenu }}</p>
+
+                        <!-- Bouton Like pour les commentaires -->
+                        <div>
+                            <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ commentaire.id }}" data-entity-type="commentaire">
+                                <button type="submit" class="like-btn">
+                                    <span class="like-icon">
+                                        {% if commentaireLikes[commentaire.id] is defined and commentaireLikes[commentaire.id] %}
+                                            ❤️
+                                        {% else %}
+                                            🤍
+                                        {% endif %}
+                                    </span>
+                                </button>
+                            </form>
+                        </div>
+
+                        {% if app.user and app.user.id == commentaire.user.id %}
+                            <div class="mt-2">
+                                <a href="{{ path('commentaire_edit', {id: commentaire.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                                <form method="post" action="{{ path('commentaire_delete', {id: commentaire.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </div>
+                        {% endif %}
+
+                        <form method="post" action="{{ path('commentaire_report', {id: commentaire.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('report' ~ commentaire.id) }}">
+                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce commentaire ?');">
+                                Signaler
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-center">Aucun commentaire pour cette théorie.</li>
+                {% endfor %}
+            </ul>
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <div class="mt-4">
+                    <h3>Ajouter un commentaire</h3>
+                    <form method="post" action="{{ path('commentaire_new', {entity: 'theorie', id: theorie.id}) }}">
+                        <div class="form-group">
+                            <label for="contenu">Votre commentaire</label>
+                            <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-2">Publier</button>
+                    </form>
+                </div>
+            {% else %}
+                <p class="mt-3">Veuillez <a href="{{ path('app_login') }}">vous connecter</a> pour ajouter un commentaire.</p>
+            {% endif %}
+        </div>
+    </div>
+</main>
 
 <script>
     document.querySelectorAll('.like-form').forEach(form => {
@@ -128,9 +150,9 @@
             .then(data => {
                 const likeIcon = this.querySelector('.like-icon');
                 if (data.isLiked) {
-                    likeIcon.innerHTML = '❤️';  // Change to filled heart
+                    likeIcon.innerHTML = '❤️';
                 } else {
-                    likeIcon.innerHTML = '🤍';  // Change to empty heart
+                    likeIcon.innerHTML = '🤍';
                 }
             })
             .catch(error => console.error('Erreur:', error));
