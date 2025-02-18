@@ -18,19 +18,13 @@ class PostController extends AbstractController
     #[Route('/', name: 'post_index', methods: ['GET'])]
     public function index(PostRepository $postRepository, Request $request): Response
     {
-        $genre = $request->query->get('genre', null); // Définit une valeur par défaut pour éviter l'erreur
 
-        if ($genre) {
-            // Filtre les posts par catégorie
-            $posts = $postRepository->findBy(['genre' => $genre]);
-        } else {
-            // Récupère tous les posts
-            $posts = $postRepository->findAll();
-        }
+        $posts = $postRepository->findAll();
+
 
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
-            'selected_genre' => $genre, // Passer la valeur au template si nécessaire
+            'genre' => $genre,
         ]);
     }
 

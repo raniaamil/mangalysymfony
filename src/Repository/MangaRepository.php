@@ -18,8 +18,8 @@ class MangaRepository extends ServiceEntityRepository
 
     public function findByQuery(string $query): array
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.titre LIKE :query')
+        return $this->createQueryBuilder('manga')
+            ->andWhere('manga.titre LIKE :query')
             ->setParameter('query', '%' . $query . '%')
             ->setMaxResults(10)
             ->getQuery()
