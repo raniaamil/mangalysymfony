@@ -14,7 +14,7 @@ class Note
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $notation = null;
+    private ?int $notation = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
     private ?User $user = null;
@@ -30,12 +30,12 @@ class Note
         return $this->id;
     }
 
-    public function getNotation(): ?float
+    public function getNotation(): ?int
     {
         return $this->notation;
     }
 
-    public function setNotation(?float $notation): static
+    public function setNotation(?int $notation): static
     {
         $this->notation = $notation;
 
