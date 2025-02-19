@@ -15,6 +15,7 @@
                     <th>Description</th>
                     <th>Genre</th>
                     <th>Actions</th>
+                {% else %}
                     <th>Titre</th>
                 {% endif %}
             </tr>
@@ -24,14 +25,18 @@
                 <tr>
                     {% if is_granted('ROLE_ADMIN') %}
                         <td>{{ manga.id }}</td>
-                        <td>{{ manga.titre }}</td>
+                        <td>
+                            <a href="{{ path('manga_show', { id: manga.id }) }}">
+                                {{ manga.titre }}
+                            </a>
+                        </td>
                         <td>{{ manga.auteur }}</td>
                         <td>{{ manga.dateSortie|date('d/m/Y') }}</td>
                         <td>{{ manga.description|slice(0, 50) ~ (manga.description|length > 50 ? '...' : '') }}</td>
                         <td>{{ manga.genre.nom }}</td>
                         <td>
-                            <a href="{{ path('manga_edit', {id: manga.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                            <form action="{{ path('manga_delete', {id: manga.id}) }}" method="post" style="display: inline;">
+                            <a href="{{ path('manga_edit', { id: manga.id }) }}" class="btn btn-primary btn-sm">Modifier</a>
+                            <form action="{{ path('manga_delete', { id: manga.id }) }}" method="post" style="display: inline;">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ manga.id) }}">
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce manga ?');">Supprimer</button>
                             </form>
@@ -39,7 +44,7 @@
                     {% else %}
                         <td>
                             <a href="{{ path('manga_show', { id: manga.id }) }}">
-                                    {{ manga.titre }}
+                                {{ manga.titre }}
                             </a>
                         </td>
                     {% endif %}
@@ -57,9 +62,9 @@
     </table>
 
     {% if is_granted('ROLE_ADMIN') %}
-    <div class="mb-3">
-        <a href="{{ path('manga_new') }}" class="btn btn-success">Ajouter un manga</a>
-    </div>
+        <div class="mb-3">
+            <a href="{{ path('manga_new') }}" class="btn btn-success">Ajouter un manga</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
