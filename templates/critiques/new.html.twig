@@ -15,8 +15,16 @@
             <label for="review-manga">Manga :</label>
             <input type="text" id="review-manga" name="review-manga" placeholder="Ex : Naruto" required>
             
-            <label for="review-rating">Note (entre 1 et 5) :</label>
-            <input type="number" id="review-rating" name="review-rating" step="0.1" min="1" max="5" placeholder="Ex : 4.5" required>
+            <!-- Liste déroulante pour la note -->
+            <label for="review-rating">Note :</label>
+            <select id="review-rating" name="review-rating" required>
+                <option value="" disabled selected>Sélectionnez une note</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
             
             <label for="review-text">Votre critique :</label>
             <textarea id="review-text" name="review-text" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>

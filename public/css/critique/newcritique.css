@@ -40,6 +40,41 @@ textarea {
     resize: vertical;
 }
 
+/* Styles pour la liste déroulante */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: white;
+    appearance: none; /* Supprime le style par défaut du navigateur */
+    -webkit-appearance: none; /* Pour les navigateurs WebKit */
+    -moz-appearance: none; /* Pour Firefox */
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: #7327BC;
+    outline: none;
+}
+
+/* Ajoute une icône de flèche personnalisée */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-wrapper::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #7327BC;
+}
+
 /* --- BOUTONS --- */
 .form-buttons {
     display: flex;

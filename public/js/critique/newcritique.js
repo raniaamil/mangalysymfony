@@ -1,29 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector(".review-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        
-        const title = document.getElementById("review-title").value.trim();
-        const reviewText = document.getElementById("review-text").value.trim();
-        const rating = document.getElementById("review-rating").value.trim();
-        
-        if (!title || !reviewText || !rating) {
-            alert("Veuillez remplir tous les champs avant de publier votre critique.");
-            return;
-        }
-        
-        const ratingValue = parseFloat(rating);
-        if (isNaN(ratingValue) || ratingValue < 1 || ratingValue > 5) {
-            alert("Veuillez entrer une note valide entre 1 et 5.");
-            return;
-        }
-        
-        console.log("Critique soumise :", {
-            titre: title,
-            texte: reviewText,
-            note: ratingValue
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("Script chargé !"); // Vérification
+
+    const stars = document.querySelectorAll(".star-rating .star");
+    const ratingInput = document.getElementById("review-rating");
+
+    if (stars.length === 0 || !ratingInput) {
+        console.error("Erreur : les étoiles ou l'input caché ne sont pas trouvés !");
+        return;
+    }
+
+    let selectedRating = 0; // Stocke la note sélectionnée
+
+    stars.forEach(star => {
+        star.addEventListener("click", function() {
+            selectedRating = parseInt(this.dataset.value);
+            ratingInput.value = selectedRating;
+            updateStars(selectedRating);
+            console.log("Note sélectionnée :", selectedRating); // Vérification
         });
-        
-        alert("Votre critique a bien été publiée !");
-        window.location.href = "page_du_manga.html";
+
+        star.addEventListener("mouseover", function() {
+            updateStars(parseInt(this.dataset.value));
+        });
+
+        star.addEventListener("mouseout", function() {
+            updateStars(selectedRating);
+        });
     });
+
+    function updateStars(rating) {
+        stars.forEach(star => {
+            star.classList.toggle("selected", parseInt(star.dataset.value) <= rating);
+        });
+    }
 });
