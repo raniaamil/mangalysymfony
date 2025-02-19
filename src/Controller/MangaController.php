@@ -11,16 +11,15 @@ use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
 use Symfony\Component\HttpFoundation\Response; // Pour renvoyer des réponses HTTP
 use Symfony\Component\Routing\Annotation\Route; // Pour définir les routes
 
-#[Route('/admin/manga')] // Route de base pour le contrôleur Manga
-class AdminMangaController extends AbstractController
+#[Route('/mangas')] // Route de base pour le contrôleur Manga
+class MangaController extends AbstractController
 {
     #[Route('/', name: 'manga_index', methods: ['GET'])] // Route pour afficher la liste des mangas
     public function index(MangaRepository $mangaRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $mangas = $mangaRepository->findAll(); // Récupère tous les mangas de la base de données
 
-        return $this->render('admin/manga/index.html.twig', ['mangas' => $mangas]); // Affiche la vue avec la liste des mangas
+        return $this->render('manga/index.html.twig', ['mangas' => $mangas]); // Affiche la vue avec la liste des mangas
     }
 
     #[Route('/new', name: 'manga_new', methods: ['GET', 'POST'])] // Route pour créer un nouveau manga
@@ -52,7 +51,7 @@ class AdminMangaController extends AbstractController
             return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas après création
         }
 
-        return $this->render('admin/manga/new.html.twig', [
+        return $this->render('manga/new.html.twig', [
             'genres' => $genres, // Passage des genres au template
         ]); 
     }
@@ -84,7 +83,7 @@ class AdminMangaController extends AbstractController
             return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas
         }
 
-        return $this->render('admin/manga/edit.html.twig', [
+        return $this->render('manga/edit.html.twig', [
             'manga' => $manga, // Affiche le formulaire de modification
             'genres' => $genres, // Passage des genres au template
         ]); 
