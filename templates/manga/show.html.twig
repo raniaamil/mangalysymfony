@@ -1,21 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page 2 - Critiques et Théories{% endblock %}
-
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/critique/page2.css') }}">
 {% endblock %}
 
 {% block body %}
-    <!-- Barre de recherche & filtres -->
     <div class="theories-container">
-        <!-- Barre de recherche -->
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Rechercher un manga...">
-            <button id="search-btn"><i class="fas fa-search"></i></button>
-        </div>
         
-        <!-- Filtres -->
         <div class="filters">
             <select id="filter-genre">
                 <option value="all">Note/5</option>
@@ -42,25 +33,19 @@
     <!-- Section principale -->
     <main class="manga-container">
         <div class="manga-info">
-            <img src="{{ asset('images/critiquespage1/1200x680_sc_onepiece.jpg') }}" alt="Couverture du manga" class="manga-cover">
+            <img src="{{ manga.image }}" alt="Couverture du manga" class="manga-cover">
             <div class="manga-details">
-                <h2 id="manga-title">One Piece</h2>
-                <p id="manga-synopsis">
-                    L'histoire suit principalement l'équipage de Chapeau de paille, mené par son capitaine Monkey D. Luffy, 
-                    un jeune homme ayant mangé, enfant, sans le savoir, le fruit du Gum Gum qui lui permet d'étirer ses membres, 
-                    et dont le rêve est de devenir le Roi des pirates.
-                </p>
-                <p><strong>Genre :</strong> <span id="manga-genre">Shônen</span></p>
-                <p><strong>Auteur :</strong> <span id="manga-author">Eiichirō Oda</span></p>
-                <p><strong>Date de sortie :</strong> <span id="manga-date">22 juillet 1997</span></p>
+                <h2 id="manga-title">{{ manga.titre }}</h2>
+                <p id="manga-synopsis">{{ manga.description }}</p>
+                <p><strong>Genre :</strong> <span id="manga-genre">{{ manga.genre.nom }}</span></p>
+                <p><strong>Auteur :</strong> <span id="manga-author">{{ manga.auteur }}</span></p>
+                <p><strong>Date de sortie :</strong> <span id="manga-date">{{ manga.dateSortie|date('d/m/Y') }}</span></p>
                 <p><strong>Note Moyenne :</strong> <span id="manga-rating">4.8/5</span></p>
             </div>
         </div>
         
         <!-- Section critiques populaires -->
         <section class="reviews-section">
-            <h2>Critiques les plus populaires</h2>
-            
             <div class="reviews-container">
                 <!-- Critique 1 -->
                 <div class="review-card">
@@ -159,3 +144,11 @@
         </section>
     </main>
 {% endblock %}
+
+
+
+
+
+
+
+

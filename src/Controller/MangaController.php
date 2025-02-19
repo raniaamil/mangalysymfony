@@ -98,5 +98,11 @@ class MangaController extends AbstractController
 
         return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas après suppression
     }
+
+    #[Route('/{id}', name: 'manga_show', methods: ['GET'])] 
+    public function show(MangaRepository $mangaRepository, Manga $manga): Response
+    {
+        return $this->render('manga/show.html.twig', ['manga' => $manga]); 
+    }
 }
 

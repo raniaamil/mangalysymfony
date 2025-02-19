@@ -7,43 +7,59 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Auteur</th>
-                <th>Date de sortie</th>
-                <th>Description</th>
-                <th>Genre</th>
-                <th>Actions</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date de sortie</th>
+                    <th>Description</th>
+                    <th>Genre</th>
+                    <th>Actions</th>
+                    <th>Titre</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for manga in mangas %}
                 <tr>
-                    <td>{{ manga.id }}</td>
-                    <td>{{ manga.titre }}</td>
-                    <td>{{ manga.auteur }}</td>
-                    <td>{{ manga.dateSortie|date('d/m/Y') }}</td>
-                    <td>{{ manga.description|slice(0, 50) ~ (manga.description|length > 50 ? '...' : '') }}</td>
-                    <td>{{ manga.genre.nom }}</td>
-                    <td>
-                        <a href="{{ path('manga_edit', {id: manga.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
-                        <form action="{{ path('manga_delete', {id: manga.id}) }}" method="post" style="display: inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ manga.id) }}">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce manga ?');">Supprimer</button>
-                        </form>
-                    </td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>{{ manga.id }}</td>
+                        <td>{{ manga.titre }}</td>
+                        <td>{{ manga.auteur }}</td>
+                        <td>{{ manga.dateSortie|date('d/m/Y') }}</td>
+                        <td>{{ manga.description|slice(0, 50) ~ (manga.description|length > 50 ? '...' : '') }}</td>
+                        <td>{{ manga.genre.nom }}</td>
+                        <td>
+                            <a href="{{ path('manga_edit', {id: manga.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                            <form action="{{ path('manga_delete', {id: manga.id}) }}" method="post" style="display: inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ manga.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce manga ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>
+                            <a href="{{ path('manga_show', { id: manga.id }) }}">
+                                    {{ manga.titre }}
+                            </a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="7" class="text-center">Aucun manga trouvé.</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td colspan="7" class="text-center">Aucun manga trouvé.</td>
+                    {% else %}
+                        <td colspan="1" class="text-center">Aucun manga trouvé.</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
+    {% if is_granted('ROLE_ADMIN') %}
     <div class="mb-3">
         <a href="{{ path('manga_new') }}" class="btn btn-success">Ajouter un manga</a>
     </div>
-
+    {% endif %}
 </div>
 {% endblock %}
