@@ -10,14 +10,14 @@
     <div class="manga-review-container">
         <form class="review-form" method="post">
             <label for="review-title">Titre de la critique :</label>
-            <input type="text" id="review-title" name="review-title" placeholder="Ex : Une aventure époustouflante..." required>
+            <input type="text" id="review-title" name="titre" placeholder="Ex : Une aventure époustouflante..." required>
             
             <label for="review-manga">Manga :</label>
-            <input type="text" id="review-manga" name="review-manga" placeholder="Ex : Naruto" required>
+            <input type="text" id="review-manga" name="manga" placeholder="Ex : Naruto" required>
             
             <!-- Liste déroulante pour la note -->
             <label for="review-rating">Note :</label>
-            <select id="review-rating" name="review-rating" required>
+            <select id="review-rating" name="note" required>
                 <option value="" disabled selected>Sélectionnez une note</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -27,7 +27,7 @@
             </select>
             
             <label for="review-text">Votre critique :</label>
-            <textarea id="review-text" name="review-text" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>
+            <textarea id="review-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>
             
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Publier</button>

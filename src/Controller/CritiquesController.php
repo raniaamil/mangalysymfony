@@ -37,33 +37,39 @@ class CritiquesController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
+            $data = $request->request->all();
+            dump($data); // Vérification des données reçues
+
+            // Vérification que tous les champs sont bien remplis
+            if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
+                $this->addFlash('error', 'Tous les champs sont obligatoires.');
+                return $this->redirectToRoute('critiques_new');
+            }
+
             $critique = new Critiques();
-            $critique->setTitre($request->request->get('titre'));
-            $critique->setContenu($request->request->get('contenu'));
+            $critique->setTitre($data['titre']);
+            $critique->setContenu($data['contenu']);
 
-            $mangaTitre = $request->request->get('manga');
-            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
-
-            if ($manga) {
-                $critique->setManga($manga);
-            } else {
+            // Vérifier si le manga existe
+            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
+            if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('critiques_new');
             }
+            $critique->setManga($manga);
+
+            // Vérifier que la note est un nombre valide entre 1 et 5
+            $note = (int)$data['note'];
+            if ($note < 1 || $note > 5) {
+                $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
+                return $this->redirectToRoute('critiques_new');
+            }
+            $critique->setNote($note);
 
             $critique->setDatePublication(new \DateTime());
             $critique->setUser($this->getUser());
 
             $em->persist($critique);
-
-            $noteValeur = (int)$request->request->get('note');
-            $note = new \App\Entity\Note();
-            $note->setValeur($noteValeur);
-            $note->setUser($this->getUser());
-            $note->setManga($manga);
-            $note->setCritique($critique);
-
-            $em->persist($note);
             $em->flush();
 
             return $this->redirectToRoute('critiques_index');
@@ -99,18 +105,33 @@ class CritiquesController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
-            $critique->setTitre($request->request->get('titre'));
-            $critique->setContenu($request->request->get('contenu'));
+            $data = $request->request->all();
+            dump($data); // Vérification des données reçues
 
-            $mangaTitre = $request->request->get('manga');
-            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
+            // Vérifier que tous les champs sont bien remplis
+            if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
+                $this->addFlash('error', 'Tous les champs sont obligatoires.');
+                return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
+            }
 
-            if ($manga) {
-                $critique->setManga($manga);
-            } else {
+            $critique->setTitre($data['titre']);
+            $critique->setContenu($data['contenu']);
+
+            // Vérifier si le manga existe
+            $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
+            if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
             }
+            $critique->setManga($manga);
+
+            // Vérifier que la note est correcte
+            $note = (int)$data['note'];
+            if ($note < 1 || $note > 5) {
+                $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
+                return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
+            }
+            $critique->setNote($note);
 
             $em->flush();
 
@@ -136,56 +157,38 @@ class CritiquesController extends AbstractController
     }
 
     #[Route('/{id}/report', name: 'critiques_report', methods: ['POST'])]
-    public function report(Critiques $critique, EntityManagerInterface $em, Request $request): Response
+    public function report(Critiques $critiques, EntityManagerInterface $em, Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        if ($critique->getReport()) {
+    
+        if ($critiques->getReport()) {
             $this->addFlash('info', 'Cette critique a déjà été signalée.');
         } else {
-            if ($this->isCsrfTokenValid('report' . $critique->getId(), $request->request->get('_token'))) {
-                $critique->setReport(true);
+            if ($this->isCsrfTokenValid('report' . $critiques->getId(), $request->request->get('_token'))) {
+                $critiques->setReport(true);
                 $em->flush();
                 $this->addFlash('success', 'La critique a été signalée.');
             } else {
                 $this->addFlash('error', 'Erreur lors du signalement.');
             }
         }
-
-        return $this->redirectToRoute('critiques_show', ['id' => $critique->getId()]);
+    
+        return $this->redirectToRoute('critiques_show', ['id' => $critiques->getId()]);
     }
-
+    
     #[Route('/mescritiques', name: 'mes_critiques', methods: ['GET'])]
-    public function mesCritiques(CritiquesRepository $critiquesRepository): Response
+    public function myCritiques(CritiquesRepository $critiquesRepository): Response
     {
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException();
         }
-
+    
         $critiques = $critiquesRepository->findBy(['user' => $user]);
-
+    
         return $this->render('critiques/mescritiques.html.twig', [
             'critiques' => $critiques,
         ]);
     }
-
-    #[Route('/page1', name: 'critiques_page1', methods: ['GET'])]
-    public function page1(): Response
-    {
-        return $this->render('critiques/page1.html.twig');
-    }
-
-    #[Route('/page2', name: 'critiques_page2', methods: ['GET'])]
-    public function page2(): Response
-    {
-        return $this->render('critiques/page2.html.twig');
-    }
-
-    #[Route('/page3', name: 'critiques_page3', methods: ['GET'])]
-    public function page3(): Response
-    {
-        return $this->render('critiques/page3.html.twig');
-    }
-
+    
 }

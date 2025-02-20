@@ -179,7 +179,6 @@ class PostController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
     
-        // Vérifier si le post a déjà été signalé
         if ($post->getReport()) {
             $this->addFlash('info', 'Ce post a déjà été signalé.');
         } else {
@@ -198,49 +197,16 @@ class PostController extends AbstractController
     #[Route('/mesposts', name: 'mes_posts', methods: ['GET'])]
     public function myPosts(PostRepository $postRepository): Response
     {
-        // Récupère l'utilisateur connecté
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException();
         }
         
-        // Récupère uniquement les posts dont l'auteur est l'utilisateur connecté
         $posts = $postRepository->findBy(['user' => $user]);
     
-        // Vous pouvez utiliser un template dédié ou réutiliser celui d'index en l'adaptant
         return $this->render('post/mesposts.html.twig', [
             'posts' => $posts,
         ]);
     }    
-
-    #[Route('/page1', name: 'post_page1', methods: ['GET'])]
-    public function page1(PostRepository $postRepository): Response
-    {
-        $posts = $postRepository->findAll();
-    
-        return $this->render('post/page1.html.twig', [
-            'posts' => $posts,
-        ]);
-    }
-
-    #[Route('/page2', name: 'post_page2', methods: ['GET'])]
-    public function page2(PostRepository $postRepository): Response
-    {
-        $posts = $postRepository->findAll();
-    
-        return $this->render('post/page2.html.twig', [
-            'posts' => $posts,
-        ]);
-    }    
-
-    #[Route('/page3', name: 'post_page3', methods: ['GET'])]
-    public function page3(PostRepository $postRepository): Response
-    {
-        $posts = $postRepository->findAll();
-    
-        return $this->render('post/page3.html.twig', [
-            'posts' => $posts,
-        ]);
-    }
     
 }

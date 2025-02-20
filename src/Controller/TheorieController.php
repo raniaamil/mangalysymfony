@@ -215,43 +215,6 @@ class TheorieController extends AbstractController
         return $this->render('theorie/mestheories.html.twig', [
             'theories' => $theories,
         ]);
-    }  
-
-    #[Route('/page1', name: 'theorie_page1', methods: ['GET'])]
-    public function page1(TheorieRepository $theorieRepository): Response
-    {
-        // Récupérer toutes les théories (ou appliquer ici des filtres spécifiques pour "page 1")
-        $theories = $theorieRepository->findAll();
-    
-        // Rendre un template dédié, par exemple "theorie/page1.html.twig"
-        return $this->render('theorie/page1.html.twig', [
-            'theories' => $theories,
-        ]);
-    }
-
-    #[Route('/page2', name: 'theorie_page2', methods: ['GET'])]
-    public function page2(TheorieRepository $theorieRepository): Response
-    {
-        // Récupérer toutes les théories (ou appliquer ici des filtres spécifiques pour "page 1")
-        $theories = $theorieRepository->findAll();
-    
-        // Rendre un template dédié, par exemple "theorie/page1.html.twig"
-        return $this->render('theorie/page2.html.twig', [
-            'theories' => $theories,
-        ]);
-    }
-
-    #[Route('/page3', name: 'theorie_page3', methods: ['GET'])]
-    public function page3(TheorieRepository $theorieRepository): Response
-    {
-        // Récupérer toutes les théories (ou appliquer ici des filtres spécifiques pour "page 1")
-        $theories = $theorieRepository->findAll();
-    
-        // Rendre un template dédié, par exemple "theorie/page1.html.twig"
-        return $this->render('theorie/page3.html.twig', [
-            'theories' => $theories,
-        ]);
-    }
-    
+    }   
     
 }

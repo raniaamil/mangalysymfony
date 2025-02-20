@@ -16,6 +16,7 @@
                 <th>Contenu</th>
                 <th>Manga</th>
                 <th>Genre</th>
+                <th>Note</th>
                 <th>Date de publication</th>
                 <th>Actions</th>
             </tr>
@@ -27,6 +28,7 @@
                     <td>{{ critique.contenu|slice(0, 50) }}...</td>
                     <td>{{ critique.manga.titre }}</td>
                     <td>{{ critique.genre }}</td>
+                    <td>{{ critique.note }}/5</td>
                     <td>{{ critique.datePublication|date('d/m/Y H:i') }}</td>
                     {% if app.user and app.user.id == critique.user.id %}
                         <td class="actions">

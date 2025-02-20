@@ -1,32 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier la Critique{% endblock %}
+{% block title %}Modifier la critique{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/critique/newcritique.css') }}">
 {% endblock %}
 
 {% block body %}
-<div class="manga-review-container">
-    <form method="post" class="review-form">
-        <label for="review-title">Titre de la critique :</label>
-        <input type="text" id="review-title" name="review-title" placeholder="Ex : Une aventure époustouflante..." value="{{ critique.titre }}" required>
-        
-        <label for="review-manga">Manga :</label>
-        <input type="text" id="review-manga" name="review-manga" placeholder="Ex : Naruto" value="{{ critique.manga.titre }}" required>
-        
-        <label for="review-rating">Note (entre 1 et 5) :</label>
-        <input type="number" id="review-rating" name="review-rating" step="0.1" min="1" max="5" placeholder="Ex : 4.5" value="{{ critique.note }}" required>
-        
-        <label for="review-text">Votre critique :</label>
-        <textarea id="review-text" name="review-text" rows="6" placeholder="Exprimez votre avis ici..." required>{{ critique.contenu }}</textarea>
-        
-        <div class="form-buttons">
-            <button type="submit" class="submit-btn">Enregistrer</button>
-            <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
-        </div>
-    </form>
-</div>
+    <div class="manga-review-container">
+        <form class="review-form" method="post">
+            <label for="review-title">Titre de la critique :</label>
+            <input type="text" id="review-title" name="titre" placeholder="Ex : Une aventure époustouflante..." value="{{ critique.titre }}" required>
+            
+            <label for="review-manga">Manga :</label>
+            <input type="text" id="review-manga" name="manga" placeholder="Ex : Naruto" value="{{ critique.manga.titre }}" required>
+            
+            <!-- Liste déroulante pour la note -->
+            <label for="review-rating">Note :</label>
+            <select id="review-rating" name="note" value="{{ critique.note}}" required>
+                <option value="" disabled selected>Sélectionnez une note</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            
+            <label for="review-text">Votre critique :</label>
+            <textarea id="review-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." value="{{ critique.contenu }}" required></textarea>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

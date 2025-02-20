@@ -45,8 +45,8 @@ class Critiques
     #[ORM\Column]
     private ?bool $report = false;
 
-    #[ORM\OneToOne(mappedBy: 'critiques', cascade: ['persist', 'remove'])]
-    private ?Note $note = null;
+    #[ORM\Column]
+    private ?int $note = null;
 
     public function __construct()
     {
@@ -167,20 +167,16 @@ class Critiques
         return $this;
     }
 
-    public function getNote(): ?Note
+    public function getNote(): ?int
     {
         return $this->note;
     }
 
-    public function setNote(?Note $note): static
+    public function setNote(int $note): static
     {
-        if ($note === null && $this->note !== null) {
-            $this->note->setCritiques(null);
-        }
-        if ($note !== null && $note->getCritiques() !== $this) {
-            $note->setCritiques($this);
-        }
         $this->note = $note;
+
         return $this;
     }
+
 }
