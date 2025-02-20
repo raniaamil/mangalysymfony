@@ -163,11 +163,11 @@ body {
 
 .review-actions {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     margin-top: 10px;
 }
 
-.like-btn, .more-btn, .open-btn, .gift-btn {
+.like-btn {
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
@@ -178,6 +178,13 @@ body {
 
 .like-btn:hover, .more-btn:hover, .open-btn:hover, .gift-btn:hover {
     background-color: #5e2ab4;
+}
+
+.post-header {
+    background: #d8b6f0;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 /* ----------------------------- RESPONSIVE ----------------------------- */

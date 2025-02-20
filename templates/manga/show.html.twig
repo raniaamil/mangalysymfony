@@ -30,7 +30,6 @@
         </div>
     </div>
 
-    <!-- Section principale -->
     <main class="manga-container">
         <div class="manga-info">
             <img src="{{ manga.image }}" alt="Couverture du manga" class="manga-cover">
@@ -44,103 +43,32 @@
             </div>
         </div>
         
-        <!-- Section critiques populaires -->
         <section class="reviews-section">
+        {% for critique in critiques %}
             <div class="reviews-container">
-                <!-- Critique 1 -->
+
                 <div class="review-card">
                     <div class="review-header">
                         <img src="{{ asset('images/critiquespage2/robin.jpg') }}" alt="Avatar" class="review-avatar">
                         <div class="review-user-info">
-                            <h3 class="review-username">CocoRobin</h3>
+                            <h3 class="review-username">{{ critique.user.username }}</h3>
                         </div>
                         <div class="review-status">
                             <span class="review-date">3 Juillet 2024</span>
                         </div>
                     </div>
-                    <p class="review-text">
-                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
-                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
-                    </p>
-                    <p class="review-text">
-                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
-                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
-                        after all, out of the 23~ minutes of each episode 3 are spent ...
-                    </p>
+                    <p class="review-text">Blabla blajfjfepfjefejfefjepfj.</p>
                     <div class="review-info">
                         <span class="review-rating">4.85/5</span>
                         <span class="review-report">Report</span>
                     </div>
                     <div class="review-actions">
                         <button class="like-btn">❤️</button>
-                        <button class="more-btn">Lire plus</button>
                     </div>
                 </div>
             </div>
-            
-            <div class="reviews-container">
-                <!-- Critique 2 -->
-                <div class="review-card">
-                    <div class="review-header">
-                        <img src="{{ asset('images/critiquespage2/Donquixote_Doflamingo.webp') }}" alt="Avatar" class="review-avatar">
-                        <div class="review-user-info">
-                            <h3 class="review-username">doffyxmaria</h3>
-                        </div>
-                        <div class="review-status">
-                            <span class="review-date">3 Juillet 2024</span>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
-                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
-                    </p>
-                    <p class="review-text">
-                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
-                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
-                        after all, out of the 23~ minutes of each episode 3 are spent ...
-                    </p>
-                    <div class="review-info">
-                        <span class="review-rating">4.85/5</span>
-                        <span class="review-report">Report</span>
-                    </div>
-                    <div class="review-actions">
-                        <button class="like-btn">❤️</button>
-                        <button class="more-btn">Lire plus</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="reviews-container">
-                <!-- Critique 3 -->
-                <div class="review-card">
-                    <div class="review-header">
-                        <img src="{{ asset('images/critiquespage2/Luffy1.jpg') }}" alt="Avatar" class="review-avatar">
-                        <div class="review-user-info">
-                            <h3 class="review-username">luffytaroooo</h3>
-                        </div>
-                        <div class="review-status">
-                            <span class="review-date">3 Juillet 2024</span>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        If I were to say anything bad (and I will have to do that as this review is not a positive one) 
-                        about this anime that would not offend the hardcore fans (and I know there are a lot) is that it's PAINFULLY slow.
-                    </p>
-                    <p class="review-text">
-                        Even if you leave the fillers aside, still- the plot itself progresses in such a slow pace that it's rather hard to watch. 
-                        Now for a younger audience it may not matter that much, but to me as a higher age audience, it matters greatly, 
-                        after all, out of the 23~ minutes of each episode 3 are spent ...
-                    </p>
-                    <div class="review-info">
-                        <span class="review-rating">4.85/5</span>
-                        <span class="review-report">Report</span>
-                    </div>
-                    <div class="review-actions">
-                        <button class="like-btn">❤️</button>
-                        <button class="more-btn">Lire plus</button>
-                    </div>
-                </div>
-            </div>
+        {% endfor %}
+
         </section>
     </main>
 {% endblock %}

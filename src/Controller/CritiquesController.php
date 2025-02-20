@@ -38,9 +38,8 @@ class CritiquesController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $data = $request->request->all();
-            dump($data); // Vérification des données reçues
+            dump($data); 
 
-            // Vérification que tous les champs sont bien remplis
             if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
                 $this->addFlash('error', 'Tous les champs sont obligatoires.');
                 return $this->redirectToRoute('critiques_new');
@@ -50,7 +49,6 @@ class CritiquesController extends AbstractController
             $critique->setTitre($data['titre']);
             $critique->setContenu($data['contenu']);
 
-            // Vérifier si le manga existe
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
             if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
@@ -58,7 +56,6 @@ class CritiquesController extends AbstractController
             }
             $critique->setManga($manga);
 
-            // Vérifier que la note est un nombre valide entre 1 et 5
             $note = (int)$data['note'];
             if ($note < 1 || $note > 5) {
                 $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
@@ -106,9 +103,8 @@ class CritiquesController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $data = $request->request->all();
-            dump($data); // Vérification des données reçues
+            dump($data); // 
 
-            // Vérifier que tous les champs sont bien remplis
             if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
                 $this->addFlash('error', 'Tous les champs sont obligatoires.');
                 return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
@@ -117,7 +113,6 @@ class CritiquesController extends AbstractController
             $critique->setTitre($data['titre']);
             $critique->setContenu($data['contenu']);
 
-            // Vérifier si le manga existe
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
             if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
@@ -125,7 +120,6 @@ class CritiquesController extends AbstractController
             }
             $critique->setManga($manga);
 
-            // Vérifier que la note est correcte
             $note = (int)$data['note'];
             if ($note < 1 || $note > 5) {
                 $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');

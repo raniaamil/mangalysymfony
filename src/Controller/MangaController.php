@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Manga; // On importe la classe Manga pour manipuler l'entité
 use App\Repository\MangaRepository; // On importe le repository pour interagir avec la base de données
-use App\Repository\GenreRepository; // On importe le repository pour interagir avec la base de données
+use App\Repository\GenreRepository; 
+use App\Repository\CritiquesRepository;// On importe le repository pour interagir avec la base de données
 use Doctrine\ORM\EntityManagerInterface; // Pour interagir avec la base de données
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des contrôleurs Symfony
 use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
@@ -100,9 +101,12 @@ class MangaController extends AbstractController
     }
 
     #[Route('/{id}', name: 'manga_show', methods: ['GET'])] 
-    public function show(MangaRepository $mangaRepository, Manga $manga): Response
+    public function show(MangaRepository $mangaRepository, Manga $manga, CritiquesRepository $critiquesRepository): Response
     {
-        return $this->render('manga/show.html.twig', ['manga' => $manga]); 
+
+        $critiques = $critiquesRepository->findby(['manga' => $manga]);
+
+        return $this->render('manga/show.html.twig', ['manga' => $manga , 'critiques' => $critiques]); 
     }
 }
 
