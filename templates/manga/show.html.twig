@@ -54,12 +54,15 @@
                             <h3 class="review-username">{{ critique.user.username }}</h3>
                         </div>
                         <div class="review-status">
-                            <span class="review-date">3 Juillet 2024</span>
+                            <span class="review-date">Publiée le : {{ critique.datePublication|date('d/m/Y H:i') }} | Modifiée le : {{ critique.dateModification|date('d/m/Y H:i') }} </span>
                         </div>
                     </div>
-                    <p class="review-text">Blabla blajfjfepfjefejfefjepfj.</p>
+                    <div class="post-header">
+                        <span>{{ critique.titre }}</span>
+                    </div>
+                    <p class="review-text">{{ critique.contenu }}</p>
                     <div class="review-info">
-                        <span class="review-rating">4.85/5</span>
+                        <span class="review-rating">{{ critique.note }}/5</span>
                         <span class="review-report">Report</span>
                     </div>
                     <div class="review-actions">

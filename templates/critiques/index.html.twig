@@ -33,7 +33,7 @@
                         <td>{{ critique.id }}</td>
                     {% endif %}
                     <td><a href="{{ path('critiques_show', {id: critique.id}) }}">{{ critique.titre }}</a></td>
-                    <td>{{ critique.contenu|slice(0, 50) }}...</td>
+                    <td>{{ critique.contenu|slice(0, 5) }}...</td>
                     <td>{{ critique.manga.titre }}</td>
                     <td>{{ critique.genre }}</td>
                     <td>{{ critique.user.username }}</td>
