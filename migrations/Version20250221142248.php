@@ -20,7 +20,6 @@ final class Version20250221142248 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE critiques CHANGE report report TINYINT(1) NOT NULL');
         $this->addSql('ALTER TABLE post CHANGE report report TINYINT(1) NOT NULL');
         $this->addSql('ALTER TABLE theorie CHANGE report report TINYINT(1) NOT NULL');
     }
@@ -28,7 +27,6 @@ final class Version20250221142248 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE critiques CHANGE report report TINYINT(1) DEFAULT 0 NOT NULL');
         $this->addSql('ALTER TABLE post CHANGE report report TINYINT(1) DEFAULT 0 NOT NULL');
         $this->addSql('ALTER TABLE theorie CHANGE report report TINYINT(1) DEFAULT 0 NOT NULL');
     }
