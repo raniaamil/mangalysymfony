@@ -27,7 +27,7 @@
                     <td>
                         <a href="{{ path('post_show', {id: post.id}) }}">{{ post.titre }}</a>
                     </td>
-                    <td>{{ post.contenu|slice(0, 50) }}...</td>
+                    <td>{{ post.contenu|slice(0, 30) }}...</td>
                     <td>{{ post.manga.titre }}</td>
                     <td>{{ post.genre }}</td>
                     <td>{{ post.datePublication|date('d/m/Y H:i') }}</td>

@@ -1,8 +1,40 @@
+
+/* ----------------------------- FILTRES ----------------------------- */
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 50px;
+}
+
+.filters select, .filters input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.add-manga-btn {
+    padding: 12px 15px;
+    background-color: #7327BC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.add-manga-btn:hover {
+    background-color: #5e2ab4;
+}
+
+/* ----------------------------- LISTE DES MANGAS ---------------------------- */
+
 .container {
     width: 90%;
     margin: 0 auto;
     padding: 20px;
-    margin-top: 50px;
     margin-bottom: 70px;
     border-radius: 10px;
 }

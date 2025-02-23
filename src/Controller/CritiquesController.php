@@ -35,45 +35,44 @@ class CritiquesController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    
         if ($request->isMethod('POST')) {
             $data = $request->request->all();
-            dump($data); 
-
+    
             if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
                 $this->addFlash('error', 'Tous les champs sont obligatoires.');
                 return $this->redirectToRoute('critiques_new');
             }
-
+    
             $critique = new Critiques();
             $critique->setTitre($data['titre']);
             $critique->setContenu($data['contenu']);
-
+    
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
             if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('critiques_new');
             }
             $critique->setManga($manga);
-
+    
             $note = (int)$data['note'];
             if ($note < 1 || $note > 5) {
                 $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
                 return $this->redirectToRoute('critiques_new');
             }
             $critique->setNote($note);
-
+    
             $critique->setDatePublication(new \DateTime());
             $critique->setUser($this->getUser());
-
+    
             $em->persist($critique);
             $em->flush();
-
+    
             return $this->redirectToRoute('critiques_index');
         }
-
+    
         return $this->render('critiques/new.html.twig');
-    }
+    }    
 
     #[Route('/{id<\d+>}', name: 'critiques_show', methods: ['GET'])]
     public function show(Critiques $critique, EntityManagerInterface $em): Response
@@ -100,40 +99,39 @@ class CritiquesController extends AbstractController
     public function edit(Critiques $critique, Request $request, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    
         if ($request->isMethod('POST')) {
             $data = $request->request->all();
-            dump($data); // 
-
+    
             if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
                 $this->addFlash('error', 'Tous les champs sont obligatoires.');
                 return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
             }
-
+    
             $critique->setTitre($data['titre']);
             $critique->setContenu($data['contenu']);
-
+    
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
             if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
             }
             $critique->setManga($manga);
-
+    
             $note = (int)$data['note'];
             if ($note < 1 || $note > 5) {
                 $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
                 return $this->redirectToRoute('critiques_edit', ['id' => $critique->getId()]);
             }
             $critique->setNote($note);
-
+    
             $em->flush();
-
+    
             return $this->redirectToRoute('critiques_index');
         }
-
+    
         return $this->render('critiques/edit.html.twig', ['critique' => $critique]);
-    }
+    }    
 
     #[Route('/{id}/delete', name: 'critiques_delete', methods: ['POST'])]
     public function delete(Critiques $critique, EntityManagerInterface $em, Request $request): Response

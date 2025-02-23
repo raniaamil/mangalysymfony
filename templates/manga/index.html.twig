@@ -1,8 +1,37 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Liste des Mangas{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/mangas/indexmangas.css') }}">
+{% endblock %}
+
 {% block body %}
+
+<div class="filters">
+        <select id="filter-genre">
+            <option value="all">Tous les genres</option>
+            <option value="shonen">Shônen</option>
+            <option value="shojo">Shôjo</option>
+            <option value="seinen">Seinen</option>
+            <option value="josei">Josei</option>
+            <option value="kodomo">Kodomo</option>
+        </select>
+        
+        <select id="filter-order">
+            <option value="all">Ordre alphabétique</option>
+            <option value="popular">A à Z</option>
+            <option value="recent">Z à A</option>
+        </select>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('manga_new') }}" class="add-manga-btn">Ajouter un manga</a>
+        {% endif %}
+
+</div>
+
 <div class="container mt-5">
-    <h1 class="mb-4">Liste des mangas</h1>
+    <h1 class="mb-4">Liste des Mangas</h1>
 
     <table class="table table-striped">
         <thead>
@@ -26,9 +55,7 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <td>{{ manga.id }}</td>
                         <td>
-                            <a href="{{ path('manga_show', { id: manga.id }) }}">
-                                {{ manga.titre }}
-                            </a>
+                            <a href="{{ path('manga_show', { id: manga.id }) }}">{{ manga.titre }}</a>
                         </td>
                         <td>{{ manga.auteur }}</td>
                         <td>{{ manga.dateSortie|date('d/m/Y') }}</td>
@@ -43,19 +70,13 @@
                         </td>
                     {% else %}
                         <td>
-                            <a href="{{ path('manga_show', { id: manga.id }) }}">
-                                {{ manga.titre }}
-                            </a>
+                            <a href="{{ path('manga_show', { id: manga.id }) }}">{{ manga.titre }}</a>
                         </td>
                     {% endif %}
                 </tr>
             {% else %}
                 <tr>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td colspan="7" class="text-center">Aucun manga trouvé.</td>
-                    {% else %}
-                        <td colspan="1" class="text-center">Aucun manga trouvé.</td>
-                    {% endif %}
+                    <td colspan="{% if is_granted('ROLE_ADMIN') %}7{% else %}1{% endif %}" class="text-center">Aucun manga trouvé.</td>
                 </tr>
             {% endfor %}
         </tbody>

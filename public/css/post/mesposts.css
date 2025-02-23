@@ -1,29 +1,31 @@
-
 .container {
     width: 90%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin-top: 80px;
+    margin-top: 50px;
     margin-bottom: 70px;
     border-radius: 10px;
 }
 
 h1 {
-    color: #5e2ab4;
+    color: #7327BC;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
 }
 
 table thead {
-    background-color: #f4f4f4;
+    background-color: #d8b6f0;
+}
+
+table tbody {
+    background-color: white;
 }
 
 table th {

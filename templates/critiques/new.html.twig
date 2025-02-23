@@ -19,11 +19,9 @@
             <label for="review-rating">Note :</label>
             <select id="review-rating" name="note" required>
                 <option value="" disabled selected>Sélectionnez une note</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
+                {% for i in 1..5 %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
             </select>
             
             <label for="review-text">Votre critique :</label>

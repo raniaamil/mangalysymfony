@@ -27,7 +27,7 @@
                     <td>
                         <a href="{{ path('theorie_show', {id: theorie.id}) }}">{{ theorie.titre }}</a>
                     </td>
-                    <td>{{ theorie.contenu|slice(0, 50) }}...</td>
+                    <td>{{ theorie.contenu|slice(0, 30) }}...</td>
                     <td>{{ theorie.manga.titre }}</td>
                     <td>{{ theorie.genre }}</td>
                     <td>{{ theorie.datePublication|date('d/m/Y H:i') }}</td>
