@@ -1,39 +1,45 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Ajouter un Manga{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/mangas/newmangas.css') }}">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <h1>Ajouter un manga</h1>
-    <form method="post" class="mt-4">
-        <div class="form-group">
-            <label for="titre">Titre</label>
-            <input type="text" id="titre" name="titre" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="auteur">Auteur</label>
-            <input type="text" id="auteur" name="auteur" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="date_sortie">Date de sortie</label>
-            <input type="date" id="date_sortie" name="date_sortie" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="image">Image (URL)</label>
-            <input type="text" id="image" name="image" class="form-control">
-        </div>
-        <div class="form-group">
-            <label for="genre_id">Genre</label>
-            <select id="genre_id" name="genre_id" class="form-control" required>
+    <div class="manga-review-container">
+        <form class="review-form" method="post">
+            <label for="titre">Titre :</label>
+            <input type="text" id="titre" name="titre" placeholder="Ex : One Piece" required>
+            
+            <label for="auteur">Auteur :</label>
+            <input type="text" id="auteur" name="auteur" placeholder="Ex : Eiichiro Oda" required>
+            
+            <label for="date_sortie">Date de sortie :</label>
+            <input type="date" id="date_sortie" name="date_sortie" required>
+            
+            <label for="description">Description :</label>
+            <textarea id="description" name="description" rows="4" placeholder="Brève présentation du manga..." required></textarea>
+            
+            <label for="image">Image (URL) :</label>
+            <input type="text" id="image" name="image" placeholder="URL de l'image">
+            
+            <label for="genre_id">Genre :</label>
+            <select id="genre_id" name="genre_id" required>
+                <option value="" disabled selected>Sélectionnez un genre</option>
                 {% for genre in genres %}
                     <option value="{{ genre.id }}">{{ genre.nom }}</option>
                 {% endfor %}
             </select>
-        </div>
-        <button type="submit" class="btn btn-success mt-3">Enregistrer</button>
-        <a href="{{ path('manga_index') }}" class="btn btn-secondary mt-3">Retour</a>
-    </form>
-</div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script defer src="{{ asset('js/critique/newcritique.js') }}"></script>
 {% endblock %}

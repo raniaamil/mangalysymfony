@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
 use Symfony\Component\HttpFoundation\Response; // Pour renvoyer des réponses HTTP
 use Symfony\Component\Routing\Annotation\Route; // Pour définir les routes
 
-#[Route('/admin/genre')] // Route de base pour le contrôleur Genre
+#[Route('/admin/genres')]
 class AdminGenreController extends AbstractController
 {
     #[Route('/', name: 'genre_index', methods: ['GET'])] // Route pour afficher la liste des genre
@@ -19,7 +19,7 @@ class AdminGenreController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
         $genre = $genreRepository->findAll(); // Récupère tous les genre de la base de données
 
-        return $this->render('admin/genre/index.html.twig', ['genre' => $genre]); // Affiche la vue avec la liste des genres
+        return $this->render('admin/genres/index.html.twig', ['genre' => $genre]); // Affiche la vue avec la liste des genres
     }
 
     #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] 
@@ -38,7 +38,7 @@ class AdminGenreController extends AbstractController
             return $this->redirectToRoute('genre_index'); 
         }
 
-        return $this->render('admin/genre/new.html.twig'); 
+        return $this->render('admin/genres/new.html.twig'); 
     }
 
     #[Route('/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] // Route pour modifier un genre existant
@@ -54,7 +54,7 @@ class AdminGenreController extends AbstractController
             return $this->redirectToRoute('genre_index'); // Redirige vers la liste des genres
         }
 
-        return $this->render('admin/genre/edit.html.twig', ['genre' => $genre]); // Affiche le formulaire de modification
+        return $this->render('admin/genres/edit.html.twig', ['genre' => $genre]); // Affiche le formulaire de modification
     }
 
     #[Route('/{id}/delete', name: 'genre_delete', methods: ['POST'])] // Route pour supprimer un genre

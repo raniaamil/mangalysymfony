@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Liste des Genres{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/genre/genreindex.css') }}">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4">Liste des genres</h1>
+    <h1 class="mb-4">Liste des Genres</h1>
 
     <table class="table table-striped">
         <thead>
@@ -32,11 +38,8 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <!-- Bouton pour ajouter un genre -->
-    <div class="mb-3">
-        <a href="{{ path('genre_new') }}" class="btn btn-success">Ajouter un genre</a>
+    <div>
+        <a href="{{ path('genre_new') }}" class="add-genre-btn">Ajouter un genre</a>
     </div>
-
 </div>
 {% endblock %}

@@ -1,0 +1,118 @@
+/* ----------------------------- AJOUTER UN MANGA ----------------------------- */
+
+.manga-review-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    margin-top: 90px;
+}
+
+@media (max-width: 768px) {
+    .manga-info {
+        flex-direction: column;
+        text-align:center;
+    }
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 98%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    
+}
+
+textarea {
+    resize: vertical;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    background-color: white;
+    appearance: none; /* Supprime le style par défaut du navigateur */
+    -webkit-appearance: none; /* Pour les navigateurs WebKit */
+    -moz-appearance: none; /* Pour Firefox */
+    cursor: pointer;
+}
+
+select:focus {
+    border-color: #7327BC;
+    outline: none;
+}
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-wrapper::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #7327BC;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.submit-btn, .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn {
+    background-color: #7327BC;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #5e2ab4;
+}
+
+.cancel-btn {
+    background-color: #ddd;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #bbb;
+}
+
+@media (max-width: 600px) {
+    .manga-container, .manga-review-container {
+        width: 90%;
+        padding: 15px;
+    }
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

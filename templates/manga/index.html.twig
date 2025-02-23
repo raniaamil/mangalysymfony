@@ -81,11 +81,5 @@
             {% endfor %}
         </tbody>
     </table>
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="mb-3">
-            <a href="{{ path('manga_new') }}" class="btn btn-success">Ajouter un manga</a>
-        </div>
-    {% endif %}
 </div>
 {% endblock %}

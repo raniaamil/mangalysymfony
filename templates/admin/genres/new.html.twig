@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/genre/genrenew.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="genre-container">
+        <form class="genre-form" method="post">
+            <label for="nom">Nom du genre :</label>
+            <input type="text" id="nom" name="nom" placeholder="Ex : Shonen" required>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
