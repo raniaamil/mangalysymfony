@@ -11,7 +11,7 @@
         <div class="reset-container">
             <h1 class="reset-title">Mot de passe oublié</h1>
             <p>Veuillez entrer votre email pour réinitialiser votre mot de passe</p>
-            
+
             {# Affichage d'éventuels messages d'erreur flash (du controller) #}
             {% for flash_error in app.flashes('reset_password_error') %}
                 <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
@@ -19,17 +19,19 @@
 
             {# Démarrage du formulaire Symfony en lui appliquant la classe reset-form #}
             {{ form_start(requestForm, {'attr': {'class': 'reset-form'}}) }}
-                
-                {# On rend le champ email avec un label personnalisé ou avec le placeholder 
-                   pour correspondre à votre design statique. Ici, on désactive le label et on 
+
+                {# On rend le champ email avec un label personnalisé ou avec le placeholder
+                   pour correspondre à votre design statique. Ici, on désactive le label et on
                    ajoute un placeholder. #}
                 {{ form_row(requestForm.email, {
                     'label': 'Votre Email',
                     'attr': {'placeholder': 'Email'}
                 }) }}
-                
+
                 <button type="submit" class="reset-btn">Envoyer</button>
             {{ form_end(requestForm) }}
         </div>
     </div>
 {% endblock %}
+
+

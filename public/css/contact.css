@@ -180,8 +180,8 @@ input::placeholder, textarea::placeholder {
     background-color: #5e2ab4;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+
+@media (max-width: 760px) {
     .contact-container {
         flex-direction: column;
         margin-right: 10px;
@@ -191,7 +191,7 @@ input::placeholder, textarea::placeholder {
     }
 }
 
-@media (max-width: 450px) {
+@media (min-width: 320px) {
     .contact-container {
         flex-direction: column;
         margin-right: 10px;

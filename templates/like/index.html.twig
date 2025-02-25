@@ -16,5 +16,32 @@
         <li>Your controller at <code>C:/Users/rania/Desktop/API_REST/api-user/src/Controller/LikeController.php</code></li>
         <li>Your template at <code>C:/Users/rania/Desktop/API_REST/api-user/templates/like/index.html.twig</code></li>
     </ul>
+
+    <!-- Example button to toggle like -->
+    <button data-id="123" data-type="theorie" class="like-toggle-btn">Like</button>
 </div>
+
+<script>
+    document.querySelector('.like-toggle-btn').addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const type = this.getAttribute('data-type');
+        const token = "{{ csrf_token('like_toggle') }}";
+
+        fetch('/likes/toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${id}&type=${type}&_csrf_token=${token}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.isLiked) {
+                alert('Liked!');
+            } else {
+                alert('Disliked!');
+            }
+        });
+    });
+</script>
 {% endblock %}

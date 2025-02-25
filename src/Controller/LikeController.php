@@ -12,17 +12,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 #[Route('/likes')]
 class LikeController extends AbstractController
 {
     #[Route('/toggle', name: 'like_toggle', methods: ['POST'])]
-    public function toggleLike(Request $request, EntityManagerInterface $em): Response
+    public function toggleLike(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $user = $this->getUser();
 
         if (!$user) {
             return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $token = $request->request->get('_csrf_token');
+
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('like_toggle', $token))) {
+            return $this->json(['message' => 'Token CSRF invalide.'], Response::HTTP_FORBIDDEN);
         }
 
         $entityId = $request->request->get('id');
@@ -100,7 +108,7 @@ class LikeController extends AbstractController
         }
 
         $em->flush();
-        
+
         return $this->json([
             'isLiked' => $isLiked,
             'type' => $type

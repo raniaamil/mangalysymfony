@@ -4,6 +4,7 @@
 <div class="container mt-5">
     <h1>Modifier l'utilisateur</h1>
     <form method="post" class="mt-4">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" class="form-control" value="{{ user.username }}" required>

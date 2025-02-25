@@ -9,12 +9,14 @@
 {% block body %}
     <div class="manga-review-container">
         <form class="review-form" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
             <label for="review-title">Titre de la critique :</label>
             <input type="text" id="review-title" name="titre" placeholder="Ex : Une aventure époustouflante..." required>
-            
+
             <label for="review-manga">Manga :</label>
             <input type="text" id="review-manga" name="manga" placeholder="Ex : Naruto" required>
-            
+
             <!-- Liste déroulante pour la note -->
             <label for="review-rating">Note :</label>
             <select id="review-rating" name="note" required>
@@ -23,10 +25,10 @@
                     <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
             </select>
-            
+
             <label for="review-text">Votre critique :</label>
             <textarea id="review-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>
-            
+
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Publier</button>
                 <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>

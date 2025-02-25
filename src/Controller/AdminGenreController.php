@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des co
 use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
 use Symfony\Component\HttpFoundation\Response; // Pour renvoyer des réponses HTTP
 use Symfony\Component\Routing\Annotation\Route; // Pour définir les routes
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 #[Route('/admin/genres')]
 class AdminGenreController extends AbstractController
@@ -23,38 +25,48 @@ class AdminGenreController extends AbstractController
     }
 
     #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] 
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
-        if ($request->isMethod('POST')) { 
-            
-            $genre = new Genre(); 
-
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    
+        if ($request->isMethod('POST')) {
+            $submittedToken = $request->request->get('_token');
+    
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('new_genre', $submittedToken))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide');
+            }
+    
+            $genre = new Genre();
             $genre->setNom($request->request->get('nom'));
-
-            $em->persist($genre); 
-            $em->flush(); 
-
-            return $this->redirectToRoute('genre_index'); 
+    
+            $em->persist($genre);
+            $em->flush();
+    
+            return $this->redirectToRoute('genre_index');
         }
-
-        return $this->render('admin/genres/new.html.twig'); 
-    }
+    
+        return $this->render('admin/genres/new.html.twig');
+    }    
 
     #[Route('/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] // Route pour modifier un genre existant
-    public function edit(Genre $genre, Request $request, EntityManagerInterface $em): Response
+    public function edit(Genre $genre, Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
-        if ($request->isMethod('POST')) { // Vérifie si la requête est POST
-            // Met à jour les informations du genre
-            $genre->setNom($request->request->get('nom')); // Modifie le nom
-
-            $em->flush(); // Sauvegarde les modifications
-
-            return $this->redirectToRoute('genre_index'); // Redirige vers la liste des genres
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    
+        if ($request->isMethod('POST')) {
+            $submittedToken = $request->request->get('_token');
+    
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('edit_genre', $submittedToken))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide');
+            }
+    
+            $genre->setNom($request->request->get('nom'));
+            $em->flush();
+    
+            return $this->redirectToRoute('genre_index');
         }
-
-        return $this->render('admin/genres/edit.html.twig', ['genre' => $genre]); // Affiche le formulaire de modification
+    
+        return $this->render('admin/genres/edit.html.twig', ['genre' => $genre]);
     }
 
     #[Route('/{id}/delete', name: 'genre_delete', methods: ['POST'])] // Route pour supprimer un genre

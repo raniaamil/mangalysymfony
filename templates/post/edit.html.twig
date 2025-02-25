@@ -9,12 +9,14 @@
 {% block body %}
 <main class="manga-post-container">
     <form method="post" enctype="multipart/form-data" class="post-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
         <label for="post-title">Titre du post :</label>
         <input type="text" id="post-title" name="titre" placeholder="Ex : Les gars vous êtes plutôt team Sakura ou team Hinata ?" required value="{{ post.titre }}">
-        
+
         <label for="post-manga">Manga :</label>
         <input type="text" id="post-manga" name="manga" placeholder="Ex : Naruto" required value="{{ post.manga.titre }}">
-        
+
         <label for="post-text">Votre texte :</label>
         <div class="editor-toolbar">
             <button type="button" class="editor-btn"><b>B</b></button>
@@ -34,7 +36,7 @@
             <button type="button" class="editor-btn"><i class="fa-solid fa-question"></i></button>
         </div>
         <textarea id="post-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required>{{ post.contenu }}</textarea>
-        
+
         <div class="form-buttons">
             <button type="submit" class="submit-btn">Enregistrer</button>
             <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>

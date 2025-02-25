@@ -2,37 +2,44 @@
 
 namespace App\Controller;
 
-use App\Entity\Manga; // On importe la classe Manga pour manipuler l'entité
-use App\Repository\MangaRepository; // On importe le repository pour interagir avec la base de données
-use App\Repository\GenreRepository; 
-use App\Repository\CritiquesRepository;// On importe le repository pour interagir avec la base de données
-use Doctrine\ORM\EntityManagerInterface; // Pour interagir avec la base de données
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des contrôleurs Symfony
-use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
-use Symfony\Component\HttpFoundation\Response; // Pour renvoyer des réponses HTTP
-use Symfony\Component\Routing\Annotation\Route; // Pour définir les routes
+use App\Entity\Manga;
+use App\Repository\MangaRepository;
+use App\Repository\GenreRepository;
+use App\Repository\CritiquesRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
-#[Route('/mangas')] // Route de base pour le contrôleur Manga
+#[Route('/mangas')]
 class MangaController extends AbstractController
 {
-    #[Route('/', name: 'manga_index', methods: ['GET'])] // Route pour afficher la liste des mangas
+    #[Route('/', name: 'manga_index', methods: ['GET'])]
     public function index(MangaRepository $mangaRepository): Response
     {
-        $mangas = $mangaRepository->findAll(); // Récupère tous les mangas de la base de données
+        $mangas = $mangaRepository->findAll();
 
-        return $this->render('manga/index.html.twig', ['mangas' => $mangas]); // Affiche la vue avec la liste des mangas
+        return $this->render('manga/index.html.twig', ['mangas' => $mangas]);
     }
 
-    #[Route('/new', name: 'manga_new', methods: ['GET', 'POST'])] // Route pour créer un nouveau manga
-    public function new(Request $request, EntityManagerInterface $em, GenreRepository $genreRepository): Response
+    #[Route('/new', name: 'manga_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $em, GenreRepository $genreRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $genres = $genreRepository->findAll(); // Retourne tous les genres depuis la base de données
+        $genres = $genreRepository->findAll();
 
-        if ($request->isMethod('POST')) { // Vérifie si la requête est POST
-            $manga = new Manga(); // Crée une nouvelle instance de l'entité Manga
+        if ($request->isMethod('POST')) {
+            $token = $request->request->get('_csrf_token');
 
-            // Récupère les données du formulaire et les attribue au manga
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('manga_new', $token))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide.');
+            }
+
+            $manga = new Manga();
+
             $manga->setTitre($request->request->get('titre'));
             $manga->setAuteur($request->request->get('auteur'));
             $manga->setDateSortie(new \DateTime($request->request->get('date_sortie')));
@@ -40,32 +47,40 @@ class MangaController extends AbstractController
             $manga->setImage($request->request->get('image'));
             $genreId = $request->request->get('genre_id');
             $genre = $genreRepository->find($genreId);
-            
+
             if (!$genre) {
                 throw $this->createNotFoundException('Le genre sélectionné est introuvable.');
             }
             $manga->setGenre($genre);
 
-            $em->persist($manga); // Prépare le manga à être sauvegardé
-            $em->flush(); // Sauvegarde dans la base de données
+            $em->persist($manga);
+            $em->flush();
 
-            return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas après création
+            return $this->redirectToRoute('manga_index');
         }
 
+        $csrfToken = $csrfTokenManager->getToken('manga_new')->getValue();
+
         return $this->render('manga/new.html.twig', [
-            'genres' => $genres, // Passage des genres au template
-        ]); 
+            'genres' => $genres,
+            'csrf_token' => $csrfToken,
+        ]);
     }
 
-    #[Route('/{id}/edit', name: 'manga_edit', methods: ['GET', 'POST'])] // Route pour modifier un manga existant
-    public function edit(Manga $manga, Request $request, EntityManagerInterface $em, GenreRepository $genreRepository): Response
+    #[Route('/{id}/edit', name: 'manga_edit', methods: ['GET', 'POST'])]
+    public function edit(Manga $manga, Request $request, EntityManagerInterface $em, GenreRepository $genreRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $genres = $genreRepository->findAll();
 
-        if ($request->isMethod('POST')) { // Vérifie si la requête est POST
-            // Met à jour les informations du manga
+        if ($request->isMethod('POST')) {
+            $token = $request->request->get('_csrf_token');
+
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('manga_edit', $token))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide.');
+            }
+
             $manga->setTitre($request->request->get('titre'));
             $manga->setAuteur($request->request->get('auteur'));
             $manga->setDateSortie(new \DateTime($request->request->get('date_sortie')));
@@ -73,40 +88,46 @@ class MangaController extends AbstractController
             $manga->setImage($request->request->get('image'));
             $genreId = $request->request->get('genre_id');
             $genre = $genreRepository->find($genreId);
-            
+
             if (!$genre) {
                 throw $this->createNotFoundException('Le genre sélectionné est introuvable.');
             }
             $manga->setGenre($genre);
 
-            $em->flush(); // Sauvegarde les modifications
+            $em->flush();
 
-            return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas
+            return $this->redirectToRoute('manga_index');
         }
 
+        $csrfToken = $csrfTokenManager->getToken('manga_edit')->getValue();
+
         return $this->render('manga/edit.html.twig', [
-            'manga' => $manga, // Affiche le formulaire de modification
-            'genres' => $genres, // Passage des genres au template
-        ]); 
+            'manga' => $manga,
+            'genres' => $genres,
+            'csrf_token' => $csrfToken,
+        ]);
     }
 
-    #[Route('/{id}/delete', name: 'manga_delete', methods: ['POST'])] // Route pour supprimer un manga
-    public function delete(Manga $manga, EntityManagerInterface $em): Response
+    #[Route('/{id}/delete', name: 'manga_delete', methods: ['POST'])]
+    public function delete(Manga $manga, EntityManagerInterface $em, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $em->remove($manga); // Supprime le manga
-        $em->flush(); // Enregistre la suppression dans la base de données
 
-        return $this->redirectToRoute('manga_index'); // Redirige vers la liste des mangas après suppression
+        if ($this->isCsrfTokenValid('delete' . $manga->getId(), $request->request->get('_token'))) {
+            $em->remove($manga);
+            $em->flush();
+            $this->addFlash('success', 'Manga supprimé avec succès.');
+        } else {
+            $this->addFlash('error', 'Erreur lors de la suppression.');
+        }
+        return $this->redirectToRoute('manga_index');
     }
 
-    #[Route('/{id}', name: 'manga_show', methods: ['GET'])] 
+    #[Route('/{id}', name: 'manga_show', methods: ['GET'])]
     public function show(MangaRepository $mangaRepository, Manga $manga, CritiquesRepository $critiquesRepository): Response
     {
+        $critiques = $critiquesRepository->findBy(['manga' => $manga]);
 
-        $critiques = $critiquesRepository->findby(['manga' => $manga]);
-
-        return $this->render('manga/show.html.twig', ['manga' => $manga , 'critiques' => $critiques]); 
+        return $this->render('manga/show.html.twig', ['manga' => $manga, 'critiques' => $critiques]);
     }
 }
-

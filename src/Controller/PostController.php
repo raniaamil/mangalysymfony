@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
 
 #[Route('/posts')]
 class PostController extends AbstractController
@@ -18,9 +20,7 @@ class PostController extends AbstractController
     #[Route('/', name: 'post_index', methods: ['GET'])]
     public function index(PostRepository $postRepository, Request $request): Response
     {
-
         $posts = $postRepository->findAll();
-
 
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
@@ -28,11 +28,17 @@ class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
+            $token = $request->request->get('_csrf_token');
+
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('post_new', $token))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide.');
+            }
+
             $post = new Post();
             $post->setTitre($request->request->get('titre'));
             $post->setContenu($request->request->get('contenu'));
@@ -68,24 +74,28 @@ class PostController extends AbstractController
             return $this->redirectToRoute('post_index');
         }
 
-        return $this->render('post/new.html.twig');
+        $csrfToken = $csrfTokenManager->getToken('post_new')->getValue();
+
+        return $this->render('post/new.html.twig', [
+            'csrf_token' => $csrfToken,
+        ]);
     }
 
     #[Route('/{id<\d+>}', name: 'post_show', methods: ['GET'])]
     public function show(Post $post, EntityManagerInterface $em): Response
     {
         $mediaBase64 = null;
-    
-        if ($post->getMedia()) { 
+
+        if ($post->getMedia()) {
             $mediaPath = $this->getParameter('media_directory') . '/' . $post->getMedia();
-            if (file_exists($mediaPath)) { 
-                $mediaBase64 = base64_encode(file_get_contents($mediaPath)); 
+            if (file_exists($mediaPath)) {
+                $mediaBase64 = base64_encode(file_get_contents($mediaPath));
             }
         }
 
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
-    
+
         // Vérifier si l'utilisateur a liké le post
         $isLiked = false;
         if ($user) {
@@ -94,7 +104,7 @@ class PostController extends AbstractController
                 'post' => $post
             ]) ? true : false;
         }
-    
+
         // Vérifier si l'utilisateur a liké les commentaires du post
         $commentaireLikes = [];
         if ($user) {
@@ -105,24 +115,29 @@ class PostController extends AbstractController
                 ]) ? true : false;
             }
         }
-    
+
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'media_base64' => $mediaBase64, 
+            'media_base64' => $mediaBase64,
             'commentaires' => $post->getCommentaires(),
             'isLiked' => $isLiked,
             'commentaireLikes' => $commentaireLikes,
             'type' => 'post'  // On passe le type pour le bouton like
         ]);
-    }    
-    
+    }
 
     #[Route('/{id<\d+>}/edit', name: 'post_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, EntityManagerInterface $em): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
+            $token = $request->request->get('_csrf_token');
+
+            if (!$csrfTokenManager->isTokenValid(new CsrfToken('post_edit', $token))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide.');
+            }
+
             $post->setTitre($request->request->get('titre'));
             $post->setContenu($request->request->get('contenu'));
 
@@ -153,8 +168,11 @@ class PostController extends AbstractController
             return $this->redirectToRoute('mes_posts');
         }
 
+        $csrfToken = $csrfTokenManager->getToken('post_edit')->getValue();
+
         return $this->render('post/edit.html.twig', [
             'post' => $post,
+            'csrf_token' => $csrfToken,
         ]);
     }
 
@@ -169,7 +187,7 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Post supprimé avec succès.');
         } else {
             $this->addFlash('error', 'Erreur lors de la suppression.');
-        }        
+        }
 
         return $this->redirectToRoute('mes_posts');
     }
@@ -178,7 +196,7 @@ class PostController extends AbstractController
     public function report(Post $post, EntityManagerInterface $em, Request $request): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-    
+
         if ($post->getReport()) {
             $this->addFlash('info', 'Ce post a déjà été signalé.');
         } else {
@@ -190,10 +208,10 @@ class PostController extends AbstractController
                 $this->addFlash('error', 'Erreur lors du signalement.');
             }
         }
-    
+
         return $this->redirectToRoute('post_show', ['id' => $post->getId()]);
     }
-    
+
     #[Route('/mesposts', name: 'mes_posts', methods: ['GET'])]
     public function myPosts(PostRepository $postRepository): Response
     {
@@ -201,12 +219,11 @@ class PostController extends AbstractController
         if (!$user) {
             throw $this->createAccessDeniedException();
         }
-        
+
         $posts = $postRepository->findBy(['user' => $user]);
-    
+
         return $this->render('post/mesposts.html.twig', [
             'posts' => $posts,
         ]);
-    }    
-    
+    }
 }

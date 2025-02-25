@@ -7,41 +7,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups; // Ajout de l'importation pour les groupes
 
 #[ORM\Entity(repositoryClass: MangaRepository::class)]
 class Manga
 {
-    /**
-     * @Groups({"manga_suggestion"})
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @Groups({"manga_suggestion"})
-     */
-    #[ORM\Column(length: 255)]
-    private ?string $titre = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $titre;
 
-    // Ne pas inclure le genre dans ce groupe
     #[ORM\ManyToOne(inversedBy: 'manga')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Genre $genre = null;
+    private Genre $genre;
 
-    #[ORM\Column(length: 150)]
-    private ?string $auteur = null;
+    #[ORM\Column(length: 150, nullable: false)]
+    private string $auteur;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_sortie = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    private \DateTimeInterface $date_sortie;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    private string $description;
 
-    #[ORM\Column(length: 255)]
-    private ?string $image = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $image;
 
     /**
      * @var Collection<int, Theorie>
@@ -63,7 +55,7 @@ class Manga
 
     public function __toString(): string
     {
-        return $this->titre; // Retourne le titre du manga lorsqu'il est utilisé comme une chaîne
+        return $this->titre; 
     }
 
     public function __construct()

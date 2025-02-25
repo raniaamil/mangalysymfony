@@ -4,6 +4,7 @@
 <h1>Ajouter un commentaire pour la critique "{{ critique.titre }}"</h1>
 
 <form method="post">
+    <input type="hidden" name="_token" value="{{ csrf_token('new_commentaire') }}">
     <div class="form-group">
         <label for="contenu">Contenu</label>
         <textarea id="contenu" name="contenu" class="form-control" required></textarea>

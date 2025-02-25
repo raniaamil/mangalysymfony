@@ -4,6 +4,7 @@
 <h1>Modifier le commentaire</h1>
 
 <form method="post">
+    <input type="hidden" name="_token" value="{{ csrf_token('edit_commentaire') }}">
     <div class="form-group">
         <label for="contenu">Contenu</label>
         <textarea id="contenu" name="contenu" class="form-control" required>{{ commentaire.contenu }}</textarea>
@@ -21,4 +22,3 @@
     {% endif %}
 </form>
 {% endblock %}
-

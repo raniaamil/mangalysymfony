@@ -11,7 +11,7 @@
         <div class="signup-container">
             <h1 class="signup-title">Connexion</h1>
             <form method="post" action="{{ path('app_login') }}" class="signup-form">
-                {# Le champ email est pré-rempli avec le dernier username saisi en cas d'erreur #}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <input type="email" name="_username" placeholder="Adresse e-mail" value="{{ last_username }}" required>
                 <input type="password" name="_password" placeholder="Mot de passe" required>
                 <div class="terms">
@@ -31,3 +31,4 @@
         </div>
     </div>
 {% endblock %}
+

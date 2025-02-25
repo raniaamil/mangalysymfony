@@ -12,11 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+
 
 #[Route('/commentaire')]
 class CommentaireController extends AbstractController
 {
-    // 1. Liste des commentaires
     #[Route('/', name: 'commentaire_index', methods: ['GET'])]
     public function index(CommentaireRepository $commentaireRepository): Response
     {
@@ -27,15 +29,14 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    // 2. Ajouter un nouveau commentaire pour 'Theorie' & 'Post'
-    #[Route('/new/{entity}/{id}', name: 'commentaire_new', methods: ['POST'])]
-    public function new(
-        string $entity,
-        int $id,
-        Request $request,
-        EntityManagerInterface $em
-    ): Response {
+    #[Route('/new/{entity}/{id}', name: 'commentaire_new', methods: ['GET', 'POST'])]
+    public function new(string $entity, int $id, Request $request, EntityManagerInterface $em): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        if (!$this->isCsrfTokenValid('new_commentaire', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
 
         $targetEntity = match ($entity) {
             'theorie' => Theorie::class,
@@ -73,20 +74,20 @@ class CommentaireController extends AbstractController
         return $this->redirectToRoute($entity . '_show', ['id' => $id]);
     }
 
-    // 3. Modifier un commentaire
     #[Route('/{id}/edit', name: 'commentaire_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        Request $request,
-        Commentaire $commentaire,
-        EntityManagerInterface $em
-    ): Response {
+    public function edit(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('edit_commentaire', $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Token CSRF invalide.');
+            }
+
             $commentaire->setContenu($request->request->get('contenu'));
             $em->flush();
 
-            $entity = $commentaire->getTheorie() ? 'theorie' : 'post';      
+            $entity = $commentaire->getTheorie() ? 'theorie' : 'post';
             $targetId = $commentaire->getTheorie()?->getId() ?? $commentaire->getPost()?->getId();
 
             return $this->redirectToRoute($entity . '_show', ['id' => $targetId]);
@@ -97,13 +98,9 @@ class CommentaireController extends AbstractController
         ]);
     }
 
-    // 4. Supprimer un commentaire
     #[Route('/{id}/delete', name: 'commentaire_delete', methods: ['POST'])]
-    public function delete(
-        Request $request,
-        Commentaire $commentaire,
-        EntityManagerInterface $em
-    ): Response {
+    public function delete(Request $request, Commentaire $commentaire, EntityManagerInterface $em): Response
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($this->isCsrfTokenValid('delete' . $commentaire->getId(), $request->request->get('_token'))) {
@@ -121,7 +118,6 @@ class CommentaireController extends AbstractController
         throw $this->createAccessDeniedException('Action non autorisée.');
     }
 
-    // 5. Signaler un commentaire
     #[Route('/{id}/report', name: 'commentaire_report', methods: ['POST'])]
     public function report(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
     {
@@ -140,13 +136,16 @@ class CommentaireController extends AbstractController
         return $this->redirectToRoute($redirectRoute, ['id' => $parentEntity->getId()]);
     }
 
-    // 6. Toggle Like sur un commentaire
     #[Route('/{id}/like', name: 'commentaire_like', methods: ['POST'])]
     public function toggleLike(Commentaire $commentaire, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
+        }
+
+        if (!$this->isCsrfTokenValid('like' . $commentaire->getId(), $request->request->get('_token'))) {
+            return $this->json(['message' => 'Token CSRF invalide.'], Response::HTTP_FORBIDDEN);
         }
 
         $likeRepo = $em->getRepository(Like::class);

@@ -9,21 +9,23 @@
 {% block body %}
     <div class="manga-review-container">
         <form class="review-form" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
             <label for="titre">Titre :</label>
             <input type="text" id="titre" name="titre" value="{{ manga.titre }}" required>
-            
+
             <label for="auteur">Auteur :</label>
             <input type="text" id="auteur" name="auteur" value="{{ manga.auteur }}" required>
-            
+
             <label for="date_sortie">Date de sortie :</label>
             <input type="date" id="date_sortie" name="date_sortie" value="{{ manga.dateSortie|date('Y-m-d') }}" required>
-            
+
             <label for="description">Description :</label>
             <textarea id="description" name="description" rows="4" required>{{ manga.description }}</textarea>
-            
+
             <label for="image">Image (URL) :</label>
             <input type="text" id="image" name="image" value="{{ manga.image }}">
-            
+
             <label for="genre_id">Genre :</label>
             <select id="genre_id" name="genre_id" required>
                 <option value="" disabled>Sélectionnez un genre</option>
@@ -31,7 +33,7 @@
                     <option value="{{ genre.id }}" {% if genre.id == manga.genre.id %}selected{% endif %}>{{ genre.nom }}</option>
                 {% endfor %}
             </select>
-            
+
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Enregistrer</button>
                 <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>

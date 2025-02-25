@@ -4,10 +4,8 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-
 api_login:
     path: /api/login
-
 
 cgu:
     path: /conditions-generales
@@ -20,3 +18,4 @@ conditions_generales:
     controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
     defaults:
         template: 'apropos\privacypolicy.html.twig'
+

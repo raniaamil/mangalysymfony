@@ -10,11 +10,10 @@
     <div class="formregister">
         <div class="signup-container">
             <h1 class="signup-title">Inscription</h1>
-            
+
             {{ form_errors(registrationForm) }}
 
             {{ form_start(registrationForm, {'attr': {'class': 'signup-form'}}) }}
-                
                 {{ form_row(registrationForm.username) }}
                 {{ form_row(registrationForm.email) }}
                 {{ form_row(registrationForm.plainPassword.first) }}
@@ -28,3 +27,4 @@
         </div>
     </div>
 {% endblock %}
+
