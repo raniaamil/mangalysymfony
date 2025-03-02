@@ -39,7 +39,6 @@ class MangaController extends AbstractController
             }
 
             $manga = new Manga();
-
             $manga->setTitre($request->request->get('titre'));
             $manga->setAuteur($request->request->get('auteur'));
             $manga->setDateSortie(new \DateTime($request->request->get('date_sortie')));
@@ -51,8 +50,8 @@ class MangaController extends AbstractController
             if (!$genre) {
                 throw $this->createNotFoundException('Le genre sélectionné est introuvable.');
             }
-            $manga->setGenre($genre);
 
+            $manga->setGenre($genre);
             $em->persist($manga);
             $em->flush();
 
