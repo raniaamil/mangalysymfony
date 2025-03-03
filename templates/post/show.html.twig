@@ -20,10 +20,17 @@
             <div class="post-header">
                 <span>{{ post.titre }}</span>
             </div>
+
             <div class="daterepondre">
                 <span class="datepubli">le: {{ post.datePublication|date('d M Y, H:i:s') }}</span>
-                <span class="report">Report</span>
+                <form method="post" action="{{ path('post_report', {id: post.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('report' ~ post.id) }}">
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler ce post ?');">
+                        Signaler
+                    </button>
+                </form>
             </div>
+
             <div class="post-body">
                 <p>{{ post.contenu }}</p>
                 <div class="media">

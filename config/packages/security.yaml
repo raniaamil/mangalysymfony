@@ -48,6 +48,7 @@ security:
         default_target_path: /home  # Après une connexion réussie, l'utilisateur est redirigé vers la page /users
       logout:  # Gestion de la déconnexion
         path: /logout  # La route pour se déconnecter
+        target: app_home
 
   
 

@@ -19,10 +19,17 @@
             <div class="post-header">
                 <span>{{ theorie.titre }}</span>
             </div>
+
             <div class="daterepondre">
                 <span class="datepubli">le: {{ theorie.datePublication|date('d M Y, H:i:s') }}</span>
-                <span class="report">Report</span>
+                <form method="post" action="{{ path('theorie_report', {id: theorie.id}) }}" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('report' ~ theorie.id) }}">
+                    <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler cette théorie ?');">
+                        Signaler
+                    </button>
+                </form>
             </div>
+
             <div class="post-body">
                 <p>{{ theorie.contenu }}</p>
                 <div class="media">

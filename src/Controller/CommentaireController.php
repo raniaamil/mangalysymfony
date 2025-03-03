@@ -137,20 +137,20 @@ class CommentaireController extends AbstractController
     }
 
     #[Route('/{id}/like', name: 'commentaire_like', methods: ['POST'])]
-    public function toggleLike(Commentaire $commentaire, EntityManagerInterface $em): Response
+    public function toggleLike(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
     {
         $user = $this->getUser();
         if (!$user) {
             return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
         }
-
+    
         if (!$this->isCsrfTokenValid('like' . $commentaire->getId(), $request->request->get('_token'))) {
             return $this->json(['message' => 'Token CSRF invalide.'], Response::HTTP_FORBIDDEN);
         }
-
+    
         $likeRepo = $em->getRepository(Like::class);
         $existingLike = $likeRepo->findOneBy(['user' => $user, 'commentaire' => $commentaire]);
-
+    
         if ($existingLike) {
             $em->remove($existingLike);
             $isLiked = false;
@@ -158,12 +158,14 @@ class CommentaireController extends AbstractController
             $like = new Like();
             $like->setUser($user);
             $like->setCommentaire($commentaire);
+            $like->setDateCreation(new \DateTime());
             $em->persist($like);
             $isLiked = true;
         }
-
+    
         $em->flush();
-
+    
         return $this->json(['isLiked' => $isLiked]);
     }
+
 }

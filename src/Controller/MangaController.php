@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\Like;
 use App\Entity\Manga;
 use App\Repository\MangaRepository;
 use App\Repository\GenreRepository;
@@ -123,10 +123,27 @@ class MangaController extends AbstractController
     }
 
     #[Route('/{id}', name: 'manga_show', methods: ['GET'])]
-    public function show(MangaRepository $mangaRepository, Manga $manga, CritiquesRepository $critiquesRepository): Response
+    public function show(MangaRepository $mangaRepository, Manga $manga, CritiquesRepository $critiquesRepository, EntityManagerInterface $em): Response
     {
         $critiques = $critiquesRepository->findBy(['manga' => $manga]);
-
-        return $this->render('manga/show.html.twig', ['manga' => $manga, 'critiques' => $critiques]);
+        
+        $user = $this->getUser();
+        $likeRepo = $em->getRepository(Like::class);
+        
+        $critiqueLikes = [];
+        if ($user) {
+            foreach ($critiques as $critique) {
+                $critiqueLikes[$critique->getId()] = $likeRepo->findOneBy([
+                    'user' => $user,
+                    'critiques' => $critique
+                ]) ? true : false;
+            }
+        }
+    
+        return $this->render('manga/show.html.twig', [
+            'manga' => $manga, 
+            'critiques' => $critiques,
+            'critiqueLikes' => $critiqueLikes
+        ]);
     }
 }
