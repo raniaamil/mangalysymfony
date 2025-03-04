@@ -1,64 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes Critiques{% endblock %}
+{% block title %}Liste des Critiques{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/critique/indexcritique.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/critique/mescritiques.css') }}">
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4">Mes Critiques</h1>
-    <table>
+    <h1 class="mb-4">Liste des Critiques</h1>
+    <table class="table table-striped">
         <thead>
             <tr>
-                {% if is_granted('ROLE_ADMIN') %}
-                    <th>ID</th>
-                {% endif %}
+                <th>ID</th>
                 <th>Titre</th>
                 <th>Contenu</th>
                 <th>Manga</th>
                 <th>Genre</th>
+                <th>Note</th>
                 <th>Par</th>
                 <th>Date de publication</th>
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <th>Actions</th>
-                {% endif %}
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for critique in critiques %}
                 <tr>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <td>{{ critique.id }}</td>
-                    {% endif %}
+                    <td>{{ critique.id }}</td>
                     <td><a href="{{ path('critiques_show', {id: critique.id}) }}">{{ critique.titre }}</a></td>
-                    <td>{{ critique.contenu|slice(0, 5) }}...</td>
+                    <td>{{ critique.contenu|slice(0, 30) }}...</td>
                     <td>{{ critique.manga.titre }}</td>
                     <td>{{ critique.genre }}</td>
+                    <td>{{ critique.note }}/5</td>
                     <td>{{ critique.user.username }}</td>
                     <td>{{ critique.datePublication|date('d/m/Y H:i') }}</td>
-                    {% if app.user and app.user.id == critique.user.id %}
-                        <td class="actions">
-                            <a href="{{ path('critiques_edit', {id: critique.id}) }}">Modifier</a>
-                            <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
-                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">Supprimer</button>
-                            </form>
-                        </td>
-                    {% elseif is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <td></td>
-                    {% endif %}
+                    <td class="actions">
+                        <a href="{{ path('critiques_edit', {id: critique.id}) }}">Modifier</a>
+                        <form action="{{ path('critiques_delete', {id: critique.id}) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ critique.id) }}">
+                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette critique ?');">Supprimer</button>
+                        </form>
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="{% if is_granted('IS_AUTHENTICATED_FULLY') %}8{% else %}7{% endif %}" class="text-center">Aucune critique trouvée.</td>
+                    <td colspan="9" class="text-center">Aucune critique trouvée.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <div class="mb-3">
-        <a href="{{ path('critiques_new') }}">Ajouter une critique</a>
-    </div>
 </div>
 {% endblock %}

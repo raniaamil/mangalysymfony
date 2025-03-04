@@ -77,7 +77,7 @@ class CritiquesController extends AbstractController
             $em->persist($critique);
             $em->flush();
 
-            return $this->redirectToRoute('critiques_index');
+            return $this->redirectToRoute('manga_show');
         }
 
         $csrfToken = $csrfTokenManager->getToken('critiques_new')->getValue();

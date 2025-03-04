@@ -2,58 +2,52 @@
 
 {% block title %}Détails de la critique{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/critique/page2.css') }}">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    <h1>{{ critique.titre }}</h1>
-    <p>{{ critique.contenu }}</p>
+    <main class="manga-container">
+        <section class="reviews-section">
+            <div class="reviews-container">
+                <div class="review-card">
+                    <div class="review-header">
+                        <img src="{{ asset('images/critiquespage2/robin.jpg') }}" alt="Avatar" class="review-avatar">
+                        <div class="review-user-info">
+                            <h3 class="review-username">{{ critique.user.username }}</h3>
+                        </div>
+                        <div class="review-status">
+                            <span class="review-date">Publiée le : {{ critique.datePublication|date('d/m/Y H:i') }} | Modifiée le : {{ critique.dateModification|date('d/m/Y H:i') }} </span>
+                        </div>
+                    </div>
+                    <div class="post-header">
+                        <span>{{ critique.titre }}</span>
+                    </div>
+                    <p class="review-text">{{ critique.contenu }}</p>
 
-    <h3>Manga</h3>
-    <p>{{ critique.manga.titre }}</p>
-
-    <h3>Genre</h3>
-    <p>{{ critique.manga.genre.nom }}</p>
-
-    <h3>Date de publication</h3>
-    <p>{{ critique.datePublication|date('d/m/Y H:i') }}</p>
-
-    <div>
-        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critique.id }}" data-entity-type="critiques">
-            <button type="submit" class="btn btn-like">
-                <span class="like-icon">
-                    {% if isLiked %}
-                        ❤️
-                    {% else %}
-                        🤍
-                    {% endif %}
-                </span>
-            </button>
-        </form>
-    </div>
-
-    <script>
-        document.querySelectorAll('.like-form').forEach(form => {
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(this);
-                formData.append('id', this.dataset.entityId);
-                formData.append('type', this.dataset.entityType);
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const likeIcon = this.querySelector('.like-icon');
-                    if (data.isLiked) {
-                        likeIcon.innerHTML = '❤️';
-                    } else {
-                        likeIcon.innerHTML = '🤍';
-                    }
-                })
-                .catch(error => console.error('Erreur:', error));
-            });
-        });
-    </script>
-</div>
+                    <div class="review-info">
+                        <span class="review-rating">{{ critique.note }}/5</span>
+                        <form method="post" action="{{ path('critiques_report', {id: critique.id}) }}" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('report' ~ critique.id) }}">
+                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler cette critique ?');">
+                                Signaler
+                            </button>
+                        </form>
+                    </div>
+                    <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critique.id }}" data-entity-type="critique">
+                        <input type="hidden" name="_token" value="{{ csrf_token('like_toggle') }}">
+                        <button type="submit" class="like-btn">
+                            <span class="like-icon">
+                                {% if isLiked %}
+                                    ❤️
+                                {% else %}
+                                    🤍
+                                {% endif %}
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
 {% endblock %}
