@@ -42,6 +42,9 @@
                     <th>MANGA</th>
                     <th>GENRE</th>
                     <th>DERNIER MESSAGE</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>ACTIONS</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -62,10 +65,19 @@
                                 -
                             {% endif %}
                         </td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td class="actions">
+                                <a href="{{ path('theorie_edit', {id: theorie.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                                <form action="{{ path('theorie_delete', {id: theorie.id}) }}" method="post" style="display: inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ theorie.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette théorie ?');">Supprimer</button>
+                                </form>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4" class="text-center">Aucune théorie trouvée.</td>
+                        <td colspan="{{ is_granted('ROLE_ADMIN') ? 5 : 4 }}" class="text-center">Aucune théorie trouvée.</td>
                     </tr>
                 {% endfor %}
             </tbody>

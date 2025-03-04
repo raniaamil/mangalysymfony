@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Commentaires{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/commentaire/mescommentaires.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Mes Commentaires</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Contenu</th>
+                <th>Date de publication</th>
+                <th>Sur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commentaire in commentaires %}
+                <tr>
+                    <td>{{ commentaire.contenu|slice(0, 30) }}{% if commentaire.contenu|length > 50 %}...{% endif %}</td>
+                    <td>{{ commentaire.datePublication|date('d/m/Y H:i') }}</td>
+                    <td>
+                        {% if commentaire.theorie %}
+                            <a href="{{ path('theorie_show', {id: commentaire.theorie.id}) }}">{{ commentaire.theorie.titre }}</a>
+                        {% elseif commentaire.post %}
+                            <a href="{{ path('post_show', {id: commentaire.post.id}) }}">{{ commentaire.post.titre }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td class="actions">
+                        <a href="{{ path('commentaire_edit', {id: commentaire.id}) }}">Modifier</a>
+                        <form action="{{ path('commentaire_delete', {id: commentaire.id}) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Vous n'avez pas encore publié de commentaires.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

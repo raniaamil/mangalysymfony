@@ -1,43 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<h1>Liste des commentaires</h1>
+{% block title %}Liste des Commentaires{% endblock %}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Contenu</th>
-            <th>Date</th>
-            <th>Utilisateur</th>
-            <th>Critique</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for commentaire in commentaires %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/commentaire/indexcommentaires.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Liste des Commentaires</h1>
+
+    <table class="table">
+        <thead>
             <tr>
-                <td>{{ commentaire.id }}</td>
-                <td>{{ commentaire.contenu }}</td>
-                <td>{{ commentaire.datePublication|date('d/m/Y') }}</td>
-                <td>{{ commentaire.user.username }}</td>
-                <td>{{ commentaire.critiques.titre }}</td>
-                <td>
-                    <!-- Modifier le commentaire -->
-                    <a href="{{ path('commentaire_edit', { id: commentaire.id }) }}" class="btn btn-primary btn-sm">Modifier</a>
-                    
-                    <!-- Supprimer le commentaire -->
-                    <form action="{{ path('commentaire_delete', { id: commentaire.id }) }}" method="post" style="display: inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
-                    </form>
-                </td>
+                <th>ID</th>
+                <th>Contenu</th>
+                <th>Sur</th>
+                <th>Date</th>
+                <th>Utilisateur</th>
+                <th>Actions</th>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="6" class="text-center">Aucun commentaire trouvé.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for commentaire in commentaires %}
+                <tr>
+                    <td>{{ commentaire.id }}</td>
+                    <td class="content-cell">{{ commentaire.contenu}}</td>
+                    <td class="content-cell">
+                        {% if commentaire.theorie %}
+                            <a href="{{ path('theorie_show', {id: commentaire.theorie.id}) }}">{{ commentaire.theorie.titre }}</a>
+                        {% elseif commentaire.post %}
+                            <a href="{{ path('post_show', {id: commentaire.post.id}) }}">{{ commentaire.post.titre }}</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ commentaire.datePublication|date('d/m/Y') }}</td>
+                    <td>{{ commentaire.user.username }}</td>
+                    <td>
+                        <!-- Modifier le commentaire -->
+                        <a href="{{ path('commentaire_edit', { id: commentaire.id }) }}" class="btn btn-primary">Modifier</a>
+                        
+                        <!-- Supprimer le commentaire -->
+                        <form action="{{ path('commentaire_delete', { id: commentaire.id }) }}" method="post" style="display: inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun commentaire trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

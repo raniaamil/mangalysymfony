@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/admin/dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Dashboard d'administration</h1>
+
+        <div class="dashboard-grid">
+            <section id="mangas">
+                <h2>Liste des Mangas</h2>
+                <p>Pour consulter la liste des mangas, <a href="{{ path('manga_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="genres">
+                <h2>Liste des Genres</h2>
+                <p>Pour consulter la liste des genres, <a href="{{ path('genre_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="critiques">
+                <h2>Liste des Critiques</h2>
+                <p>Pour consulter la liste des critiques, <a href="{{ path('critiques_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="posts">
+                <h2>Liste des Posts</h2>
+                <p>Pour consulter la liste des posts, <a href="{{ path('post_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="theories">
+                <h2>Liste des Théories</h2>
+                <p>Pour consulter la liste des théories, <a href="{{ path('theorie_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="commentaires">
+                <h2>Liste des Commentaires</h2>
+                <p>Pour consulter la liste des commentaires, <a href="{{ path('commentaire_index') }}">cliquez ici</a>.</p>
+            </section>
+
+            <section id="users">
+                <h2>Liste des Utilisateurs</h2>
+                <p>Pour consulter la liste des utilisateurs, <a href="{{ path('user_index') }}">cliquez ici</a>.</p>
+            </section>  
+        </div>
+
+    </div>
+{% endblock %}

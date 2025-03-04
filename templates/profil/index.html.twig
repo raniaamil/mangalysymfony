@@ -56,10 +56,11 @@
             <h2>Mes Posts</h2>
             <p>Pour consulter vos posts, <a href="{{ path('mes_posts') }}">cliquez ici</a>.</p>
         </section>
+
+        <section id="commentaires">
+            <h2>Mes Commentaires</h2>
+            <p>Pour consulter vos commentaires, <a href="{{ path('mes_commentaires') }}">cliquez ici</a>.</p>
+        </section>
         
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('js/profil.js') }}"></script>
 {% endblock %}

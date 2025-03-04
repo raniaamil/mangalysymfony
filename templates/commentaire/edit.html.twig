@@ -1,24 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<h1>Modifier le commentaire</h1>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/commentaire/editcommentaires.css') }}">
+{% endblock %}
 
-<form method="post">
-    <input type="hidden" name="_token" value="{{ csrf_token('edit_commentaire') }}">
-    <div class="form-group">
-        <label for="contenu">Contenu</label>
-        <textarea id="contenu" name="contenu" class="form-control" required>{{ commentaire.contenu }}</textarea>
+{% block body %}
+    <div class="commentaire-container">
+        <form class="commentaire-form" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token('edit_commentaire') }}">
+            <label for="contenu">Contenu du commentaire :</label>
+            <textarea id="contenu" name="contenu" required>{{ commentaire.contenu }}</textarea>
+            
+            <div class="form-buttons">
+                <button type="submit" class="submit-btn">Enregistrer</button>
+                <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>
+            </div>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
-    
-    {% if commentaire.theorie %}
-        <a href="{{ path('theorie_show', {id: commentaire.theorie.id}) }}" class="btn btn-secondary mt-3">
-            Retour à la théorie
-        </a>
-    {% elseif commentaire.critiques %}
-        <a href="{{ path('critiques_show', {id: commentaire.critiques.id}) }}" class="btn btn-secondary mt-3">
-            Retour à la critique
-        </a>
-    {% endif %}
-</form>
 {% endblock %}

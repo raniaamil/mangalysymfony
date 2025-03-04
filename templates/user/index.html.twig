@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Liste des Utilisateurs{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/users/indexusers.css') }}">
+{% endblock %}
+
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4">Liste des utilisateurs</h1>
+    <h1 class="mb-4">Liste des Utilisateurs</h1>
 
     <table class="table table-striped">
         <thead>
@@ -33,16 +39,13 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" class="text-center">Aucun utilisateur trouvé.</td>
+                    <td colspan="6" class="text-center">Aucun utilisateur trouvé.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <!-- Bouton pour ajouter un utilisateur -->
-    <div class="mb-3">
-        <a href="{{ path('user_new') }}" class="btn btn-success">Ajouter un utilisateur</a>
+    <div>
+        <a href="{{ path('user_new') }}" class="add-user-btn">Ajouter un utilisateur</a>
     </div>
-
 </div>
 {% endblock %}

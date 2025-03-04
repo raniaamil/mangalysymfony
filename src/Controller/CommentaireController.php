@@ -168,4 +168,19 @@ class CommentaireController extends AbstractController
         return $this->json(['isLiked' => $isLiked]);
     }
 
+    #[Route('/mescommentaires', name: 'mes_commentaires', methods: ['GET'])]
+    public function myCommentaires(CommentaireRepository $commentaireRepository): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+    
+        $commentaires = $commentaireRepository->findBy(['user' => $user], ['date_publication' => 'DESC']);
+    
+        return $this->render('commentaire/mescommentaires.html.twig', [
+            'commentaires' => $commentaires,
+        ]);
+    }
+
 }

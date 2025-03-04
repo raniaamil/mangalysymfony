@@ -73,6 +73,7 @@ class AdminGenreController extends AbstractController
     public function delete(Genre $genre, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
+        
         $em->remove($genre); // Supprime le genre
         $em->flush(); // Enregistre la suppression dans la base de données
 
