@@ -1,116 +1,69 @@
 security:
-  # Configuration des hashers de mot de passe
   password_hashers:
-    # Spécifie que les mots de passe des utilisateurs qui implémentent PasswordAuthenticatedUserInterface seront hachés avec l'algorithme choisi ici
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-      algorithm: auto  # Symfony choisit automatiquement l'algorithme de hachage (généralement bcrypt ou argon2, dans le projet bcrypt est utilisé)
-      cost: 15  # Détermine le coût de l'algorithme de hachage (complexité)
+      algorithm: auto
+      cost: 15
 
-  # Configuration du fournisseur d'utilisateurs (d'où proviennent les utilisateurs pour l'authentification)
   providers:
     app_user_provider:
       entity:
-        class: App\Entity\User  # Indique que les utilisateurs viennent de l'entité User
-        property: email  # Utilise l'email pour retrouver les utilisateurs dans la base de données
+        class: App\Entity\User
+        property: email
 
-  # Définition des firewalls (protection des routes de l'application)
   firewalls:
-    # Configuration du firewall pour les routes de développement, comme les outils de débogage et les ressources statiques (CSS, JS, etc.)
     dev:
-      pattern: ^/(_(profiler|wdt)|css|images|js)/  # Ce motif couvre les routes liées au profiler, aux fichiers CSS, JS et images
-      security: false  # Pas de sécurité appliquée sur ces routes (les utilisateurs peuvent y accéder sans être authentifiés)
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
 
-    # Configuration pour les API (commentée ici, mais peut être activée si nécessaire pour les connexions API basées sur JSON ou JWT)
     api_login:
-        pattern: ^/api/login  # Cette route serait spécifique aux API (connexion via API)
-        stateless: true  # Indique que l'API ne maintient pas de session (stateless)
-        json_login:  # Configuration pour une authentification JSON (souvent utilisée pour les APIs)
-            check_path: /api/login  # La route où les données de connexion sont envoyées
+        pattern: ^/api/login
+        stateless: true
+        json_login:
+            check_path: /api/login
             username_path: email
             password_path: password
-            success_handler: lexik_jwt_authentication.handler.authentication_success  # Si la connexion réussit, la réponse JSON sera gérée ici
-            failure_handler: lexik_jwt_authentication.handler.authentication_failure  # Si la connexion échoue, la réponse JSON sera gérée ici
+            success_handler: lexik_jwt_authentication.handler.authentication_success
+            failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     api:
         pattern: ^/api
         stateless: true
+        provider: app_user_provider
         jwt: ~
 
-    # Configuration principale du firewall pour toutes les autres routes
     main:
-      pattern: ^/  # Cela couvre toutes les routes qui commencent par '/' (toutes les routes de l'application)
-      provider: app_user_provider  # Utilise le fournisseur d'utilisateurs défini ci-dessus
-      form_login:  # Authentification par formulaire
-        login_path: app_login  # La route pour afficher le formulaire de connexion
-        check_path: /login  # La route où les informations de connexion sont envoyées via une requête POST
+      pattern: ^/
+      provider: app_user_provider
+      form_login:
+        login_path: app_login
+        check_path: /login
         username_parameter: _username
         password_parameter: _password
-        default_target_path: /home  # Après une connexion réussie, l'utilisateur est redirigé vers la page /users
-      logout:  # Gestion de la déconnexion
-        path: /logout  # La route pour se déconnecter
+        default_target_path: /home
+      logout:
+        path: /logout
         target: app_home
 
-  
-
-  # Configuration des contrôles d'accès (qui peut accéder à quelles routes en fonction de son rôle)
   access_control:
-    # Autorise l'accès à la page de connexion sans être authentifié
-    - { path: ^/login, roles: PUBLIC_ACCESS }  # La page /login est publique (tout le monde peut y accéder)
-
-    # Autorise l'accès à la page de déconnexion sans être authentifié
-    - { path: ^/logout, roles: PUBLIC_ACCESS }  # La page /logout est publique (tout le monde peut y accéder)
-
-    # Autorise l'accès à la page d'inscription sans être authentifié
-    - { path: ^/users/new, roles: PUBLIC_ACCESS }  # La page /users/new (inscription) est publique (tout le monde peut y accéder)
-
-    # Restreint l'accès à la page des utilisateurs (/users) uniquement aux utilisateurs complètement authentifiés
-    - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }  # L'accès à la page /users est restreint aux utilisateurs qui sont entièrement authentifiés
-
+    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/logout, roles: PUBLIC_ACCESS }
+    - { path: ^/users/new, roles: PUBLIC_ACCESS }
+    - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/critiques/, roles: PUBLIC_ACCESS }
-
     - { path: ^/critiques/new, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/critiques/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/critiques/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/admin/genre/, roles: ROLE_ADMIN }
-
-    - { path: ^/api/login, roles: ROLE_ADMIN }
-
+    - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/commentaire/, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/commentaire/new/\d+/, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/commentaire/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/commentaire/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/admin/, roles: ROLE_ADMIN }
-
     - { path: ^/theories/, roles: PUBLIC_ACCESS }
-
     - { path: ^/theories/new, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/theories/\d+/, roles: PUBLIC_ACCESS }
-
     - { path: ^/theories/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/theories/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/likes, roles: IS_AUTHENTICATED_FULLY }
-
     - { path: ^/commentaire/\d+/report, roles: IS_AUTHENTICATED_FULLY }
-
-
-
-
-
-
-
-
-
-
-
-
-    

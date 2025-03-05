@@ -2,29 +2,29 @@
 
 namespace App\Controller;
 
-use App\Entity\Genre; // On importe la classe Genre pour manipuler l'entité
-use App\Repository\GenreRepository; // On importe le repository pour interagir avec la base de données
-use Doctrine\ORM\EntityManagerInterface; // Pour interagir avec la base de données
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; // Base des contrôleurs Symfony
-use Symfony\Component\HttpFoundation\Request; // Pour gérer les requêtes HTTP
-use Symfony\Component\HttpFoundation\Response; // Pour renvoyer des réponses HTTP
-use Symfony\Component\Routing\Annotation\Route; // Pour définir les routes
+use App\Entity\Genre; 
+use App\Repository\GenreRepository; 
+use Doctrine\ORM\EntityManagerInterface; 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response; 
+use Symfony\Component\Routing\Annotation\Route; 
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-#[Route('/admin/genres')]
 class AdminGenreController extends AbstractController
 {
-    #[Route('/', name: 'genre_index', methods: ['GET'])] // Route pour afficher la liste des genre
+    #[Route('/admin/genres', name: 'genre_index', methods: ['GET'])] 
     public function index(GenreRepository $genreRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
-        $genre = $genreRepository->findAll(); // Récupère tous les genre de la base de données
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $genre = $genreRepository->findAll(); 
 
-        return $this->render('admin/genres/index.html.twig', ['genre' => $genre]); // Affiche la vue avec la liste des genres
+        return $this->render('admin/genres/index.html.twig', ['genre' => $genre]); 
     }
 
-    #[Route('/new', name: 'genre_new', methods: ['GET', 'POST'])] 
+    #[Route('/admin/genres/new', name: 'genre_new', methods: ['GET', 'POST'])] 
     public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -48,7 +48,7 @@ class AdminGenreController extends AbstractController
         return $this->render('admin/genres/new.html.twig');
     }    
 
-    #[Route('/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] // Route pour modifier un genre existant
+    #[Route('/admin/genres/{id}/edit', name: 'genre_edit', methods: ['GET', 'POST'])] 
     public function edit(Genre $genre, Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -69,14 +69,95 @@ class AdminGenreController extends AbstractController
         return $this->render('admin/genres/edit.html.twig', ['genre' => $genre]);
     }
 
-    #[Route('/{id}/delete', name: 'genre_delete', methods: ['POST'])] // Route pour supprimer un genre
+    #[Route('/admin/genres/{id}/delete', name: 'genre_delete', methods: ['POST'])] 
     public function delete(Genre $genre, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN') ;
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
-        $em->remove($genre); // Supprime le genre
-        $em->flush(); // Enregistre la suppression dans la base de données
+        $em->remove($genre); 
+        $em->flush(); 
 
-        return $this->redirectToRoute('genre_index'); // Redirige vers la liste des genres après suppression
+        return $this->redirectToRoute('genre_index'); 
+    }
+
+    // ------------------------------------------  API - Endpoints  -------------------------------- //
+
+    #[Route('/api/genres', name: 'api_genre_index', methods: ['GET'])]
+    public function apiIndex(GenreRepository $genreRepository): JsonResponse
+    {
+        $genres = $genreRepository->findAll();
+        
+        $data = [];
+        foreach ($genres as $genre) {
+            $data[] = [
+                'id' => $genre->getId(),
+                'nom' => $genre->getNom()
+            ];
+        }
+        
+        return new JsonResponse($data);
+    }
+
+    #[Route('/api/genres/{id}', name: 'api_genre_show', methods: ['GET'])]
+    public function apiShow(Genre $genre): JsonResponse
+    {
+        return new JsonResponse([
+            'id' => $genre->getId(),
+            'nom' => $genre->getNom()
+        ]);
+    }
+
+    #[Route('/api/genres', name: 'api_genre_create', methods: ['POST'])]
+    public function apiCreate(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $data = json_decode($request->getContent(), true);
+        
+        if (!isset($data['nom']) || empty($data['nom'])) {
+            return new JsonResponse(['error' => 'Le nom est requis'], Response::HTTP_BAD_REQUEST);
+        }
+        
+        $genre = new Genre();
+        $genre->setNom($data['nom']);
+        
+        $em->persist($genre);
+        $em->flush();
+        
+        return new JsonResponse([
+            'id' => $genre->getId(),
+            'nom' => $genre->getNom()
+        ], Response::HTTP_CREATED);
+    }
+
+    #[Route('/api/genres/{id}', name: 'api_genre_update', methods: ['PUT'])]
+    public function apiUpdate(Genre $genre, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $data = json_decode($request->getContent(), true);
+        
+        if (!isset($data['nom']) || empty($data['nom'])) {
+            return new JsonResponse(['error' => 'Le nom est requis'], Response::HTTP_BAD_REQUEST);
+        }
+        
+        $genre->setNom($data['nom']);
+        $em->flush();
+        
+        return new JsonResponse([
+            'id' => $genre->getId(),
+            'nom' => $genre->getNom()
+        ]);
+    }
+
+    #[Route('/api/genres/{id}', name: 'api_genre_delete', methods: ['DELETE'])]
+    public function apiDelete(Genre $genre, EntityManagerInterface $em): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        
+        $em->remove($genre);
+        $em->flush();
+        
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }
