@@ -8,8 +8,8 @@ index:
     path: /
     controller: App\Controller\HomeController::index
 
-api_login:
-    path: /api/login
+# api_login:
+#     path: /api/login
 
 cgu:
     path: /conditions-generales

@@ -55,6 +55,12 @@ security:
     - { path: ^/critiques/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/admin/genre/, roles: ROLE_ADMIN }
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
+
+    - { path: ^/api/genres$, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+    - { path: ^/api/genres$, roles: ROLE_ADMIN, methods: [POST] }
+    - { path: ^/api/genres/\d+$, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+    - { path: ^/api/genres/\d+$, roles: ROLE_ADMIN, methods: [PUT, DELETE] }
+
     - { path: ^/commentaire/, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/new/\d+/, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/\d+/edit, roles: IS_AUTHENTICATED_FULLY }

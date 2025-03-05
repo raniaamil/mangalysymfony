@@ -18,7 +18,6 @@ class AdminGenreController extends AbstractController
     #[Route('/admin/genres', name: 'genre_index', methods: ['GET'])] 
     public function index(GenreRepository $genreRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $genre = $genreRepository->findAll(); 
 
         return $this->render('admin/genres/index.html.twig', ['genre' => $genre]); 
