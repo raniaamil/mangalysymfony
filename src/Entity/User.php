@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->theorie = new ArrayCollection();
         $this->post = new ArrayCollection();
         $this->likes = new ArrayCollection();
-        $this->manga = new ArrayCollection();
+        // $this->manga = new ArrayCollection();
     }
 
     public function getId(): ?int

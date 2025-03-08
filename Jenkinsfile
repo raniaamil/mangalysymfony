@@ -46,6 +46,14 @@ pipeline {
             }
         }
 
+        stage('Exécution des tests') {
+            steps {
+                dir("${DEPLOY_DIR}") {
+                    sh 'php bin/phpunit --testdox' // Lancer les tests unitaires et fonctionnels
+                }
+            }
+        }
+
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
