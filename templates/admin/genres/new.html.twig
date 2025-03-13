@@ -7,10 +7,13 @@
 {% block body %}
     <div class="genre-container">
         <form class="genre-form" method="post">
-            <input type="hidden" name="_token" value="{{ csrf_token('genre_new') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('genre_new') }}">
+
             <label for="nom">Nom du genre :</label>
-            <input type="text" id="nom" name="nom" placeholder="Ex : Shonen" required>
-            
+            <input type="text" id="nom" name="nom" 
+                   placeholder="Ex : Shonen" 
+                   required minlength="2" maxlength="50">
+
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Enregistrer</button>
                 <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>

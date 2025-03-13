@@ -7,7 +7,8 @@
     <input type="hidden" name="_token" value="{{ csrf_token('new_commentaire') }}">
     <div class="form-group">
         <label for="contenu">Contenu</label>
-        <textarea id="contenu" name="contenu" class="form-control" required></textarea>
+        <textarea id="contenu" name="contenu" class="form-control" 
+                  required minlength="2" maxlength="2000"></textarea>
     </div>
     <button type="submit" class="btn btn-success mt-3">Publier</button>
     <a href="{{ path('commentaire_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>

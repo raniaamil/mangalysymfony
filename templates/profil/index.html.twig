@@ -11,7 +11,12 @@
     <div class="container">
 
         <section id="profile">
-            <h2>Profil</h2>
+            <div class="profile-header">
+                <h2>Profil</h2>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_admin_dashboard') }}" class="admin-button">Espace Admin</a>
+                {% endif %}
+            </div>   
             <form id="profile-form">
                 <label for="avatar">Avatar:</label>
                 <input type="file" id="avatar" name="avatar">

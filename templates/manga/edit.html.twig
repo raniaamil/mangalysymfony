@@ -12,19 +12,25 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
             <label for="titre">Titre :</label>
-            <input type="text" id="titre" name="titre" value="{{ manga.titre }}" required>
+            <input type="text" id="titre" name="titre" value="{{ manga.titre }}" 
+                   required minlength="2" maxlength="100">
 
             <label for="auteur">Auteur :</label>
-            <input type="text" id="auteur" name="auteur" value="{{ manga.auteur }}" required>
+            <input type="text" id="auteur" name="auteur" value="{{ manga.auteur }}" 
+                   required minlength="2" maxlength="50">
 
             <label for="date_sortie">Date de sortie :</label>
-            <input type="date" id="date_sortie" name="date_sortie" value="{{ manga.dateSortie|date('Y-m-d') }}" required>
+            <input type="date" id="date_sortie" name="date_sortie" 
+                   value="{{ manga.dateSortie|date('Y-m-d') }}" 
+                   required max="{{ 'now'|date('Y-m-d') }}">
 
             <label for="description">Description :</label>
-            <textarea id="description" name="description" rows="4" required>{{ manga.description }}</textarea>
+            <textarea id="description" name="description" rows="4" 
+                      required minlength="20">{{ manga.description }}</textarea>
 
             <label for="image">Image (URL) :</label>
-            <input type="text" id="image" name="image" value="{{ manga.image }}">
+            <input type="url" id="image" name="image" value="{{ manga.image }}" 
+                   required pattern="https?://.+">
 
             <label for="genre_id">Genre :</label>
             <select id="genre_id" name="genre_id" required>
@@ -45,4 +51,3 @@
 {% block javascripts %}
     <script defer src="{{ asset('js/critique/newcritique.js') }}"></script>
 {% endblock %}
-

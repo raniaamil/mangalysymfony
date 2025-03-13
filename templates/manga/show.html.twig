@@ -71,18 +71,18 @@
                             </button>
                         </form>
                     </div>
-                        <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critique.id }}" data-entity-type="critique">
-                            <input type="hidden" name="_token" value="{{ csrf_token('like_toggle') }}">
-                            <button type="submit" class="like-btn">
-                                <span class="like-icon">
-                                    {% if critiqueLikes[critique.id] is defined and critiqueLikes[critique.id] %}
-                                        ❤️
-                                    {% else %}
-                                        🤍
-                                    {% endif %}
-                                </span>
-                            </button>
-                        </form>
+                    <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ critique.id }}" data-entity-type="critique">
+                        <input type="hidden" name="_token" value="{{ csrf_token('like_toggle') }}">
+                        <button type="submit" class="like-btn">
+                            <span class="like-icon">
+                                {% if critiqueLikes[critique.id] is defined and critiqueLikes[critique.id] %}
+                                    ❤️
+                                {% else %}
+                                    🤍
+                                {% endif %}
+                            </span>
+                        </button>
+                    </form>
                 </div>
             </div>
         {% endfor %}

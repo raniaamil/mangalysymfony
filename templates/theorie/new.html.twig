@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une théorie{% endblock %}
+{% block title %}Ajouter une Théorie{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/theories/newtheorie.css') }}">
@@ -9,30 +9,27 @@
 {% block body %}
 <main class="manga-post-container">
     <form method="post" enctype="multipart/form-data" class="post-form">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
-        <label for="post-title">Titre de la théorie :</label>
-        <input type="text" id="post-title" name="titre" placeholder="Ex : Les gars vous êtes plutôt team Sakura ou team Hinata ?" required>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('theorie_new') }}">
 
-        <label for="post-manga">Manga :</label>
-        <input type="text" id="post-manga" name="manga" placeholder="Ex : Naruto" required>
+        <label for="theorie-title">Titre de la théorie :</label>
+        <input type="text" id="theorie-title" name="titre" 
+               placeholder="Ex : Naruto est-il immortel ?" 
+               required minlength="5" maxlength="255">
 
-        <label for="post-text">Votre texte :</label>
-        <div class="editor-toolbar">
-            <button type="button" class="editor-btn"><b>B</b></button>
-            <button type="button" class="editor-btn"><i>I</i></button>
-            <button type="button" class="editor-btn"><u>U</u></button>
-            <button type="button" class="editor-btn"><s>S</s></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ul"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ol"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-quote-left"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-code"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-eye-slash"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-smile"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-image"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-play"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-question"></i></button>
-        </div>
-        <textarea id="post-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>
+        <label for="theorie-manga">Manga :</label>
+        <input type="text" id="theorie-manga" name="manga" 
+               placeholder="Ex : Naruto" 
+               required>
+
+        <label for="theorie-text">Votre théorie :</label>
+        <textarea id="theorie-text" name="contenu" rows="6" 
+                  placeholder="Développez votre théorie ici..." 
+                  required minlength="50"></textarea>
+
+        <label for="theorie-media">Média (URL) :</label>
+        <input type="url" id="theorie-media" name="media" 
+               placeholder="URL d'une image" 
+               pattern="https?://.+" title="Entrez une URL valide">
 
         <div class="form-buttons">
             <button type="submit" class="submit-btn">Publier</button>
@@ -40,9 +37,5 @@
         </div>
     </form>
 </main>
-{% endblock %}
-
-{% block javascripts %}
-    <script src="{{ asset('js/theorie/newtheorie.js') }}"></script>
 {% endblock %}
 

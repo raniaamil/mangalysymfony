@@ -47,3 +47,23 @@ button {
 button:hover {
     background-color: #555;
 }
+
+/* Nouveaux styles pour le header du profil et le bouton admin */
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.admin-button:hover {
+    background-color: #c82333;
+}

@@ -6,23 +6,26 @@ use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups; 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
+#[UniqueEntity(fields: ['nom'], message: 'Ce genre existe déjà')]
 class Genre
 {
-    /**
-     * @Groups({"manga_suggestion"})
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @Groups({"manga_suggestion"})
-     */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50, unique: true)]
+    #[Assert\NotBlank(message: 'Le nom du genre est obligatoire')]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'Le nom du genre doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le nom du genre ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $nom = null;
 
     /**
@@ -79,7 +82,6 @@ class Genre
     public function removeManga(Manga $manga): static
     {
         if ($this->manga->removeElement($manga)) {
-            
             if ($manga->getGenre() === $this) {
                 $manga->setGenre(null);
             }

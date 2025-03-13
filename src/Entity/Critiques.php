@@ -7,8 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CritiquesRepository::class)]
+#[ORM\Index(name: 'idx_critiques_titre', columns: ['titre'])]
+#[ORM\Index(name: 'idx_critiques_date_publication', columns: ['date_publication'])]
+#[ORM\Index(name: 'idx_critiques_date_modification', columns: ['date_modification'])]
+#[ORM\Index(name: 'idx_critiques_report', columns: ['report'])]
 class Critiques
 {
     #[ORM\Id]
@@ -17,13 +22,26 @@ class Critiques
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire")]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: "Le titre doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le contenu est obligatoire")]
+    #[Assert\Length(
+        min: 100,
+        minMessage: "Votre critique doit contenir au moins {{ limit }} caractères pour être pertinente"
+    )]
     private ?string $contenu = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'critiques')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[Assert\NotNull(message: "Un utilisateur doit être associé à la critique")]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -31,6 +49,7 @@ class Critiques
 
     #[ORM\ManyToOne(inversedBy: 'critique')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Un manga doit être associé à la critique")]
     private ?Manga $manga = null;
 
     /**

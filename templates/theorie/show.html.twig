@@ -139,30 +139,4 @@
         </div>
     </div>
 </main>
-
-<script>
-    document.querySelectorAll('.like-form').forEach(form => {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            formData.append('id', this.dataset.entityId);
-            formData.append('type', this.dataset.entityType);
-
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                const likeIcon = this.querySelector('.like-icon');
-                if (data.isLiked) {
-                    likeIcon.innerHTML = '❤️';
-                } else {
-                    likeIcon.innerHTML = '🤍';
-                }
-            })
-            .catch(error => console.error('Erreur:', error));
-        });
-    });
-</script>
 {% endblock %}

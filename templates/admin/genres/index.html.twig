@@ -38,8 +38,10 @@
             {% endfor %}
         </tbody>
     </table>
-    <div>
-        <a href="{{ path('genre_new') }}" class="add-genre-btn">Ajouter un genre</a>
-    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div>
+            <a href="{{ path('genre_new') }}" class="add-genre-btn">Ajouter un genre</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -9,25 +9,24 @@
 {% block body %}
 
 <div class="filters">
-        <select id="filter-genre">
-            <option value="all">Tous les genres</option>
-            <option value="shonen">Shônen</option>
-            <option value="shojo">Shôjo</option>
-            <option value="seinen">Seinen</option>
-            <option value="josei">Josei</option>
-            <option value="kodomo">Kodomo</option>
-        </select>
-        
-        <select id="filter-order">
-            <option value="all">Ordre alphabétique</option>
-            <option value="popular">A à Z</option>
-            <option value="recent">Z à A</option>
-        </select>
-        
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('manga_new') }}" class="add-manga-btn">Ajouter un manga</a>
-        {% endif %}
-
+    <select id="filter-genre">
+        <option value="all">Tous les genres</option>
+        <option value="shonen">Shônen</option>
+        <option value="shojo">Shôjo</option>
+        <option value="seinen">Seinen</option>
+        <option value="josei">Josei</option>
+        <option value="kodomo">Kodomo</option>
+    </select>
+    
+    <select id="filter-order">
+        <option value="all">Ordre alphabétique</option>
+        <option value="popular">A à Z</option>
+        <option value="recent">Z à A</option>
+    </select>
+    
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('manga_new') }}" class="add-manga-btn">Ajouter un manga</a>
+    {% endif %}
 </div>
 
 <div class="container mt-5">

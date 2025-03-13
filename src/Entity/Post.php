@@ -7,8 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ORM\Index(name: 'idx_post_titre', columns: ['titre'])]
+#[ORM\Index(name: 'idx_post_date_publication', columns: ['date_publication'])]
+#[ORM\Index(name: 'idx_post_date_modification', columns: ['date_modification'])]
+#[ORM\Index(name: 'idx_post_report', columns: ['report'])]
+
 class Post
 {
     #[ORM\Id]
@@ -17,23 +23,38 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le titre est obligatoire")]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: "Le titre doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le contenu est obligatoire")]
+    #[Assert\Length(
+        min: 50,
+        minMessage: "Votre post doit contenir au moins {{ limit }} caractères"
+    )]
     private ?string $contenu = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_publication = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Url(message: "L'URL du média n'est pas valide")]
     private ?string $media = null;
 
     #[ORM\ManyToOne(inversedBy: 'post')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "L'utilisateur est obligatoire")]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'post')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Le manga associé est obligatoire")]
     private ?Manga $manga = null;
 
     /**

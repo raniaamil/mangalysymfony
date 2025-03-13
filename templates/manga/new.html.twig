@@ -12,19 +12,25 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
             <label for="titre">Titre :</label>
-            <input type="text" id="titre" name="titre" placeholder="Ex : One Piece" required>
+            <input type="text" id="titre" name="titre" placeholder="Ex : One Piece" 
+                   required minlength="2" maxlength="100">
 
             <label for="auteur">Auteur :</label>
-            <input type="text" id="auteur" name="auteur" placeholder="Ex : Eiichiro Oda" required>
+            <input type="text" id="auteur" name="auteur" placeholder="Ex : Eiichiro Oda" 
+                   required minlength="2" maxlength="50">
 
             <label for="date_sortie">Date de sortie :</label>
-            <input type="date" id="date_sortie" name="date_sortie" required>
+            <input type="date" id="date_sortie" name="date_sortie" 
+                   required max="{{ 'now'|date('Y-m-d') }}">
 
             <label for="description">Description :</label>
-            <textarea id="description" name="description" rows="4" placeholder="Brève présentation du manga..." required></textarea>
+            <textarea id="description" name="description" rows="4" 
+                      placeholder="Brève présentation du manga..." 
+                      required minlength="20"></textarea>
 
             <label for="image">Image (URL) :</label>
-            <input type="text" id="image" name="image" placeholder="URL de l'image" required>
+            <input type="url" id="image" name="image" placeholder="URL de l'image" 
+                   required pattern="https?://.+">
 
             <label for="genre_id">Genre :</label>
             <select id="genre_id" name="genre_id" required>

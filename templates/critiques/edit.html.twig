@@ -12,10 +12,16 @@
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
 
             <label for="review-title">Titre de la critique :</label>
-            <input type="text" id="review-title" name="titre" placeholder="Ex : Une aventure époustouflante..." value="{{ critique.titre }}" required>
+            <input type="text" id="review-title" name="titre" 
+                   placeholder="Ex : Une aventure époustouflante..." 
+                   value="{{ critique.titre }}" 
+                   required minlength="5" maxlength="255">
 
             <label for="review-manga">Manga :</label>
-            <input type="text" id="review-manga" name="manga" placeholder="Ex : Naruto" value="{{ critique.manga.titre }}" required>
+            <input type="text" id="review-manga" name="manga" 
+                   placeholder="Ex : Naruto" 
+                   value="{{ critique.manga.titre }}" 
+                   required>
 
             <!-- Liste déroulante pour la note -->
             <label for="review-rating">Note :</label>
@@ -27,7 +33,9 @@
             </select>
 
             <label for="review-text">Votre critique :</label>
-            <textarea id="review-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required>{{ critique.contenu }}</textarea>
+            <textarea id="review-text" name="contenu" rows="6" 
+                      placeholder="Exprimez votre avis ici..." 
+                      required minlength="100">{{ critique.contenu }}</textarea>
 
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Enregistrer</button>
@@ -40,3 +48,4 @@
 {% block javascripts %}
     <script defer src="{{ asset('js/critique/newcritique.js') }}"></script>
 {% endblock %}
+

@@ -8,22 +8,28 @@
     <div class="user-container">
         <form class="user-form" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token('user_new') }}">
-            
+
             <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" placeholder="Ex : JohnDoe" required>
-            
+            <input type="text" id="username" name="username" 
+                   placeholder="Ex : JohnDoe" 
+                   required minlength="3" maxlength="50">
+
             <label for="email">Email :</label>
-            <input type="email" id="email" name="email" placeholder="Ex : john.doe@exemple.com" required>
-            
+            <input type="email" id="email" name="email" 
+                   placeholder="Ex : john.doe@exemple.com" 
+                   required>
+
             <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" placeholder="Entrez un mot de passe sécurisé" required>
-            
+            <input type="password" id="password" name="password" 
+                   placeholder="Entrez un mot de passe sécurisé" 
+                   required minlength="6">
+
             <label for="role">Rôle :</label>
             <select name="role" id="role">
                 <option value="ROLE_USER" {% if app.request.get('role') == 'ROLE_USER' %}selected{% endif %}>Utilisateur</option>
                 <option value="ROLE_ADMIN" {% if app.request.get('role') == 'ROLE_ADMIN' %}selected{% endif %}>Administrateur</option>
             </select>
-            
+
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Enregistrer</button>
                 <button type="button" class="cancel-btn" onclick="window.history.back();">Annuler</button>

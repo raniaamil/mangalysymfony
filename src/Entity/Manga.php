@@ -7,8 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: MangaRepository::class)]
+#[UniqueEntity(fields: ['titre'], message: 'Un manga avec ce titre existe déjà')]
+#[ORM\Index(name: 'idx_manga_titre', columns: ['titre'])]
+#[ORM\Index(name: 'idx_manga_date_sortie', columns: ['date_sortie'])]
 class Manga
 {
     #[ORM\Id]
@@ -16,23 +21,47 @@ class Manga
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
+    #[ORM\Column(length: 100, nullable: false, unique: true)]
+    #[Assert\NotBlank(message: 'Le titre du manga est obligatoire')]
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: 'Le titre doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères'
+    )]
     private string $titre;
 
     #[ORM\ManyToOne(inversedBy: 'manga')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: 'Veuillez sélectionner un genre')]
     private Genre $genre;
 
-    #[ORM\Column(length: 150, nullable: false)]
+    #[ORM\Column(length: 50, nullable: false)]
+    #[Assert\NotBlank(message: 'Le nom de l\'auteur est obligatoire')]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'Le nom de l\'auteur doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le nom de l\'auteur ne peut pas dépasser {{ limit }} caractères'
+    )]
     private string $auteur;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
+    #[Assert\NotNull(message: 'La date de sortie est obligatoire')]
+    #[Assert\LessThanOrEqual('today', message: 'La date de sortie ne peut pas être dans le futur')]
     private \DateTimeInterface $date_sortie;
 
     #[ORM\Column(type: Types::TEXT, nullable: false)]
+    #[Assert\NotBlank(message: 'La description est obligatoire')]
+    #[Assert\Length(
+        min: 20,
+        minMessage: 'La description doit contenir au moins {{ limit }} caractères'
+    )]
     private string $description;
 
     #[ORM\Column(length: 255, nullable: false)]
+    #[Assert\NotBlank(message: 'L\'URL de l\'image est obligatoire')]
+    #[Assert\Url(message: 'L\'URL de l\'image n\'est pas valide')]
     private string $image;
 
     /**

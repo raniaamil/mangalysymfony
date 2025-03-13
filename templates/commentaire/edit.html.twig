@@ -9,7 +9,8 @@
         <form class="commentaire-form" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token('edit_commentaire') }}">
             <label for="contenu">Contenu du commentaire :</label>
-            <textarea id="contenu" name="contenu" required>{{ commentaire.contenu }}</textarea>
+            <textarea id="contenu" name="contenu" 
+                      required minlength="2" maxlength="2000">{{ commentaire.contenu }}</textarea>
             
             <div class="form-buttons">
                 <button type="submit" class="submit-btn">Enregistrer</button>

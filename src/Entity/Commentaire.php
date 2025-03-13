@@ -7,8 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
+#[ORM\Index(name: 'idx_commentaire_date_publication', columns: ['date_publication'])]
+#[ORM\Index(name: 'idx_commentaire_date_modification', columns: ['date_modification'])]
+#[ORM\Index(name: 'idx_commentaire_report', columns: ['report'])]
 class Commentaire
 {
     #[ORM\Id]
@@ -17,6 +21,13 @@ class Commentaire
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le contenu du commentaire ne peut pas être vide")]
+    #[Assert\Length(
+        min: 2,
+        max: 2000,
+        minMessage: "Le commentaire doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le commentaire ne peut pas dépasser {{ limit }} caractères"
+    )]
     private ?string $contenu = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -24,10 +35,12 @@ class Commentaire
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Un utilisateur doit être associé au commentaire")]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
     private ?Theorie $theorie = null;
+
 
     /**
      * @var Collection<int, Like>
