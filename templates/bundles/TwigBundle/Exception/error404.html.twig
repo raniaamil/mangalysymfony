@@ -1,0 +1,74 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .error-title {
+            font-size: 10rem;
+            color: #7A36DB;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+        
+        .error-subtitle {
+            font-size: 2rem;
+            color: #333;
+            margin-top: 0;
+        }
+        
+        .error-text {
+            font-size: 1.2rem;
+            margin: 30px 0;
+            color: #666;
+        }
+        
+        .error-image {
+            max-width: 400px;
+            margin: 20px 0;
+        }
+        
+        .home-button {
+            display: inline-block;
+            background-color: #7A36DB;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .home-button:hover {
+            background-color: #5e2ab4;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="error-container">
+    <h1 class="error-title">404</h1>
+    <h2 class="error-subtitle">Page non trouvée</h2>
+    
+    <p class="error-text">
+        Oups ! La page que vous recherchez semble avoir disparu dans une autre dimension.
+    </p>
+    
+    <img src="{{ asset('images/errors/404.webp') }}" alt="Personnage manga perdu" class="error-image">
+    
+    <p class="error-text">
+        Retournez à la page d'accueil pour continuer votre aventure sur Mangaly.
+    </p>
+    
+    <a href="{{ path('app_home') }}" class="home-button">Retour à l'accueil</a>
+</div>
+{% endblock %}
