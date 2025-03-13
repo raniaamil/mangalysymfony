@@ -22,6 +22,7 @@ class CommentaireController extends AbstractController
     #[Route('/', name: 'commentaire_index', methods: ['GET'])]
     public function index(CommentaireRepository $commentaireRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $commentaires = $commentaireRepository->findAll();
 
         return $this->render('commentaire/index.html.twig', [
@@ -121,6 +122,8 @@ class CommentaireController extends AbstractController
     #[Route('/{id}/report', name: 'commentaire_report', methods: ['POST'])]
     public function report(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if ($this->isCsrfTokenValid('report' . $commentaire->getId(), $request->request->get('_token'))) {
             $commentaire->setReport(true);
             $em->flush();
@@ -139,7 +142,9 @@ class CommentaireController extends AbstractController
     #[Route('/{id}/like', name: 'commentaire_like', methods: ['POST'])]
     public function toggleLike(Commentaire $commentaire, EntityManagerInterface $em, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
+
         if (!$user) {
             return $this->json(['message' => 'Authentication required.'], Response::HTTP_FORBIDDEN);
         }
@@ -171,6 +176,8 @@ class CommentaireController extends AbstractController
     #[Route('/mescommentaires', name: 'mes_commentaires', methods: ['GET'])]
     public function myCommentaires(CommentaireRepository $commentaireRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException();

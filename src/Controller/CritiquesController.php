@@ -21,6 +21,8 @@ class CritiquesController extends AbstractController
     #[Route('/', name: 'critiques_index', methods: ['GET'])]
     public function index(CritiquesRepository $critiquesRepository, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $genre = $request->query->get('genre');
 
         if ($genre) {

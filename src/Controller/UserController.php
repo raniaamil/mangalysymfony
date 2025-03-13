@@ -18,6 +18,7 @@ class UserController extends AbstractController
     #[Route('/', name: 'user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $users = $userRepository->findAll();
 
         return $this->render('user/index.html.twig', ['users' => $users]);
@@ -26,6 +27,7 @@ class UserController extends AbstractController
     #[Route('/new', name: 'user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
 
@@ -60,6 +62,7 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'user_edit', methods: ['GET', 'POST'])]
     public function edit(User $user, Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
 
@@ -89,6 +92,7 @@ class UserController extends AbstractController
     #[Route('/{id}/delete', name: 'user_delete', methods: ['POST'])]
     public function delete(User $user, Request $request, EntityManagerInterface $em): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $em->remove($user);
             $em->flush();
