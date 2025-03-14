@@ -63,3 +63,40 @@ table a:hover {
 .actions form {
     display: inline;
 }
+
+/* ----------------------------- RESPONSIVE STYLES ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    .container {
+        width: 90%;
+        padding: 15px;
+        margin-top: 40px;
+    }
+    
+    /* Pour permettre le défilement horizontal du tableau */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    table th,
+    table td {
+        padding: 10px;
+        font-size: 0.9em;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        width: 85%;
+    }
+    
+    table th,
+    table td {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+}

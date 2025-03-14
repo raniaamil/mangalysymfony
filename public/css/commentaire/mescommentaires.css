@@ -1,5 +1,4 @@
 /* ----------------------------- LISTE DES COMMENTAIRES ---------------------------- */
-
 .container {
     width: 90%;
     margin: 0 auto;
@@ -44,10 +43,10 @@ table td {
 }
 
 td.content-cell {
-    max-width: 200px; /* Définir une largeur maximale */
-    white-space: nowrap; /* Empêcher le texte de passer à la ligne */
-    overflow: hidden; /* Cacher le texte qui dépasse */
-    text-overflow: ellipsis; /* Ajouter des points de suspension */
+    max-width: 200px; /* Largeur maximale pour le contenu */
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+    overflow: hidden;    /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute des points de suspension */
 }
 
 table a {
@@ -61,7 +60,7 @@ table a:hover {
 
 .actions a {
     margin-right: 10px;
-    color: #007bff;
+    color: #7327BC;
     text-decoration: none;
 }
 
@@ -73,35 +72,37 @@ table a:hover {
     display: inline;
 }
 
-/* --- RESPONSIVE DESIGN --- */
+/* ----------------------------- RESPONSIVE STYLES ----------------------------- */
 
 /* Mobile : 320px - 767px */
 @media (max-width: 767px) {
     .container {
-        width: 95%;
+        width: 90%;
         padding: 15px;
         margin-top: 40px;
     }
-
+    
     h1 {
         font-size: 1.8em;
     }
-
+    
+    /* Transformation du tableau en mode défilable horizontal */
     table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
     }
-
-    table th, table td {
+    
+    table th,
+    table td {
         padding: 8px;
         font-size: 0.9em;
     }
-
+    
     td.content-cell {
         max-width: 150px;
     }
-
+    
     .btn {
         font-size: 0.9em;
         padding: 8px 10px;
@@ -113,109 +114,15 @@ table a:hover {
     .container {
         width: 80%;
     }
-
-    table th, table td {
+    
+    table th,
+    table td {
         padding: 10px;
+        font-size: 0.95em;
     }
-
+    
     td.content-cell {
         max-width: 180px;
     }
 }
 
-/* --- RESPONSIVE DESIGN --- */
-
-/* Mobile : 320px - 767px */
-@media (max-width: 767px) {
-    .container {
-        width: 95%;
-        padding: 5px;
-        margin-top: 30px;
-    }
-    
-    h1 {
-        font-size: 1.5em;
-        margin-bottom: 20px;
-    }
-    
-    /* Transformation du tableau pour mobile */
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
-    
-    table thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-    
-    table tr {
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-    }
-    
-    table td {
-        border: none;
-        border-bottom: 1px solid #eee;
-        position: relative;
-        padding-left: 50%;
-        white-space: normal;
-        text-align: left;
-    }
-    
-    table td:before {
-        position: absolute;
-        top: 12px;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        font-weight: bold;
-    }
-    
-    /* Ajout des en-têtes via data attribute */
-    table td:nth-of-type(1):before { content: "ID"; }
-    table td:nth-of-type(2):before { content: "Contenu"; }
-    table td:nth-of-type(3):before { content: "Sur"; }
-    table td:nth-of-type(4):before { content: "Date"; }
-    table td:nth-of-type(5):before { content: "Utilisateur"; }
-    table td:nth-of-type(6):before { content: "Actions"; }
-    
-    td.content-cell {
-        max-width: none;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-    }
-    
-    .btn {
-        display: block;
-        width: 70%;
-        margin-bottom: 5px;
-        font-size: 0.9em;
-    }
-    
-    form {
-        width: 90%;
-    }
-}
-
-/* Tablette : 768px - 991px */
-@media (min-width: 768px) and (max-width: 991px) {
-    .container {
-        width: 85%;
-    }
-    
-    table {
-        font-size: 0.95em;
-    }
-    
-    td.content-cell {
-        max-width: 150px;
-    }
-    
-    .btn {
-        padding: 6px 12px;
-        font-size: 0.9em;
-    }
-}

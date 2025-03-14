@@ -71,7 +71,7 @@ select:focus, input:focus {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 600px) {
+@media (max-width: 760px) {
     .user-container {
         width: 90%;
         padding: 15px;

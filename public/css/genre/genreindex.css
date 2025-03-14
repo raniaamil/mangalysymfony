@@ -1,3 +1,5 @@
+/* ----------------------------- LISTE DES GENRES ---------------------------- */
+
 .container {
     width: 90%;
     margin: 0 auto;
@@ -14,7 +16,7 @@ h1 {
 }
 
 table {
-    width: 100%;
+    width: 50%;
     border-collapse: collapse;
     margin-top: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
@@ -81,7 +83,7 @@ table a:hover {
     background-color: #5e2ab4;
 }
 
-/* --- RESPONSIVE --- */
+/* ----------------------------- RESPONSIVE STYLES ----------------------------- */
 
 /* Mobile : 320px - 767px */
 @media (max-width: 767px) {
@@ -89,16 +91,17 @@ table a:hover {
         width: 95%;
         padding: 15px;
         margin-top: 40px;
-    }
+        margin-left: 20px;
+    }   
 
     table {
-        display: block;
-        width: 100%;
+        width: 90%;
         overflow-x: auto;
         white-space: nowrap;
     }
 
-    table th, table td {
+    table th,
+    table td {
         padding: 8px;
         font-size: 0.9em;
     }
@@ -115,7 +118,8 @@ table a:hover {
         width: 80%;
     }
 
-    table th, table td {
+    table th,
+    table td {
         padding: 10px;
     }
 }

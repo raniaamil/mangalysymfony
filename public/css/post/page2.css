@@ -7,14 +7,14 @@ body {
 }
 
 /* ----------------------------- POSTS ----------------------------- */
-
 .posts {
-    margin-top: 100px;
+    margin-top: 50px;
+    padding: 0 15px;
 }
 
 .forum-container {
     max-width: 1200px;
-    margin: auto;
+    margin: 20px auto;
     background: white;
     border-radius: 8px;
     overflow: hidden;
@@ -26,8 +26,9 @@ body {
 .user-info {
     background: #f9f9f9;
     padding: 20px;
-    flex: 1 1 100px;
+    flex: 1 1 200px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .user-info img {
@@ -35,21 +36,25 @@ body {
     height: 100px;
     border-radius: 5px;
     padding-top: 10px;
+    object-fit: cover;
 }
 
 .user-info h3 {
     color: #d87b2e;
     margin: 5px 0;
     font-size: 1.1em;
+    word-break: break-word;
 }
 
 .user-info p {
     font-size: 0.8em;
+    margin: 5px 0;
 }
 
 .post-content {
-    flex: 2 1 600px;
+    flex: 3 1 600px;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .post-header {
@@ -57,6 +62,7 @@ body {
     padding: 10px;
     border-radius: 5px;
     font-weight: bold;
+    word-break: break-word;
 }
 
 .daterepondre {
@@ -64,6 +70,8 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 0.8em;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .datepubli {
@@ -79,7 +87,26 @@ body {
 .post-body {
     margin-top: 10px;
     line-height: 1.6;
-    font-size: 0.8em;
+    font-size: 0.9em;
+    word-break: break-word;
+}
+
+.media {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.media h3 {
+    color: #7327BC;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.media img, .media video, .media audio {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 
 .footerdate {
@@ -92,29 +119,286 @@ body {
     font-style: italic;
 }
 
+.likeanswer {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
 .like-btn {
-    background-color: #f4f4f4;
+    background-color: transparent;
+    border: none;
     cursor: pointer;
-    margin-top: 20px;
+    font-size: 1.2em;
+    padding: 5px;
+    transition: transform 0.2s;
+}
+
+.like-btn:hover {
+    transform: scale(1.1);
+}
+
+.like-icon {
+    font-size: 1.5em;
 }
 
 .answer {
     cursor: pointer;
-    margin-left: 210px;
+    margin-left: 20px;
     color: #7327BC;
     font-weight: bold;
 }
 
-footer {
-    margin-top: 40px;
+/* ----------------------------- COMMENTAIRES ----------------------------- */
+.list-group {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-@media (max-width: 768px) {
+.list-group-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item strong {
+    color: #7327BC;
+    font-size: 1em;
+}
+
+.list-group-item p {
+    margin: 10px 0;
+    line-height: 1.5;
+    font-size: 0.95em;
+    color: #555;
+    word-break: break-word;
+}
+
+/* Boutons d'action (Modifier, Supprimer, Signaler) */
+.btn {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* CSS pour la section "Ajouter un commentaire" */
+.post-content form .form-group textarea.form-control {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.btn-publier {
+    background-color: #7327BC;
+    color: white;
+    cursor: pointer;
+    padding: 8px 15px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-publier:hover {
+    background-color: #5e2ab4;
+}
+
+/* ----------------------------- RESPONSIVE ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    .posts {
+        margin-top: 30px;
+        padding: 0 10px;
+    }
+    
     .forum-container {
         flex-direction: column;
-    }
-    .user-info {
-        text-align: center;
-    }
+        margin: 15px auto;
 
+    }
+    
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+    }
+    
+    .user-info img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .post-content {
+        padding: 15px;
+        margin-bottom: 0px;
+        flex: 1 1 100%; /* Largeur à 100% pour ne pas avoir de vide en bas du like */
+    }
+    
+    .post-header {
+        font-size: 0.95em;
+    }
+    
+    .daterepondre {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .daterepondre form {
+        width: 100%;
+    }
+    
+    .daterepondre button {
+        width: 100%;
+    }
+    
+    .post-body {
+        font-size: 0.85em;
+    }
+    
+    .list-group-item {
+        padding: 10px;
+    }
+    
+    .list-group-item p {
+        font-size: 0.85em;
+    }
+    
+    .btn {
+        font-size: 0.8em;
+        padding: 5px 8px;
+        display: block;
+        width: 100%;
+        margin-top: 5px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    
+    form[method="post"] {
+        display: block !important;
+        width: 100%;
+    }
+    
+    .post-content form .form-group textarea.form-control {
+        min-height: 100px;
+    }
+    
+    .btn-publier {
+        width: 100%;
+    }
+    
+    /* Améliorer l'affichage des actions de commentaire sur mobile */
+    .mt-2 {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .forum-container {
+        flex-wrap: nowrap;
+    }
+    
+    .user-info {
+        flex: 0 0 180px;
+        padding: 15px;
+    }
+    
+    .post-content {
+        padding: 15px;
+    }
+    
+    .post-body {
+        font-size: 0.9em;
+    }
+    
+    .btn {
+        font-size: 0.85em;
+        padding: 6px 10px;
+    }
+    
+    .post-content form .form-group textarea.form-control {
+        min-height: 120px;
+    }
+}
+
+/* Desktop : 992px et plus */
+@media (min-width: 992px) {
+    .forum-container {
+        margin: 25px auto;
+    }
+    
+    .user-info {
+        flex: 0 0 220px;
+    }
+    
+    .post-content {
+        padding: 25px;
+    }
+    
+    .post-body {
+        font-size: 1em;
+    }
+    
+    .list-group-item {
+        padding: 20px;
+    }
+}
+
+/* Grand écran : 1200px et plus */
+@media (min-width: 1200px) {
+    .forum-container {
+        max-width: 1300px;
+    }
+    
+    .user-info {
+        flex: 0 0 250px;
+    }
 }

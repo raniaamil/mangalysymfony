@@ -130,6 +130,23 @@ nav svg{
 }
 
 /* ---------------------------------------------------- NAVBAR RESPONSIVE ---------------------------------------------------- */
+@media (max-width: 480px) {
+    .links-container {
+        width: 100%; /* Prendre toute la largeur sur les très petits écrans */
+    }
+
+    nav a {
+        padding: 10px 15px; /* Réduire le padding */
+    }
+
+    .logo {
+        height: 40px; /* Réduire encore la taille du logo */
+    }
+
+    .dropdown-toggle {
+        padding: 10px 15px; /* Réduire le padding */
+    }
+}
 
 @media (max-width: 768px) {
     nav {
@@ -211,24 +228,6 @@ nav svg{
         position: static; /* Position relative pour les petits écrans */
         width: 100%; /* Prendre toute la largeur */
         box-shadow: none; /* Supprimer l'ombre pour un look plus propre */
-    }
-}
-
-@media (max-width: 480px) {
-    .links-container {
-        width: 100%; /* Prendre toute la largeur sur les très petits écrans */
-    }
-
-    nav a {
-        padding: 10px 15px; /* Réduire le padding */
-    }
-
-    .logo {
-        height: 40px; /* Réduire encore la taille du logo */
-    }
-
-    .dropdown-toggle {
-        padding: 10px 15px; /* Réduire le padding */
     }
 }
 

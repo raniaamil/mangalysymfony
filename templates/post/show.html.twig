@@ -128,10 +128,9 @@
                     <h3>Ajouter un commentaire</h3>
                     <form method="post" action="{{ path('commentaire_new', {entity: 'post', id: post.id}) }}">
                         <div class="form-group">
-                            <label for="contenu">Votre commentaire</label>
                             <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success mt-2">Publier</button>
+                        <button type="submit" class="btn-publier">Publier</button>
                     </form>
                 </div>
             {% else %}
