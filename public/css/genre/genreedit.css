@@ -72,13 +72,32 @@ select:focus {
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 600px) {
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
     .genre-container {
         width: 90%;
         padding: 15px;
+        margin-top: 60px;
     }
+
     .form-buttons {
         flex-direction: column;
         gap: 10px;
+    }
+
+    input, textarea {
+        width: 95%;
+    }
+
+    .submit-btn, .cancel-btn {
+        width: 100%;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .genre-container {
+        width: 70%;
     }
 }

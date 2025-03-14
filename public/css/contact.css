@@ -4,7 +4,6 @@ body {
     color: #333;
 }
 
-/* Container for the whole contact section */
 .contact-container {
     display: flex;
     flex-wrap: wrap;
@@ -16,7 +15,6 @@ body {
     margin-top: 30px;
 }
 
-/* Left side contact info styling */
 .contact-info {
     flex: 1;
     min-width: 300px;
@@ -181,22 +179,3 @@ input::placeholder, textarea::placeholder {
 }
 
 
-@media (max-width: 760px) {
-    .contact-container {
-        flex-direction: column;
-        margin-right: 10px;
-    }
-    .contact-info, .contact-form {
-        min-width: 90%;
-    }
-}
-
-@media (min-width: 320px) {
-    .contact-container {
-        flex-direction: column;
-        margin-right: 10px;
-    }
-    .contact-info, .contact-form {
-        min-width: 90%;
-    }
-}

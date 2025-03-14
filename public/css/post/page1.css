@@ -1,4 +1,4 @@
-/* ----------------------------- STYLES GÉNÉRAUX ----------------------------- */
+/* ----------------------------- BASE STYLES ----------------------------- */
 body {
     margin: 0;
     padding: 0;
@@ -7,21 +7,25 @@ body {
 }
 
 .forum-container {
+    width: 90%;
     max-width: 1400px;
     margin: 20px auto;
     padding: 20px;
     border-radius: 10px;
+    background-color: #f8f8f8;
 }
 
 /* ----------------------------- FILTRES ----------------------------- */
 .filters {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
     margin-bottom: 20px;
 }
 
-.filters select, .filters input {
+.filters select,
+.filters input {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -31,7 +35,7 @@ body {
 .add-post-btn {
     padding: 12px 15px;
     background-color: #7327BC;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 1em;
@@ -43,39 +47,41 @@ body {
     background-color: #5e2ab4;
 }
 
-
-/* ----------------------------- TABLEAU DES POSTS ----------------------------- */
+/* ----------------------------- POSTS SECTION ----------------------------- */
 .posts-section {
     margin-top: 30px;
 }
 
+/* ----------------------------- TABLEAU DES POSTS ----------------------------- */
 .posts-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
-
+    margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-.posts-table th, .posts-table td {
+.posts-table thead {
+    background-color: #d8b6f0;
+}
+
+.posts-table tbody {
+    background-color: #fff;
+}
+
+.posts-table th,
+.posts-table td {
     padding: 12px;
-    border-bottom: 1px solid #ddd;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
 .posts-table th {
-    background-color: #d8b6f0;
     font-weight: bold;
-    text-align: left;
-    color: black;
-}
-
-.posts-table td {
-    background-color: white;
 }
 
 .posts-table a {
-    text-decoration: none;
     color: #7327BC;
+    text-decoration: none;
     font-weight: bold;
 }
 
@@ -83,16 +89,59 @@ body {
     text-decoration: underline;
 }
 
-/* ----------------------------- RESPONSIVE ----------------------------- */
-@media (max-width: 768px) {
+/* ----------------------------- ACTIONS ----------------------------- */
+.actions a {
+    margin-right: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.actions form {
+    display: inline;
+}
+
+/* ----------------------------- RESPONSIVE STYLES ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    .forum-container {
+        width: 95%;
+        padding: 15px;
+        margin-top: 40px;
+    }
+    
     .filters {
         flex-direction: column;
         align-items: center;
     }
-    .search-bar input {
-        width: 80%;
+    
+    /* Permettre le défilement horizontal du tableau */
+    .posts-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
     }
-    .posts-table, .posts-table th, .posts-table td {
+    
+    .posts-table th,
+    .posts-table td {
+        padding: 8px;
         font-size: 0.9em;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .forum-container {
+        width: 85%;
+    }
+    
+    .posts-table th,
+    .posts-table td {
+        padding: 10px;
+        font-size: 0.95em;
     }
 }

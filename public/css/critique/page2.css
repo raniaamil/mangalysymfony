@@ -1,15 +1,14 @@
-
 /* ---------------------------------------------------- 3) FILTRES ---------------------------------------------------- */
-
 .filters {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 20px;
-    margin-top: 50px;
+    margin: 50px auto 20px;
+    flex-wrap: wrap;
 }
 
-.filters select, .filters input {
+.filters select,
+.filters input {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -25,27 +24,11 @@
     font-size: 1em;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .add-post-btn:hover {
     background-color: #5e2ab4;
-}
-
-@media (max-width: 768px) {
-    .reviews-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .filters {
-        flex-direction: column;
-        align-items: center;
-    }
-    .search-bar input {
-        width: 80%;
-    }
 }
 
 /* ----------------------------- PRESENTATION MANGA ----------------------------- */
@@ -54,6 +37,7 @@ body {
     padding: 0;
     background-color: #f8f8f8;
     color: #333;
+    font-family: Arial, sans-serif;
 }
 
 .manga-container {
@@ -71,21 +55,21 @@ body {
     align-items: center;
     gap: 20px;
     background-color: white;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
 }
 
 .manga-cover {
-    max-width: 100%;
     width: 400px;
+    max-width: 100%;
     height: auto;
     border-radius: 5px;
 }
 
 .manga-details {
     flex: 1;
+    padding: 10px;
 }
 
 .manga-details h2 {
@@ -114,6 +98,9 @@ body {
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .review-header {
@@ -126,6 +113,7 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .review-user-info {
@@ -146,25 +134,23 @@ body {
     text-align: right;
 }
 
+.post-header {
+    background: #d8b6f0;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
 .review-text {
     margin-top: 10px;
     font-size: 1em;
+    line-height: 1.5;
 }
 
 .review-info {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
-}
-
-.review-likes {
-    color: #e74c3c;
-}
-
-.review-actions {
-    display: flex;
     align-items: center;
-    margin-top: 10px;
 }
 
 .like-btn {
@@ -174,34 +160,65 @@ body {
     cursor: pointer;
     background-color: #7327BC;
     color: white;
+    font-size: 0.9em;
 }
 
-.like-btn:hover, .more-btn:hover, .open-btn:hover, .gift-btn:hover {
+.like-btn:hover,
+.more-btn:hover,
+.open-btn:hover,
+.gift-btn:hover {
     background-color: #5e2ab4;
 }
 
-.post-header {
-    background: #d8b6f0;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-}
+/* ----------------------------- RESPONSIVE DESIGN ----------------------------- */
 
-/* ----------------------------- RESPONSIVE ----------------------------- */
-@media (max-width: 768px) {
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    /* Conteneur global en colonne */
     .manga-info {
         flex-direction: column;
         text-align: center;
     }
+    
     .manga-cover {
         width: 100%;
         max-width: 400px;
     }
-    .reviews-container {
-        grid-template-columns: 1fr;
+    
+    .manga-details {
+        padding: 10px 5px;
     }
-    .review-header {
+    
+    .filters {
         flex-direction: column;
         align-items: center;
     }
+    
+    .reviews-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .manga-container {
+        padding: 15px;
+    }
+    
+    .manga-info {
+        flex-direction: row;
+        text-align: left;
+    }
+    
+    .filters {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
 }

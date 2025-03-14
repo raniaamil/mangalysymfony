@@ -56,3 +56,32 @@ a:hover {
         font-size: 0.95em;
     }
 }
+
+/* ----------------------------- RESPONSIVE DESIGN ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    .privacy-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.2em;
+    }
+
+    p, ul, ol {
+        font-size: 0.95em;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .privacy-container {
+        width: 90%;
+    }
+}

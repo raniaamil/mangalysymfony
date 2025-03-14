@@ -1,10 +1,10 @@
-
 /* ----------------------------- FILTRES ----------------------------- */
 .filters {
     display: flex;
     justify-content: center;
     gap: 15px;
     margin-top: 50px;
+    flex-wrap: wrap;
 }
 
 .filters select, .filters input {
@@ -60,38 +60,97 @@ table tbody {
     background-color: white;
 }
 
-table th {
+table th, table td {
     padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
+}
+
+table th {
     font-weight: bold;
 }
 
-table td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
+/* Le style pour les utilisateurs non-admin - cache toutes les colonnes sauf la première */
+.user-view th:not(:first-child),
+.user-view td:not(:first-child) {
+    display: none;
 }
 
-table a {
-    color: #7327BC;
-    text-decoration: none;
+/* Pour les utilisateurs normaux, on garde un style de table classique */
+.user-view table {
+    width: 50%; /* Réduit la largeur du tableau puisqu'il n'y a qu'une colonne */
+    margin: 0 auto; /* Centre le tableau */
 }
 
-table a:hover {
-    text-decoration: underline;
+.user-view th:first-child,
+.user-view td:first-child {
+    width: 100%; /* La colonne prend toute la largeur */
+    text-align: center; /* Centre le texte */
 }
 
-.actions a {
-    margin-right: 10px;
-    color: #007bff;
-    text-decoration: none;
-}
+/* Style responsive pour les petits écrans */
+@media (max-width: 767px) {
+    /* Pour les administrateurs, on garde la transformation de tableau pour mobile */
+    .admin-view table, 
+    .admin-view thead, 
+    .admin-view tbody, 
+    .admin-view th, 
+    .admin-view td, 
+    .admin-view tr {
+        display: block;
+    }
 
-.actions a:hover {
-    text-decoration: underline;
-}
+    .admin-view table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
 
-.actions form {
-    display: inline;
+    .admin-view table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+    }
+
+    .admin-view table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+    }
+
+    .admin-view table td:before {
+        position: absolute;
+        top: 12px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+
+    /* Les labels pour la vue admin */
+    .admin-view table td:nth-of-type(1):before { content: "ID"; }
+    .admin-view table td:nth-of-type(2):before { content: "Titre"; }
+    .admin-view table td:nth-of-type(3):before { content: "Auteur"; }
+    .admin-view table td:nth-of-type(4):before { content: "Date de sortie"; }
+    .admin-view table td:nth-of-type(5):before { content: "Description"; }
+    .admin-view table td:nth-of-type(6):before { content: "Genre"; }
+    .admin-view table td:nth-of-type(7):before { content: "Actions"; }
+
+    /* Pour la vue utilisateur, on garde un design simple */
+    .user-view table {
+        width: 80%;
+        display: table;
+    }
+    
+    .user-view tr {
+        display: table-row;
+    }
+    
+    .user-view th, .user-view td {
+        display: table-cell;
+        padding: 12px;
+    }
 }

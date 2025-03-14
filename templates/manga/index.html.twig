@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block body %}
-
 <div class="filters">
     <select id="filter-genre">
         <option value="all">Tous les genres</option>
@@ -29,7 +28,7 @@
     {% endif %}
 </div>
 
-<div class="container mt-5">
+<div class="container mt-5 {% if is_granted('ROLE_ADMIN') %}admin-view{% else %}user-view{% endif %}">
     <h1 class="mb-4">Liste des Mangas</h1>
 
     <table class="table table-striped">

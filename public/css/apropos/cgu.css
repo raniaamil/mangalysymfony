@@ -37,14 +37,17 @@ a:hover {
     text-decoration: underline;
 }
 
-/* ----------------------------- RESPONSIVE ----------------------------- */
-@media (max-width: 768px) {
-    .privacy-container {
+/* ----------------------------- RESPONSIVE DESIGN ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
+    .cgu-container {
         width: 90%;
         padding: 15px;
     }
-    
+
     h1 {
+        font-size: 1.8em;
         text-align: center;
     }
 
@@ -54,5 +57,17 @@ a:hover {
 
     p, ul, ol {
         font-size: 0.95em;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .cgu-container {
+        width: 80%;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+        text-align: center;
     }
 }

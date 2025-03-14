@@ -1,71 +1,210 @@
-/* ---------------------------------------------------------   Espace Utilisateur   ----------------------------------------------------------------------- */
-
+/* Base styles */
 .container {
     width: 90%;
     margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    margin-top: 80px;
+    margin-top: 50px;
     margin-bottom: 70px;
     border-radius: 10px;
 }
 
-section {
-    margin-bottom: 40px;
-}
-
-h2 {
-    color: #5e2ab4;
-    border-bottom: 2px solid #5e2ab4;
-    padding-bottom: 10px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-}
-
-label {
-    margin-top: 10px;
-}
-
-input, button {
-    margin-top: 5px;
-    padding: 10px;
-    font-size: 16px;
-}
-
-button {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #555;
+h1 {
+    color: #7327BC;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.50);
 }
 
-th, td {
-    padding: 10px;
+table thead {
+    background-color: #d8b6f0;
+}
+
+table tbody {
+    background-color: white;
+}
+
+table th, table td {
+    padding: 12px;
     border: 1px solid #ddd;
     text-align: left;
 }
 
-th {
-    background-color: #f4f4f4;
+table th {
+    font-weight: bold;
 }
 
-.actions button {
-    margin: 0 5px;
-    padding: 5px 10px;
-    font-size: 14px;
+table a {
+    color: #7327BC;
+    text-decoration: none;
+}
+
+table a:hover {
+    text-decoration: underline;
+}
+
+.actions a {
+    margin-right: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.actions form {
+    display: inline;
+}
+
+/* Responsive styles */
+@media (max-width: 767px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+        margin-top: 40px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table th, table td {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    td.content-cell {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .btn {
+        font-size: 0.9em;
+        padding: 8px 10px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        width: 80%;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    td.content-cell {
+        max-width: 180px;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        width: 95%;
+        padding: 5px;
+        margin-top: 30px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    /* Transformation du tableau pour mobile */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+    }
+
+    table td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+    }
+
+    table td:before {
+        position: absolute;
+        top: 12px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+
+    /* Ajout des en-têtes via data attribute */
+    table td:nth-of-type(1):before { content: "ID"; }
+    table td:nth-of-type(2):before { content: "Titre"; }
+    table td:nth-of-type(3):before { content: "Contenu"; }
+    table td:nth-of-type(4):before { content: "Manga"; }
+    table td:nth-of-type(5):before { content: "Genre"; }
+    table td:nth-of-type(6):before { content: "Note"; }
+    table td:nth-of-type(7):before { content: "Par"; }
+    table td:nth-of-type(8):before { content: "Date de publication"; }
+    table td:nth-of-type(9):before { content: "Actions"; }
+
+    td.content-cell {
+        max-width: none;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .btn {
+        display: block;
+        width: 70%;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    form {
+        width: 90%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        width: 85%;
+    }
+
+    table {
+        font-size: 0.95em;
+    }
+
+    td.content-cell {
+        max-width: 150px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
 }

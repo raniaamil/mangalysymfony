@@ -71,14 +71,42 @@ select:focus {
     background-color: #bbb;
 }
 
-/* --- RESPONSIVE --- */
-@media (max-width: 600px) {
+/* ----------------------------- RESPONSIVE DESIGN ----------------------------- */
+
+/* Mobile : 320px - 767px */
+@media (max-width: 767px) {
     .commentaire-container {
-        width: 90%;
+        width: 80%;
         padding: 15px;
+        margin-top: 60px;
     }
+
+    label {
+        font-size: 1em;
+    }
+
+    input, textarea {
+        font-size: 0.95em;
+        padding: 10px;
+    }
+
     .form-buttons {
         flex-direction: column;
         gap: 10px;
+    }
+
+    .submit-btn, .cancel-btn {
+        width: 100%;
+    }
+}
+
+/* Tablette : 768px - 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    .commentaire-container {
+        width: 80%;
+    }
+
+    textarea {
+        min-height: 160px;
     }
 }

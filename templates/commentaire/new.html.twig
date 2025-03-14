@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/commentaire/newcommentaires.css') }}">
+{% endblock %}
+
+
 {% block body %}
 <h1>Ajouter un commentaire pour la critique "{{ critique.titre }}"</h1>
 
