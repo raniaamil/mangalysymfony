@@ -51,7 +51,7 @@ class Theorie
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'theorie')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     #[Assert\NotNull(message: "Le manga associé est obligatoire")]
     private ?Manga $manga = null;
 

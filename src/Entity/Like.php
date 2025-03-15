@@ -20,15 +20,19 @@ class Like
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Commentaire $commentaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Theorie $theorie = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Post $post = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     private ?Critiques $critiques = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

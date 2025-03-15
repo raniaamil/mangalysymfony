@@ -39,6 +39,7 @@ class Commentaire
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
     private ?Theorie $theorie = null;
 
 
@@ -55,6 +56,7 @@ class Commentaire
     private ?bool $report = false;
 
     #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: true, onDelete: "CASCADE")]
     private ?Post $post = null;
 
     public function __construct()

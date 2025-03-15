@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Critiques>
      */
-    #[ORM\OneToMany(targetEntity: Critiques::class, mappedBy: 'user', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Critiques::class, mappedBy: 'user')]
     private Collection $critiques;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

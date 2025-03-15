@@ -32,7 +32,7 @@ class Manga
     private string $titre;
 
     #[ORM\ManyToOne(inversedBy: 'manga')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     #[Assert\NotNull(message: 'Veuillez sélectionner un genre')]
     private Genre $genre;
 

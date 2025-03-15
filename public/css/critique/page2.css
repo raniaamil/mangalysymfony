@@ -1,4 +1,11 @@
-/* ---------------------------------------------------- 3) FILTRES ---------------------------------------------------- */
+/* Règle globale pour une meilleure gestion de la taille des éléments */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ------------------------- FILTRES ------------------------- */
 .filters {
     display: flex;
     justify-content: center;
@@ -25,16 +32,15 @@
     cursor: pointer;
     text-decoration: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease;
 }
 
 .add-post-btn:hover {
     background-color: #5e2ab4;
 }
 
-/* ----------------------------- PRESENTATION MANGA ----------------------------- */
+/* ------------------- PRESENTATION MANGA ------------------- */
 body {
-    margin: 0;
-    padding: 0;
     background-color: #f8f8f8;
     color: #333;
     font-family: Arial, sans-serif;
@@ -42,6 +48,7 @@ body {
 
 .manga-container {
     max-width: 1200px;
+    width: 95%;
     margin: 20px auto;
     padding: 20px;
     background-color: #f8f8f8;
@@ -54,7 +61,7 @@ body {
     flex-wrap: wrap;
     align-items: center;
     gap: 20px;
-    background-color: white;
+    background-color: #fff;
     padding: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
@@ -76,7 +83,7 @@ body {
     color: #7327BC;
 }
 
-/* ------------------------------------- CRITIQUES ---------------------------*/
+/* --------------------- CRITIQUES --------------------- */
 .reviews-section {
     margin-top: 30px;
 }
@@ -94,7 +101,7 @@ body {
 }
 
 .review-card {
-    background-color: white;
+    background-color: #fff;
     border-radius: 10px;
     padding: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -145,6 +152,7 @@ body {
     margin-top: 10px;
     font-size: 1em;
     line-height: 1.5;
+    overflow-wrap: break-word; /* Permet de couper les mots trop longs */
 }
 
 .review-info {
@@ -176,11 +184,15 @@ body {
     background-color: #5e2ab4;
 }
 
-/* ----------------------------- RESPONSIVE DESIGN ----------------------------- */
+/* ----------------- RESPONSIVE DESIGN ----------------- */
 
 /* Mobile : 320px - 767px */
 @media (max-width: 767px) {
-    /* Conteneur global en colonne */
+    .manga-container {
+        width: 95%;
+        padding: 10px;
+    }
+
     .manga-info {
         flex-direction: column;
         text-align: center;
@@ -198,10 +210,7 @@ body {
     .filters {
         flex-direction: column;
         align-items: center;
-    }
-    
-    .reviews-container {
-        grid-template-columns: 1fr;
+        width: 100%;
     }
     
     .review-header {
@@ -214,6 +223,7 @@ body {
 /* Tablette : 768px - 991px */
 @media (min-width: 768px) and (max-width: 991px) {
     .manga-container {
+        width: 90%;
         padding: 15px;
     }
     
@@ -226,5 +236,4 @@ body {
         justify-content: center;
         flex-wrap: wrap;
     }
-
 }

@@ -31,7 +31,7 @@ class Genre
     /**
      * @var Collection<int, Manga>
      */
-    #[ORM\OneToMany(targetEntity: Manga::class, mappedBy: 'genre', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Manga::class, mappedBy: 'genre')]
     private Collection $manga;
 
     public function __construct()

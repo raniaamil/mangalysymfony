@@ -52,7 +52,7 @@ class Post
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'post')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     #[Assert\NotNull(message: "Le manga associé est obligatoire")]
     private ?Manga $manga = null;
 

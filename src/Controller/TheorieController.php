@@ -205,7 +205,7 @@ class TheorieController extends AbstractController
         }
         $theories = $theorieRepository->findBy(['user' => $user]);
 
-        return $this->render('theorie/mes_theories.html.twig', [
+        return $this->render('theorie/mestheories.html.twig', [
             'theories' => $theories,
         ]);
     }
