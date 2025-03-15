@@ -26,7 +26,7 @@
                 <option value="popular">Les plus récents</option>
                 <option value="recent">Les moins récents</option>
             </select>
-            <a href="/critiques/new" class="add-post-btn">Ajouter une critique</a>
+            <a href="{{ path('critiques_new', { manga: manga.titre }) }}" class="add-post-btn">Ajouter une critique</a>
         </div>
     </div>
 
@@ -86,7 +86,6 @@
                 </div>
             </div>
         {% endfor %}
-
         </section>
     </main>
 {% endblock %}

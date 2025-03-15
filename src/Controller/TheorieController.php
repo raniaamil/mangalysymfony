@@ -6,6 +6,7 @@ use App\Entity\Theorie;
 use App\Entity\Manga;
 use App\Entity\Like;
 use App\Repository\TheorieRepository;
+use App\Repository\MangaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,56 +37,58 @@ class TheorieController extends AbstractController
     }
 
     #[Route('/new', name: 'theorie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
+    public function new(
+        Request $request, 
+        EntityManagerInterface $em, 
+        CsrfTokenManagerInterface $csrfTokenManager,
+        MangaRepository $mangaRepository
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('theorie_new', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-
+    
             $theorie = new Theorie();
             $theorie->setTitre($request->request->get('titre'));
             $theorie->setContenu($request->request->get('contenu'));
-
-            // Associer le manga
+    
+            // Associer le manga via la valeur envoyée par le select
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
-
             if ($manga) {
                 $theorie->setManga($manga);
             } else {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('theorie_new');
             }
-
+    
             // Gestion du média
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
-                $media->move(
-                    $this->getParameter('media_directory'),
-                    $newFilename
-                );
+                $media->move($this->getParameter('media_directory'), $newFilename);
                 $theorie->setMedia($newFilename);
             }
-
+    
             $theorie->setDatePublication(new \DateTime());
             $theorie->setUser($this->getUser());
-
+    
             $em->persist($theorie);
             $em->flush();
-
+    
             return $this->redirectToRoute('theorie_index');
         }
-
+    
         $csrfToken = $csrfTokenManager->getToken('theorie_new')->getValue();
-
+        // Récupère la liste complète des mangas
+        $mangas = $mangaRepository->findAll();
+    
         return $this->render('theorie/new.html.twig', [
             'csrf_token' => $csrfToken,
+            'mangas'     => $mangas,
         ]);
     }
 
@@ -135,52 +138,54 @@ class TheorieController extends AbstractController
     }
 
     #[Route('/{id<\d+>}/edit', name: 'theorie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Theorie $theorie, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
+    public function edit(
+        Request $request, 
+        Theorie $theorie, 
+        EntityManagerInterface $em, 
+        CsrfTokenManagerInterface $csrfTokenManager,
+        MangaRepository $mangaRepository
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('theorie_edit', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-
+    
             $theorie->setTitre($request->request->get('titre'));
             $theorie->setContenu($request->request->get('contenu'));
-
-            // Mise à jour du manga
+    
+            // Mise à jour du manga via la valeur du select
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
-
             if ($manga) {
                 $theorie->setManga($manga);
             } else {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('theorie_edit', ['id' => $theorie->getId()]);
             }
-
+    
             // Gestion du média (facultatif)
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
-                $media->move(
-                    $this->getParameter('media_directory'),
-                    $newFilename
-                );
+                $media->move($this->getParameter('media_directory'), $newFilename);
                 $theorie->setMedia($newFilename);
             }
-
+    
             $em->flush();
-
+    
             return $this->redirectToRoute('mes_theories');
         }
-
+    
         $csrfToken = $csrfTokenManager->getToken('theorie_edit')->getValue();
-
+        $mangas = $mangaRepository->findAll();
+    
         return $this->render('theorie/edit.html.twig', [
-            'theorie' => $theorie,
+            'theorie'    => $theorie,
             'csrf_token' => $csrfToken,
+            'mangas'     => $mangas,
         ]);
     }
 

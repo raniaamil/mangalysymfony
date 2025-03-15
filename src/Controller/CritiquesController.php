@@ -40,52 +40,55 @@ class CritiquesController extends AbstractController
     public function new(Request $request, EntityManagerInterface $em, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
+    
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-
+    
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('critiques_new', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-
+    
             $data = $request->request->all();
-
+    
             if (!isset($data['titre'], $data['contenu'], $data['manga'], $data['note'])) {
                 $this->addFlash('error', 'Tous les champs sont obligatoires.');
                 return $this->redirectToRoute('critiques_new');
             }
-
+    
             $critique = new Critiques();
             $critique->setTitre($data['titre']);
             $critique->setContenu($data['contenu']);
-
+    
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $data['manga']]);
             if (!$manga) {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('critiques_new');
             }
             $critique->setManga($manga);
-
+    
             $note = (int)$data['note'];
             if ($note < 1 || $note > 5) {
                 $this->addFlash('error', 'La note doit être comprise entre 1 et 5.');
                 return $this->redirectToRoute('critiques_new');
             }
             $critique->setNote($note);
-
+    
             $critique->setDatePublication(new \DateTime());
             $critique->setUser($this->getUser());
-
+    
             $em->persist($critique);
             $em->flush();
-
-            return $this->redirectToRoute('manga_show');
+    
+            return $this->redirectToRoute('manga_show', ['id' => $manga->getId()]);
         }
-
+    
+        // Récupération du paramètre GET "manga"
         $csrfToken = $csrfTokenManager->getToken('critiques_new')->getValue();
-
+        $mangaParam = $request->query->get('manga');
+    
         return $this->render('critiques/new.html.twig', [
             'csrf_token' => $csrfToken,
+            'mangaParam' => $mangaParam,
         ]);
     }
 

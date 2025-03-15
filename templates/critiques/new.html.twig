@@ -18,7 +18,8 @@
 
             <label for="review-manga">Manga :</label>
             <input type="text" id="review-manga" name="manga" 
-                   placeholder="Ex : Naruto" 
+                   placeholder="Ex : Naruto"
+                   value="{{ mangaParam|default('') }}"
                    required>
 
             <!-- Liste déroulante pour la note -->

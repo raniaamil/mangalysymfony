@@ -15,7 +15,12 @@
         <input type="text" id="post-title" name="titre" placeholder="Ex : Les gars vous êtes plutôt team Sakura ou team Hinata ?" required value="{{ post.titre }}">
 
         <label for="post-manga">Manga :</label>
-        <input type="text" id="post-manga" name="manga" placeholder="Ex : Naruto" required value="{{ post.manga.titre }}">
+        <select id="post-manga" name="manga" required style="height: 40px;">
+            <option value="" disabled selected>Sélectionnez un manga</option>
+            {% for manga in mangas %}
+                <option value="{{ manga.titre }}">{{ manga.titre }}</option>
+            {% endfor %}
+        </select>
 
         <label for="post-text">Votre texte :</label>
         <div class="editor-toolbar">
