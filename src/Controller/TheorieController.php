@@ -75,8 +75,6 @@ class TheorieController extends AbstractController
         }
 
         $csrfToken = $csrfTokenManager->getToken('theorie_new')->getValue();
-
-        // Si vous souhaitez afficher la liste des mangas dans le formulaire :
         $mangas = $mangaRepository->findAll();
 
         return $this->render('theorie/new.html.twig', [
@@ -111,7 +109,7 @@ class TheorieController extends AbstractController
             }
         }
 
-        // On ne fait plus de conversion base64 ; le template affichera l'image via asset()
+        // Le template affichera le média via asset(), sans conversion base64
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
             'isLiked' => $isLiked,
@@ -163,10 +161,12 @@ class TheorieController extends AbstractController
         }
 
         $csrfToken = $csrfTokenManager->getToken('theorie_edit')->getValue();
+        $mangas = $mangaRepository->findAll();
 
         return $this->render('theorie/edit.html.twig', [
             'theorie'    => $theorie,
             'csrf_token' => $csrfToken,
+            'mangas'     => $mangas,
         ]);
     }
 
@@ -210,4 +210,3 @@ class TheorieController extends AbstractController
         ]);
     }
 }
-

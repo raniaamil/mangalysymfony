@@ -92,8 +92,8 @@ body {
 }
 
 .media img {
-    max-width: 400px;  /* Limite la largeur à 400 pixels */
-    max-height: 300px; /* Limite la hauteur à 300 pixels */
+    max-width: 400px;  
+    max-height: 300px; 
     width: auto;
     height: auto;
 }

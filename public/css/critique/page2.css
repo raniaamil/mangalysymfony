@@ -154,16 +154,22 @@ body {
 }
 
 .like-btn {
-    padding: 8px 12px;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    background-color: #7327BC;
-    color: white;
-    font-size: 0.9em;
+    font-size: 1.2em;
+    padding: 5px;
+    transition: transform 0.2s;
 }
 
-.like-btn:hover,
+.like-btn:hover {
+    transform: scale(1.1);
+}
+
+.like-icon {
+    font-size: 1.5em;
+}
+
 .more-btn:hover,
 .open-btn:hover,
 .gift-btn:hover {

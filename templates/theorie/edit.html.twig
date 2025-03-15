@@ -3,7 +3,7 @@
 {% block title %}Modifier une Théorie{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/theories/newtheorie.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/post/newpost.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -11,30 +11,36 @@
     <form method="post" enctype="multipart/form-data" class="post-form">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('theorie_edit') }}">
 
-        <label for="theorie-title">Titre de la théorie :</label>
-        <input type="text" id="theorie-title" name="titre" 
-               placeholder="Ex : Naruto est-il immortel ?" 
-               value="{{ theorie.titre }}" 
-               required minlength="5" maxlength="255">
+        <label for="post-title">Titre de la théorie :</label>
+        <input type="text" id="post-title" name="titre" placeholder="Ex : Naruto est-il immortel ?" required value="{{ theorie.titre }}">
 
-        <label for="theorie-manga">Manga :</label>
-        <select id="theorie-manga" name="manga" required style="height: 40px;">
+        <label for="post-manga">Manga :</label>
+        <select id="post-manga" name="manga" required style="height: 40px;">
             <option value="" disabled selected>Sélectionnez un manga</option>
             {% for manga in mangas %}
-                <option value="{{ manga.titre }}">{{ manga.titre }}</option>
+                <option value="{{ manga.titre }}" {% if manga.titre == theorie.manga.titre %}selected{% endif %}>
+                    {{ manga.titre }}
+                </option>
             {% endfor %}
         </select>
 
-        <label for="theorie-text">Votre théorie :</label>
-        <textarea id="theorie-text" name="contenu" rows="6" 
-                  placeholder="Développez votre théorie ici..." 
-                  required minlength="50">{{ theorie.contenu }}</textarea>
+        <label for="post-text">Votre théorie :</label>
+        <div class="editor-toolbar">
+            <button type="button" class="editor-btn"><b>B</b></button>
+            <button type="button" class="editor-btn"><i>I</i></button>
+            <button type="button" class="editor-btn"><u>U</u></button>
+            <button type="button" class="editor-btn"><s>S</s></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ul"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-list-ol"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-quote-left"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-code"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-eye-slash"></i></button>
+            <button type="button" class="editor-btn"><i class="fa-solid fa-smile"></i></button>
+        </div>
+        <textarea id="post-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required>{{ theorie.contenu }}</textarea>
 
-        <label for="theorie-media">Média (URL) :</label>
-        <input type="url" id="theorie-media" name="media" 
-               placeholder="URL d'une image" 
-               value="{{ theorie.media }}" 
-               pattern="https?://.+" title="Entrez une URL valide">
+        <label for="post-media">Image (optionnel) :</label>
+        <input type="file" id="post-media" name="media" accept="image/*">
 
         <div class="form-buttons">
             <button type="submit" class="submit-btn">Enregistrer</button>
@@ -44,3 +50,6 @@
 </main>
 {% endblock %}
 
+{% block javascripts %}
+    <script src="{{ asset('js/post/newpost.js') }}"></script>
+{% endblock %}
