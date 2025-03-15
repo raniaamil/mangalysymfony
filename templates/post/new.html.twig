@@ -34,13 +34,11 @@
             <button type="button" class="editor-btn"><i class="fa-solid fa-code"></i></button>
             <button type="button" class="editor-btn"><i class="fa-solid fa-eye-slash"></i></button>
             <button type="button" class="editor-btn"><i class="fa-solid fa-smile"></i></button>
-            <!-- Bouton pour insérer des images -->
-            <button type="button" class="editor-btn"><i class="fa-solid fa-image"></i></button>
-            <!-- Bouton pour insérer des vidéos ou fichiers audio -->
-            <button type="button" class="editor-btn"><i class="fa-solid fa-play"></i></button>
-            <button type="button" class="editor-btn"><i class="fa-solid fa-question"></i></button>
         </div>
         <textarea id="post-text" name="contenu" rows="6" placeholder="Exprimez votre avis ici..." required></textarea>
+
+        <label for="post-media">Image (optionnel) :</label>
+        <input type="file" id="post-media" name="media" accept="image/*">
 
         <div class="form-buttons">
             <button type="submit" class="submit-btn">Publier</button>
@@ -53,3 +51,4 @@
 {% block javascripts %}
     <script src="{{ asset('js/post/newpost.js') }}"></script>
 {% endblock %}
+

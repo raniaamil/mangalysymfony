@@ -21,15 +21,7 @@ class TheorieController extends AbstractController
     #[Route('/', name: 'theorie_index', methods: ['GET'])]
     public function index(TheorieRepository $theorieRepository, Request $request): Response
     {
-        $genre = $request->query->get('genre'); // Récupère la catégorie sélectionnée
-
-        if ($genre) {
-            // Filtre les théories par catégorie
-            $theories = $theorieRepository->findBy(['genre' => $genre]);
-        } else {
-            // Récupère toutes les théories
-            $theories = $theorieRepository->findAll();
-        }
+        $theories = $theorieRepository->findAll();
 
         return $this->render('theorie/index.html.twig', [
             'theories' => $theories,
@@ -38,24 +30,24 @@ class TheorieController extends AbstractController
 
     #[Route('/new', name: 'theorie_new', methods: ['GET', 'POST'])]
     public function new(
-        Request $request, 
-        EntityManagerInterface $em, 
+        Request $request,
+        EntityManagerInterface $em,
         CsrfTokenManagerInterface $csrfTokenManager,
         MangaRepository $mangaRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-    
+
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('theorie_new', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-    
+
             $theorie = new Theorie();
             $theorie->setTitre($request->request->get('titre'));
             $theorie->setContenu($request->request->get('contenu'));
-    
-            // Associer le manga via la valeur envoyée par le select
+
+            // Associer le manga via son titre
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
             if ($manga) {
@@ -64,28 +56,29 @@ class TheorieController extends AbstractController
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('theorie_new');
             }
-    
-            // Gestion du média
+
+            // Gestion minimale du média (upload d'image)
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
                 $media->move($this->getParameter('media_directory'), $newFilename);
                 $theorie->setMedia($newFilename);
             }
-    
+
             $theorie->setDatePublication(new \DateTime());
             $theorie->setUser($this->getUser());
-    
+
             $em->persist($theorie);
             $em->flush();
-    
+
             return $this->redirectToRoute('theorie_index');
         }
-    
+
         $csrfToken = $csrfTokenManager->getToken('theorie_new')->getValue();
-        // Récupère la liste complète des mangas
+
+        // Si vous souhaitez afficher la liste des mangas dans le formulaire :
         $mangas = $mangaRepository->findAll();
-    
+
         return $this->render('theorie/new.html.twig', [
             'csrf_token' => $csrfToken,
             'mangas'     => $mangas,
@@ -95,15 +88,6 @@ class TheorieController extends AbstractController
     #[Route('/{id<\d+>}', name: 'theorie_show', methods: ['GET'])]
     public function show(Theorie $theorie, EntityManagerInterface $em): Response
     {
-        $mediaBase64 = null;
-
-        if ($theorie->getMedia()) {
-            $mediaPath = $this->getParameter('media_directory') . '/' . $theorie->getMedia();
-            if (file_exists($mediaPath)) {
-                $mediaBase64 = base64_encode(file_get_contents($mediaPath));
-            }
-        }
-
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
 
@@ -127,36 +111,35 @@ class TheorieController extends AbstractController
             }
         }
 
+        // On ne fait plus de conversion base64 ; le template affichera l'image via asset()
         return $this->render('theorie/show.html.twig', [
             'theorie' => $theorie,
-            'media_base64' => $mediaBase64,
-            'commentaires' => $theorie->getCommentaires(),
             'isLiked' => $isLiked,
             'commentaireLikes' => $commentaireLikes,
-            'type' => 'theorie'  // On passe le type pour le bouton like
+            'type' => 'theorie'
         ]);
     }
 
     #[Route('/{id<\d+>}/edit', name: 'theorie_edit', methods: ['GET', 'POST'])]
     public function edit(
-        Request $request, 
-        Theorie $theorie, 
-        EntityManagerInterface $em, 
+        Request $request,
+        Theorie $theorie,
+        EntityManagerInterface $em,
         CsrfTokenManagerInterface $csrfTokenManager,
         MangaRepository $mangaRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-    
+
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('theorie_edit', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-    
+
             $theorie->setTitre($request->request->get('titre'));
             $theorie->setContenu($request->request->get('contenu'));
-    
-            // Mise à jour du manga via la valeur du select
+
+            // Mise à jour du manga via son titre
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
             if ($manga) {
@@ -165,33 +148,30 @@ class TheorieController extends AbstractController
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('theorie_edit', ['id' => $theorie->getId()]);
             }
-    
-            // Gestion du média (facultatif)
+
+            // Gestion minimale du média (upload facultatif d'image)
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
                 $media->move($this->getParameter('media_directory'), $newFilename);
                 $theorie->setMedia($newFilename);
             }
-    
+
             $em->flush();
-    
+
             return $this->redirectToRoute('mes_theories');
         }
-    
+
         $csrfToken = $csrfTokenManager->getToken('theorie_edit')->getValue();
-        $mangas = $mangaRepository->findAll();
-    
+
         return $this->render('theorie/edit.html.twig', [
             'theorie'    => $theorie,
             'csrf_token' => $csrfToken,
-            'mangas'     => $mangas,
         ]);
     }
 
     #[Route('/{id}/delete', name: 'theorie_delete', methods: ['POST'])]
-    public function delete(Request $request, Theorie $theorie, EntityManagerInterface $em): Response
-    {
+    public function delete(Request $request, Theorie $theorie, EntityManagerInterface $em): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($this->isCsrfTokenValid('delete' . $theorie->getId(), $request->request->get('_token'))) {
@@ -203,38 +183,31 @@ class TheorieController extends AbstractController
     }
 
     #[Route('/{id}/report', name: 'theorie_report', methods: ['POST'])]
-    public function report(Theorie $theorie, EntityManagerInterface $em, Request $request): Response
-    {
+    public function report(Theorie $theorie, EntityManagerInterface $em, Request $request): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // Vérifier si la théorie a déjà été signalée
-        if ($theorie->getReport()) {
-            $this->addFlash('info', 'Cette théorie a déjà été signalée.');
+        if ($this->isCsrfTokenValid('report' . $theorie->getId(), $request->request->get('_token'))) {
+            $theorie->setReport(true);
+            $em->flush();
+            $this->addFlash('success', 'La théorie a été signalée.');
         } else {
-            if ($this->isCsrfTokenValid('report' . $theorie->getId(), $request->request->get('_token'))) {
-                $theorie->setReport(true);
-                $em->flush();
-                $this->addFlash('success', 'La théorie a été signalée.');
-            } else {
-                $this->addFlash('error', 'Erreur lors du signalement.');
-            }
+            $this->addFlash('error', 'Erreur lors du signalement.');
         }
 
         return $this->redirectToRoute('theorie_show', ['id' => $theorie->getId()]);
     }
 
     #[Route('/mestheories', name: 'mes_theories', methods: ['GET'])]
-    public function myTheories(TheorieRepository $theorieRepository): Response
-    {
+    public function myTheories(TheorieRepository $theorieRepository): Response {
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException();
         }
-
         $theories = $theorieRepository->findBy(['user' => $user]);
 
-        return $this->render('theorie/mestheories.html.twig', [
+        return $this->render('theorie/mes_theories.html.twig', [
             'theories' => $theories,
         ]);
     }
 }
+

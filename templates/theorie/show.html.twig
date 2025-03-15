@@ -11,9 +11,9 @@
     <!-- Container principal pour la théorie -->
     <div class="forum-container">
         <div class="user-info">
-            <h3>{{ theorie.user.username }}</h3>
+            <h3>{{ theorie.user.username|default('Auteur inconnu') }}</h3>
             <img src="{{ asset('images/postspage2/Mikasa_avec_les_cheveux_longs.webp') }}" alt="Avatar">
-            <p>Inscrit depuis Août 2024</p>
+            <p>Inscrit depuis {{ theorie.user.dateInscription|date('d M Y') }}</p>
         </div>
         <div class="post-content">
             <div class="post-header">
@@ -21,7 +21,7 @@
             </div>
 
             <div class="daterepondre">
-                <span class="datepubli">le: {{ theorie.datePublication|date('d M Y, H:i:s') }}</span>
+                <span class="datepubli">Publié le : {{ theorie.datePublication|date('d M Y, H:i:s') }}</span>
                 <form method="post" action="{{ path('theorie_report', {id: theorie.id}) }}" style="display: inline;">
                     <input type="hidden" name="_token" value="{{ csrf_token('report' ~ theorie.id) }}">
                     <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Voulez-vous signaler cette théorie ?');">
@@ -33,31 +33,15 @@
             <div class="post-body">
                 <p>{{ theorie.contenu }}</p>
                 <div class="media">
-                    <h3>Média</h3>
-                    {% if media_base64 %}
-                        <div>
-                            <p>Type: {{ theorie.mediaType }}</p>
-                            {% if theorie.mediaType starts with 'image' %}
-                                <img src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}" alt="Média associé" class="img-fluid" />
-                            {% elseif theorie.mediaType starts with 'video' %}
-                                <video controls class="w-100">
-                                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
-                                    Votre navigateur ne supporte pas la lecture vidéo.
-                                </video>
-                            {% elseif theorie.mediaType starts with 'audio' %}
-                                <audio controls>
-                                    <source src="data:{{ theorie.mediaType }};base64,{{ media_base64 }}">
-                                    Votre navigateur ne supporte pas la lecture audio.
-                                </audio>
-                            {% endif %}
-                        </div>
+                    {% if theorie.media %}
+                        <img src="{{ asset('uploads/media/' ~ theorie.media) }}" alt="Média associé" class="img-fluid" />
                     {% else %}
                         <p>Aucun média associé</p>
                     {% endif %}
                 </div>
             </div>
             <div class="footerdate">
-                <span class="datemodif">« Publié le: {{ theorie.datePublication|date('d M Y, H:i:s') }} »</span>
+                <span class="datemodif">« Modifié le : {{ theorie.datePublication|date('d M Y, H:i:s') }} »</span>
             </div>
             <div class="likeanswer">
                 <form method="post" action="{{ path('like_toggle') }}" class="like-form" data-entity-id="{{ theorie.id }}" data-entity-type="theorie">
@@ -118,14 +102,15 @@
                         </form>
                     </li>
                 {% else %}
-                    <li class="list-group-item text-center">Aucun commentaire pour cette théorie.</li>
+                    <li class="list-group-item text-center">Aucun commentaire pour ce post.</li>
                 {% endfor %}
             </ul>
-
+            
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <div class="mt-4">
                     <h3>Ajouter un commentaire</h3>
                     <form method="post" action="{{ path('commentaire_new', {entity: 'theorie', id: theorie.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('new_commentaire') }}">
                         <div class="form-group">
                             <textarea id="contenu" name="contenu" class="form-control" rows="3" required></textarea>
                         </div>

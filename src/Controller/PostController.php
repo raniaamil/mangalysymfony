@@ -36,54 +36,47 @@ class PostController extends AbstractController
         MangaRepository $mangaRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-    
+
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-    
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('post_new', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-    
+
             $post = new Post();
             $post->setTitre($request->request->get('titre'));
             $post->setContenu($request->request->get('contenu'));
-    
-            // Associer le manga via son titre (passe par la liste déroulante)
+
+            // Associer le manga via son titre
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
-    
             if ($manga) {
                 $post->setManga($manga);
             } else {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('post_new');
             }
-    
-            // Gestion du média
+
+            // Gestion minimale du média (upload d'image)
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
-                $media->move(
-                    $this->getParameter('media_directory'),
-                    $newFilename
-                );
+                $media->move($this->getParameter('media_directory'), $newFilename);
                 $post->setMedia($newFilename);
             }
-    
+
             $post->setDatePublication(new \DateTime());
             $post->setUser($this->getUser());
-    
+
             $em->persist($post);
             $em->flush();
-    
+
             return $this->redirectToRoute('post_index');
         }
-    
+
         $csrfToken = $csrfTokenManager->getToken('post_new')->getValue();
-    
-        // Récupérer tous les mangas depuis la base de données
         $mangas = $mangaRepository->findAll();
-    
+
         return $this->render('post/new.html.twig', [
             'csrf_token' => $csrfToken,
             'mangas'     => $mangas,
@@ -93,15 +86,6 @@ class PostController extends AbstractController
     #[Route('/{id<\d+>}', name: 'post_show', methods: ['GET'])]
     public function show(Post $post, EntityManagerInterface $em): Response
     {
-        $mediaBase64 = null;
-
-        if ($post->getMedia()) {
-            $mediaPath = $this->getParameter('media_directory') . '/' . $post->getMedia();
-            if (file_exists($mediaPath)) {
-                $mediaBase64 = base64_encode(file_get_contents($mediaPath));
-            }
-        }
-
         $user = $this->getUser();
         $likeRepo = $em->getRepository(Like::class);
 
@@ -127,11 +111,9 @@ class PostController extends AbstractController
 
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'media_base64' => $mediaBase64,
-            'commentaires' => $post->getCommentaires(),
             'isLiked' => $isLiked,
             'commentaireLikes' => $commentaireLikes,
-            'type' => 'post'  // On passe le type pour le bouton like
+            'type' => 'post'
         ]);
     }
 
@@ -144,49 +126,42 @@ class PostController extends AbstractController
         MangaRepository $mangaRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-    
+
         if ($request->isMethod('POST')) {
             $token = $request->request->get('_csrf_token');
-    
             if (!$csrfTokenManager->isTokenValid(new CsrfToken('post_edit', $token))) {
                 throw $this->createAccessDeniedException('Token CSRF invalide.');
             }
-    
+
             $post->setTitre($request->request->get('titre'));
             $post->setContenu($request->request->get('contenu'));
-    
+
             // Mise à jour du manga via son titre
             $mangaTitre = $request->request->get('manga');
             $manga = $em->getRepository(Manga::class)->findOneBy(['titre' => $mangaTitre]);
-    
             if ($manga) {
                 $post->setManga($manga);
             } else {
                 $this->addFlash('error', 'Le manga sélectionné est invalide.');
                 return $this->redirectToRoute('post_edit', ['id' => $post->getId()]);
             }
-    
-            // Gestion du média (facultatif)
+
+            // Gestion minimale du média (upload facultatif d'image)
             $media = $request->files->get('media');
             if ($media) {
                 $newFilename = uniqid() . '.' . $media->guessExtension();
-                $media->move(
-                    $this->getParameter('media_directory'),
-                    $newFilename
-                );
+                $media->move($this->getParameter('media_directory'), $newFilename);
                 $post->setMedia($newFilename);
             }
-    
+
             $em->flush();
-    
+
             return $this->redirectToRoute('mes_posts');
         }
-    
+
         $csrfToken = $csrfTokenManager->getToken('post_edit')->getValue();
-    
-        // Récupérer tous les mangas pour la liste déroulante
         $mangas = $mangaRepository->findAll();
-    
+
         return $this->render('post/edit.html.twig', [
             'post'       => $post,
             'csrf_token' => $csrfToken,

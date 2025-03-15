@@ -44,7 +44,6 @@ class Post
     private ?\DateTimeInterface $date_publication = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Url(message: "L'URL du média n'est pas valide")]
     private ?string $media = null;
 
     #[ORM\ManyToOne(inversedBy: 'post')]
@@ -132,21 +131,6 @@ class Post
         $this->media = $media;
 
         return $this;
-    }
-
-    public function getMediaType(): ?string
-    {
-        if (!$this->media) {
-            return null;
-        }
-
-        $extension = strtolower(pathinfo($this->media, PATHINFO_EXTENSION));
-            return match ($extension) {
-            'jpg', 'jpeg', 'png', 'gif' => 'image',
-            'mp4', 'mov' => 'video',
-            'mp3', 'wav' => 'audio',
-            default => null,
-        };
     }
 
     public function getUser(): ?User

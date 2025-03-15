@@ -91,22 +91,11 @@ body {
     word-break: break-word;
 }
 
-.media {
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
-}
-
-.media h3 {
-    color: #7327BC;
-    font-size: 1.1em;
-    margin-bottom: 10px;
-}
-
-.media img, .media video, .media audio {
-    max-width: 100%;
-    border-radius: 5px;
-    margin-top: 10px;
+.media img {
+    max-width: 400px;  /* Limite la largeur à 400 pixels */
+    max-height: 300px; /* Limite la hauteur à 300 pixels */
+    width: auto;
+    height: auto;
 }
 
 .footerdate {
