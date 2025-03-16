@@ -30,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Le mot de passe est obligatoire')]
+    #[Assert\NotBlank(message: 'Le mot de passe est obligatoire', groups: ['update'])]
     #[Assert\Length(
         min: 6,
         minMessage: 'Le mot de passe doit contenir au moins {{ limit }} caractères'
@@ -326,6 +326,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-
 }

@@ -52,9 +52,8 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Veuillez saisir un mot de passe',
                     ]),
                     new Length([
-                        'min' => 8,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
-                        'max' => 4096,
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères'
                     ]),
                 ],
             ])
@@ -76,6 +75,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => ['Default'], // Exclut explicitement le groupe 'update'
         ]);
     }
 }
