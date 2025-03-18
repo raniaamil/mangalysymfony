@@ -45,66 +45,75 @@ security:
         target: app_home
 
   access_control:
+    # Authentification
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/logout, roles: PUBLIC_ACCESS }
 
-    - { path: ^/users, roles: ROLE_ADMIN }
+    # Users (Admin only)
     - { path: ^/users/new, roles: ROLE_ADMIN }
     - { path: ^/users/\d+/edit, roles: ROLE_ADMIN }
     - { path: ^/users/\d+/delete, roles: ROLE_ADMIN }
+    - { path: ^/users, roles: ROLE_ADMIN }
 
-
-    - { path: ^/critiques/, roles: ROLE_ADMIN }
+    # Critiques
     - { path: ^/critiques/new, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/critiques/\d+/, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/critiques/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/critiques/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/critiques/\d+/report, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/critiques/mescritiques, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/critiques/\d+/, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/critiques/, roles: ROLE_ADMIN }
 
-    - { path: ^/mangas/, roles: PUBLIC_ACCESS }
+    # Mangas
     - { path: ^/mangas/new, roles: ROLE_ADMIN }
-    - { path: ^/mangas/\d+/, roles: PUBLIC_ACCESS }
     - { path: ^/mangas/\d+/edit, roles: ROLE_ADMIN }
     - { path: ^/mangas/\d+/delete, roles: ROLE_ADMIN }
+    - { path: ^/mangas/\d+/, roles: PUBLIC_ACCESS }
+    - { path: ^/mangas/, roles: PUBLIC_ACCESS }
 
-    - { path: ^/admin/, roles: ROLE_ADMIN }
-    - { path: ^/admin/genres/, roles: ROLE_ADMIN }
+    # Admin Dashboard
     - { path: ^/admin/dashboard, roles: ROLE_ADMIN }
+    - { path: ^/admin/genres/, roles: ROLE_ADMIN }
+    - { path: ^/admin/, roles: ROLE_ADMIN }
 
+    # API
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api/genres$, roles: PUBLIC_ACCESS, methods: [GET] }
     - { path: ^/api/genres$, roles: ROLE_ADMIN, methods: [POST] }
     - { path: ^/api/genres/\d+$, roles: PUBLIC_ACCESS, methods: [GET] }
     - { path: ^/api/genres/\d+$, roles: ROLE_ADMIN, methods: [PUT, DELETE] }
 
-    - { path: ^/commentaire/, roles: ROLE_ADMIN }
-    - { path: ^/commentaire/new/\d+/, roles: IS_AUTHENTICATED_FULLY }
+    # Posts
+    - { path: ^/posts/new/, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/posts/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/posts/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/posts/\d+/report, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/posts/mesposts, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/posts/\d+/, roles: PUBLIC_ACCESS }
+    - { path: ^/posts/, roles: PUBLIC_ACCESS }
+
+    # Commentaires (ordre corrigé)
+    - { path: ^/commentaire/new/\w+/\d+/, roles: IS_AUTHENTICATED_FULLY } # new avec entity + id
     - { path: ^/commentaire/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/\d+/report, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/\d+/like, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commentaire/mescommentaires, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commentaire/$, roles: ROLE_ADMIN } # Index réservé admin
 
-    - { path: ^/posts/, roles: PUBLIC_ACCESS }
-    - { path: ^/posts/new/, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/posts/\d+/, roles: PUBLIC_ACCESS }
-    - { path: ^/posts/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/posts/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/posts/\d+/report, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/posts/mesposts, roles: IS_AUTHENTICATED_FULLY }
-
-    - { path: ^/theories/, roles: PUBLIC_ACCESS }
+    # Theories
     - { path: ^/theories/new/, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/theories/\d+/, roles: PUBLIC_ACCESS }
     - { path: ^/theories/\d+/edit, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/theories/\d+/delete, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/theories/\d+/report, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/theories/mestheories, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/theories/\d+/, roles: PUBLIC_ACCESS }
+    - { path: ^/theories/, roles: PUBLIC_ACCESS }
 
+    # Likes
     - { path: ^/likes, roles: IS_AUTHENTICATED_FULLY }
+
+    # Autres pages
     - { path: ^/contact, roles: PUBLIC_ACCESS }
     - { path: ^/profil, roles: IS_AUTHENTICATED_FULLY }
-    
 
-    

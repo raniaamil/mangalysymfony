@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                sh "rm -rf ${DEPLOY_DIR}" // Nettoyage du précédent build
+                sh "rm -rf ${DEPLOY_DIR}" 
                 sh "git clone -b ${GIT_BRANCH} ${GIT_REPO} ${DEPLOY_DIR}"
             }
         }
@@ -49,7 +49,7 @@ pipeline {
         stage('Exécution des tests') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/phpunit --testdox' // Lancer les tests unitaires et fonctionnels
+                    sh 'php bin/phpunit --testdox'
                 }
             }
         }
@@ -57,16 +57,16 @@ pipeline {
         stage('Nettoyage du cache') {
             steps {
                 dir("${DEPLOY_DIR}") {
-                    sh 'php bin/console cache:clear --env=prod'
-                    sh 'php bin/console cache:warmup'
+                    sh 'php bin/console cache:clear --env=prod' 
+                    sh 'php bin/console cache:warmup' 
                 }
             }
         }
 
         stage('Déploiement') {
             steps {
-                sh "rm -rf /var/www/html/${DEPLOY_DIR}" // Supprime le dossier de destination
-                sh "mkdir /var/www/html/${DEPLOY_DIR}" // Recréé le dossier de destination
+                sh "rm -rf /var/www/html/${DEPLOY_DIR}" 
+                sh "mkdir /var/www/html/${DEPLOY_DIR}" 
                 sh "cp -rT ${DEPLOY_DIR} /var/www/html/${DEPLOY_DIR}"
                 sh "chmod -R 775 /var/www/html/${DEPLOY_DIR}/var"
             }
